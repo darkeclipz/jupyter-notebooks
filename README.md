@@ -31,7 +31,7 @@ Start notebook with additional parameter:
 **Packages:**
 Install dependencies with `pip install --user <dependency>`:
 
-`plotly`, `requests`, `numpy`
+`plotly`, `requests`, `numpy`, `scipy`, `scipy-learn`, `pandas`, `matplotlib`
 
 # Licence
 Public Domain, unless otherwise stated.

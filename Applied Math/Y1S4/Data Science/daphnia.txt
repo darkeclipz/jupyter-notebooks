@@ -1,0 +1,7 @@
+Growth.rate Water Detergent Daphnia
+1 2.919086 Tyne BrandA Clone1
+2 2.492904 Tyne BrandA Clone1
+3 3.021804 Tyne BrandA Clone1
+4 2.350874 Tyne BrandA Clone2
+5 3.148174 Tyne BrandA Clone2
+6 4.423853 Tyne BrandA Clone2

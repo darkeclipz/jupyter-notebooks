@@ -1,0 +1,3 @@
+"Vak" "Periode" "Cijfer"
+"1" "Bewijstechnieken" 3 8
+"2" "DataScience" 4 0

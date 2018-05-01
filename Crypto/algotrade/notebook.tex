@@ -1,0 +1,1051 @@
+
+% Default to the notebook output style
+
+    
+
+
+% Inherit from the specified cell style.
+
+
+
+
+    
+\documentclass[11pt]{article}
+
+    
+    
+    \usepackage[T1]{fontenc}
+    % Nicer default font (+ math font) than Computer Modern for most use cases
+    \usepackage{mathpazo}
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % We will generate all images so they have a width \maxwidth. This means
+    % that they will get their normal width if they fit onto the page, but
+    % are scaled down if they would overflow the margins.
+    \makeatletter
+    \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
+    \else\Gin@nat@width\fi}
+    \makeatother
+    \let\Oldincludegraphics\includegraphics
+    % Set max figure width to be 80% of text width, for now hardcoded.
+    \renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=.8\maxwidth]{#1}}
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionLabelFormat{nolabel}{}
+    \captionsetup{labelformat=nolabel}
+
+    \usepackage{adjustbox} % Used to constrain images to a maximum size 
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range 
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    
+
+    
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatability definitions
+    \def\gt{>}
+    \def\lt{<}
+    % Document parameters
+    \title{Single Position Signal Trading Simulation System}
+    
+    
+    
+
+    % Pygments definitions
+    
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % Exact colors from NB
+    \definecolor{incolor}{rgb}{0.0, 0.0, 0.5}
+    \definecolor{outcolor}{rgb}{0.545, 0.0, 0.0}
+
+
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+    \begin{document}
+    
+    
+    \maketitle
+    
+    
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}1}]:} \PY{o}{\PYZpc{}}\PY{k}{pylab} inline
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Populating the interactive namespace from numpy and matplotlib
+
+    \end{Verbatim}
+
+    \hypertarget{single-position-signal-trading-simulation-system}{%
+\section{Single Position Signal Trading Simulation
+System}\label{single-position-signal-trading-simulation-system}}
+
+    \hypertarget{overview-of-libraries}{%
+\subsection{Overview of libraries}\label{overview-of-libraries}}
+
+    The code below is meant to give an impression of the current
+implementation of the libraries that are customly developed for the
+algorithmic trading algorithm.
+
+    \hypertarget{imports}{%
+\subsubsection{Imports}\label{imports}}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}2}]:} \PY{k+kn}{import} \PY{n+nn}{poloniex} \PY{k}{as} \PY{n+nn}{plnx}
+        \PY{k+kn}{import} \PY{n+nn}{ta\PYZus{}lib} \PY{k}{as} \PY{n+nn}{ta}
+        \PY{k+kn}{from} \PY{n+nn}{datetime} \PY{k}{import} \PY{n}{datetime}\PY{p}{,} \PY{n}{timedelta}
+        \PY{k+kn}{from} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{finance} \PY{k}{import} \PY{n}{candlestick2\PYZus{}ohlc}
+\end{Verbatim}
+
+
+    \hypertarget{chart-settings}{%
+\subsubsection{Chart settings}\label{chart-settings}}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}3}]:} \PY{n}{pair} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{USDT\PYZus{}BTC}\PY{l+s+s1}{\PYZsq{}}
+        \PY{n}{timeframe} \PY{o}{=} \PY{l+m+mi}{30}\PY{o}{*}\PY{l+m+mi}{60}
+        \PY{n}{end} \PY{o}{=} \PY{n}{datetime}\PY{o}{.}\PY{n}{utcnow}\PY{p}{(}\PY{p}{)}
+        \PY{n}{start} \PY{o}{=} \PY{n}{end} \PY{o}{\PYZhy{}} \PY{n}{timedelta}\PY{p}{(}\PY{n}{days}\PY{o}{=}\PY{l+m+mi}{4}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}4}]:} \PY{n}{chart} \PY{o}{=} \PY{n}{plnx}\PY{o}{.}\PY{n}{get\PYZus{}chart}\PY{p}{(}\PY{n}{pair}\PY{p}{,} \PY{n}{timeframe}\PY{p}{,} \PY{n}{start}\PY{p}{,} \PY{n}{end}\PY{p}{)}
+\end{Verbatim}
+
+
+    \hypertarget{technical-indicators}{%
+\subsubsection{Technical indicators}\label{technical-indicators}}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}5}]:} \PY{n}{ta}\PY{o}{.}\PY{n}{daily\PYZus{}returns}\PY{p}{(}\PY{n}{chart}\PY{p}{)}
+        \PY{n}{ta}\PY{o}{.}\PY{n}{ema}\PY{p}{(}\PY{n}{chart}\PY{p}{)}    \PY{c+c1}{\PYZsh{} default n=7}
+        \PY{n}{ta}\PY{o}{.}\PY{n}{ema}\PY{p}{(}\PY{n}{chart}\PY{p}{,} \PY{l+m+mi}{23}\PY{p}{)}
+        \PY{n}{ta}\PY{o}{.}\PY{n}{bbands}\PY{p}{(}\PY{n}{chart}\PY{p}{)} \PY{c+c1}{\PYZsh{} default n=20}
+        \PY{n}{ta}\PY{o}{.}\PY{n}{rsi}\PY{p}{(}\PY{n}{chart}\PY{p}{)}    \PY{c+c1}{\PYZsh{} default n=14}
+\end{Verbatim}
+
+
+    \hypertarget{plotting}{%
+\subsubsection{Plotting}\label{plotting}}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}6}]:} \PY{k+kn}{from} \PY{n+nn}{matplotlib} \PY{k}{import} \PY{n}{gridspec}
+        
+        \PY{n}{gs} \PY{o}{=} \PY{n}{gridspec}\PY{o}{.}\PY{n}{GridSpec}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{n}{height\PYZus{}ratios}\PY{o}{=}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}
+        \PY{n}{f} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{20}\PY{p}{,}\PY{l+m+mi}{15}\PY{p}{)}\PY{p}{)}
+        \PY{n}{ax1} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplot}\PY{p}{(}\PY{n}{gs}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}
+        \PY{n}{ax2} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplot}\PY{p}{(}\PY{n}{gs}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}
+        \PY{n}{candlestick2\PYZus{}ohlc}\PY{p}{(}\PY{n}{ax1}\PY{p}{,} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{open}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{high}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{low}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{width}\PY{o}{=}\PY{l+m+mf}{0.74}\PY{p}{,} \PY{n}{colorup}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{g}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{colordown}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.5}\PY{p}{)}
+        \PY{n}{ax1}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ema7}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{lime}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{lw}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{)}
+        \PY{n}{ax1}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ema23}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{lw}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{)}
+        \PY{n}{ax1}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bb\PYZus{}mid}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gray}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ls}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dotted}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        \PY{n}{ax1}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bb\PYZus{}upper}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gray}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ls}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dotted}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        \PY{n}{ax1}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bb\PYZus{}lower}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gray}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ls}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dotted}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        \PY{n}{ax1}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
+        \PY{n}{ax2}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n+nb}{list}\PY{p}{(}\PY{n}{chart}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{,} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{rsi}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gray}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        \PY{n}{ax2}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}
+        \PY{n}{ax2}\PY{o}{.}\PY{n}{axhline}\PY{p}{(}\PY{n}{y}\PY{o}{=}\PY{l+m+mi}{80}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ls}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dashed}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        \PY{n}{ax2}\PY{o}{.}\PY{n}{axhline}\PY{p}{(}\PY{n}{y}\PY{o}{=}\PY{l+m+mi}{20}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{lime}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ls}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dashed}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+        \PY{n}{ax2}\PY{o}{.}\PY{n}{fill\PYZus{}between}\PY{p}{(}\PY{n+nb}{list}\PY{p}{(}\PY{n}{chart}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{,} \PY{l+m+mi}{20}\PY{p}{,} \PY{l+m+mi}{80}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{grey}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{alpha}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)} \PY{c+c1}{\PYZsh{} \PYZsq{}kinda\PYZsq{} corrects the x\PYZhy{}axis for RSI }
+        \PY{n}{f}\PY{o}{.}\PY{n}{subplots\PYZus{}adjust}\PY{p}{(}\PY{n}{hspace}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_12_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \hypertarget{data-columns}{%
+\subsubsection{Data columns}\label{data-columns}}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}7}]:} \PY{n}{chart}\PY{o}{.}\PY{n}{columns}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}7}]:} Index(['close', 'date', 'high', 'low', 'open', 'daily\_return', 'ema7', 'ema23',
+               'bb\_mid', 'bb\_upper', 'bb\_lower', 'rsi'],
+              dtype='object')
+\end{Verbatim}
+            
+    \hypertarget{dataset}{%
+\subsubsection{Dataset}\label{dataset}}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}8}]:} \PY{n}{chart}\PY{p}{[}\PY{l+m+mi}{20}\PY{p}{:}\PY{l+m+mi}{25}\PY{p}{]}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}8}]:}           close                 date         high          low         open  \textbackslash{}
+        20  9098.169080  2018-04-26 23:30:00  9175.000000  9080.000000  9168.773684   
+        21  9159.143633  2018-04-27 00:00:00  9170.017888  9098.169080  9098.169080   
+        22  9225.341376  2018-04-27 00:30:00  9230.000000  9128.334587  9159.143633   
+        23  9244.796425  2018-04-27 01:00:00  9270.000000  9189.599015  9222.000000   
+        24  9286.000000  2018-04-27 01:30:00  9299.000000  9197.098010  9232.605917   
+        
+            daily\_return         ema7        ema23       bb\_mid     bb\_upper  \textbackslash{}
+        20    -70.604604  9074.742928          NaN  8958.288332  9192.056089   
+        21     60.974552  9108.188311          NaN  8982.224883  9241.774208   
+        22     66.197743  9152.517190  8995.344645  9010.870418  9304.396245   
+        23     19.455049  9190.065537  9021.857784  9039.544022  9361.818619   
+        24     41.203575  9222.921864  9049.786140  9070.695253  9418.297899   
+        
+               bb\_lower        rsi  
+        20  8724.520576  70.430204  
+        21  8722.675557  76.191020  
+        22  8717.344591  80.589150  
+        23  8717.269425  81.390225  
+        24  8723.092606  83.455062  
+\end{Verbatim}
+            
+    \hypertarget{specification}{%
+\subsection{Specification}\label{specification}}
+
+    Specifications for the trading simulator.
+
+    \hypertarget{simulation-parameters}{%
+\subsubsection{Simulation parameters}\label{simulation-parameters}}
+
+    We want to be able to adjust the following parameters for the
+simulation:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Symbol
+\item
+  Timeframe
+\item
+  Stop loss strategy: \texttt{none}, \texttt{limit}, \texttt{trail}
+\item
+  Stop loss percentage (max losses before the trade is stopped out)
+\item
+  Amount of leverage used
+\item
+  Fee percentage per order
+\item
+  Initial balance
+\item
+  Lot sizing
+\item
+  Signals, when to go long and short
+\end{enumerate}
+
+    \hypertarget{simulation-metrics}{%
+\subsubsection{Simulation metrics}\label{simulation-metrics}}
+
+    We want to able to track the following metrics:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Total trades
+\item
+  Winning trades
+\item
+  Losing trades
+\item
+  Win/loss ratio
+\item
+  Trades stopped out
+\item
+  Fee paid
+\item
+  Fee paid (cumulative)
+\item
+  Gains
+\item
+  Gains (cumulative)
+\item
+  Drawdown
+\item
+  Max drawdown
+\item
+  Risk/reward ratio
+\item
+  Risk/reward average
+\end{enumerate}
+
+    \hypertarget{simulation-types}{%
+\subsubsection{Simulation types}\label{simulation-types}}
+
+    We want to support the following simulation types:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Single simulation
+\item
+  Multiple simulations for parameter tuning
+\end{enumerate}
+
+    \hypertarget{implementation}{%
+\subsection{Implementation}\label{implementation}}
+
+    \hypertarget{signals}{%
+\subsubsection{Signals}\label{signals}}
+
+The generated signals are appended to the chart dataset. There will be
+four columns:
+
+\begin{verbatim}
+1. `open_long`
+2. `close_long`
+3. `open_short`
+4. `close_short`
+\end{verbatim}
+
+A value is \(0\) if the signal is off and \(1\) if the signal is on.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}14}]:} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{open\PYZus{}long}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close\PYZus{}long}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{open\PYZus{}short}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close\PYZus{}short}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{l+m+mi}{0}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}15}]:} \PY{n}{chart}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}15}]:}          close                 date         high          low     open  \textbackslash{}
+         0  8850.110679  2018-04-26 13:30:00  8875.874887  8826.906467  8867.08   
+         
+            daily\_return  ema7  ema23  bb\_mid  bb\_upper  bb\_lower  rsi  open\_long  \textbackslash{}
+         0           NaN   NaN    NaN     NaN       NaN       NaN  NaN          0   
+         
+            close\_long  open\_short  close\_short  
+         0           0           0            0  
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}37}]:} \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{l+m+mi}{30}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{open\PYZus{}long}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{l+m+mi}{1}
+         \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{l+m+mi}{35}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close\PYZus{}long}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{l+m+mi}{1}
+         \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{l+m+mi}{100}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{open\PYZus{}short}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{l+m+mi}{1}
+         \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{l+m+mi}{150}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{open\PYZus{}long}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{l+m+mi}{1}
+         \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{l+m+mi}{170}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close\PYZus{}long}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{l+m+mi}{1}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}40}]:} \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{20}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{)}\PY{p}{)}
+         \PY{n}{step}\PY{p}{(}\PY{n+nb}{list}\PY{p}{(}\PY{n}{chart}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{,} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{open\PYZus{}long}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{lime}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{step}\PY{p}{(}\PY{n+nb}{list}\PY{p}{(}\PY{n}{chart}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{,} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close\PYZus{}long}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{lime}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linestyle}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dashed}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{step}\PY{p}{(}\PY{n+nb}{list}\PY{p}{(}\PY{n}{chart}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{,} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{open\PYZus{}short}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{step}\PY{p}{(}\PY{n+nb}{list}\PY{p}{(}\PY{n}{chart}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{,} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close\PYZus{}short}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linestyle}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dashed}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{step}\PY{p}{(}\PY{n+nb}{list}\PY{p}{(}\PY{n}{chart}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{chart}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{black}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Signals}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{On/Off [0,1]}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Time}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{open\PYZus{}long}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close\PYZus{}long}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{open\PYZus{}short}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close\PYZus{}short}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_30_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Perhaps let \texttt{close\_long} and \texttt{close\_short} indicate when
+we want to reduce a position. The interval used will be \([0,1]\) where
+\(0.5\) will reduce the position by half, and \(0.25\) by a quarter.
+
+Example: we have a position of \(1000\). If we want close this position
+by reducing with four orders, thus reduce \(250\) each time, we
+calculate them as follows:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \texttt{0.25\ *\ order\_size} for the first order to sell a quarter.
+\item
+  \texttt{0.33..\ *\ order\_size} for the next quarter (taking into
+  account that the \texttt{order\_size} has became smaller, but we still
+  want to sell the same position size.)
+\item
+  \texttt{0.5\ *\ order\_size} for the third quarter.
+\item
+  \texttt{1.0\ *\ order\_size} for the last quarter.
+\end{enumerate}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}45}]:} \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{l+m+mi}{35}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close\PYZus{}long}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{l+m+mf}{0.25}
+         \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{l+m+mi}{40}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close\PYZus{}long}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{l+m+mi}{1}\PY{o}{/}\PY{l+m+mi}{3}
+         \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{l+m+mi}{45}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close\PYZus{}long}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{l+m+mf}{0.50}
+         \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{l+m+mi}{50}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close\PYZus{}long}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{l+m+mi}{1}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}48}]:} \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{20}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{)}\PY{p}{)}
+         \PY{n}{step}\PY{p}{(}\PY{n+nb}{list}\PY{p}{(}\PY{n}{chart}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{,} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{open\PYZus{}long}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{lime}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{step}\PY{p}{(}\PY{n+nb}{list}\PY{p}{(}\PY{n}{chart}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{,} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close\PYZus{}long}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{lime}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linestyle}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dashed}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{step}\PY{p}{(}\PY{n+nb}{list}\PY{p}{(}\PY{n}{chart}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{,} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{open\PYZus{}short}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{step}\PY{p}{(}\PY{n+nb}{list}\PY{p}{(}\PY{n}{chart}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{,} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close\PYZus{}short}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linestyle}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dashed}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{step}\PY{p}{(}\PY{n+nb}{list}\PY{p}{(}\PY{n}{chart}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{chart}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{black}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Signals}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Strength}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Time}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{legend}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{open\PYZus{}long}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close\PYZus{}long}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{open\PYZus{}short}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close\PYZus{}short}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_33_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \hypertarget{trade}{%
+\subsubsection{Trade}\label{trade}}
+
+    We want a \texttt{Trade} instance that keeps track of:
+
+\begin{itemize}
+\tightlist
+\item
+  State (\texttt{open}, \texttt{closed}, \texttt{stopped},
+  \texttt{submitted}, \texttt{timed\_out}, \texttt{expired})
+\item
+  Expiry time, if an order expires we want to resubmit a limit order for
+  a new price.
+\item
+  Lot size
+\item
+  Entry price
+\item
+  Exit price
+\item
+  P/L
+\item
+  P/L in \%
+\item
+  Stop loss type (\texttt{none}, \texttt{limit}, \texttt{trail})
+\item
+  Stop loss percentage
+\item
+  Stop loss price
+\item
+  Fees
+\item
+  Leverage
+\item
+  Net result (P/L adjusted with fees)
+\item
+  Entry date
+\item
+  Exit date
+\item
+  Trade open (hours)
+\end{itemize}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}9}]:} \PY{k}{class} \PY{n+nc}{Trade}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+            \PY{n}{exit\PYZus{}price} \PY{o}{=} \PY{k+kc}{None}      \PY{c+c1}{\PYZsh{} Price when the trade was closed.}
+            \PY{n}{stop\PYZus{}loss\PYZus{}price} \PY{o}{=} \PY{k+kc}{None} \PY{c+c1}{\PYZsh{} Price when the stop loss should trigger.}
+            
+            \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{} Initialize a new order. \PYZdq{}\PYZdq{}\PYZdq{}}
+            \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{position\PYZus{}type}\PY{p}{,} \PY{n}{lot\PYZus{}size}\PY{p}{,} \PY{n}{leverage}\PY{p}{,} \PY{n}{entry\PYZus{}price}\PY{p}{,} \PY{n}{stop\PYZus{}loss}\PY{p}{,} \PY{n}{stop\PYZus{}loss\PYZus{}percentage}\PY{p}{,} \PY{n}{fee\PYZus{}percentage}\PY{p}{)}\PY{p}{:}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{state} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{open}\PY{l+s+s1}{\PYZsq{}}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{position\PYZus{}type} \PY{o}{=} \PY{n}{position\PYZus{}type}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{lot\PYZus{}size\PYZus{}base} \PY{o}{=} \PY{n}{lot\PYZus{}size}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{lot\PYZus{}size\PYZus{}base\PYZus{}leveraged} \PY{o}{=} \PY{n}{lot\PYZus{}size} \PY{o}{*} \PY{n}{leverage}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{lot\PYZus{}size\PYZus{}quote} \PY{o}{=} \PY{n}{lot\PYZus{}size} \PY{o}{/} \PY{n}{entry\PYZus{}price}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{lot\PYZus{}size\PYZus{}quote\PYZus{}leveraged} \PY{o}{=} \PY{n}{lot\PYZus{}size} \PY{o}{/} \PY{n}{entry\PYZus{}price} \PY{o}{*} \PY{n}{leverage}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{leverage} \PY{o}{=} \PY{n}{leverage}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{entry\PYZus{}price} \PY{o}{=} \PY{n}{entry\PYZus{}price}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{stop\PYZus{}loss} \PY{o}{=} \PY{n}{stop\PYZus{}loss}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{stop\PYZus{}loss\PYZus{}percentage} \PY{o}{=} \PY{n}{stop\PYZus{}loss\PYZus{}percentage}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{fee\PYZus{}percentage} \PY{o}{=} \PY{n}{fee\PYZus{}percentage}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{stop\PYZus{}loss\PYZus{}price} \PY{o}{=} \PY{p}{(}\PY{l+m+mi}{1} \PY{o}{\PYZhy{}} \PY{n}{stop\PYZus{}loss\PYZus{}percentage}\PY{p}{)} \PY{o}{*} \PY{n}{entry\PYZus{}price} \PY{k}{if} \PY{n}{position\PYZus{}type} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{long}\PY{l+s+s1}{\PYZsq{}} \PYZbs{}
+                                  \PY{k}{else} \PY{p}{(}\PY{l+m+mi}{1} \PY{o}{+} \PY{n}{stop\PYZus{}loss\PYZus{}percentage}\PY{p}{)} \PY{o}{*} \PY{n}{entry\PYZus{}price} \PY{c+c1}{\PYZsh{} is short}
+            
+            \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{} Returns the total order cost in the base currency. \PYZdq{}\PYZdq{}\PYZdq{}}
+            \PY{k}{def} \PY{n+nf}{order\PYZus{}cost}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:}
+                \PY{k}{return} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{lot\PYZus{}size\PYZus{}base} \PY{o}{*} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{leverage}
+            
+            \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{} Returns the market value of the order in the base currency. \PYZdq{}\PYZdq{}\PYZdq{}}
+            \PY{k}{def} \PY{n+nf}{market\PYZus{}value}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:}
+                \PY{n}{x} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{exit\PYZus{}price} \PY{k}{if} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{exit\PYZus{}price} \PY{o}{!=} \PY{k+kc}{None} \PY{k}{else} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{current\PYZus{}price}
+                \PY{k}{return} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{lot\PYZus{}size\PYZus{}quote} \PY{o}{*} \PY{n}{x} \PY{o}{*} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{leverage}
+            
+            \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{} Returns the P/L for this in the base currency. \PYZdq{}\PYZdq{}\PYZdq{}}
+            \PY{k}{def} \PY{n+nf}{pl}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:}
+                \PY{n}{x} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{exit\PYZus{}price} \PY{k}{if} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{exit\PYZus{}price} \PY{o}{!=} \PY{k+kc}{None} \PY{k}{else} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{current\PYZus{}price}
+                \PY{k}{if} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{position\PYZus{}type} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{long}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:}  \PY{k}{return} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{market\PYZus{}value}\PY{p}{(}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{order\PYZus{}cost}\PY{p}{(}\PY{p}{)}
+                \PY{k}{if} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{position\PYZus{}type} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{short}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{k}{return} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{order\PYZus{}cost}\PY{p}{(}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{market\PYZus{}value}\PY{p}{(}\PY{p}{)}
+                                                 
+            \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{} Returns the P/L percentage. \PYZdq{}\PYZdq{}\PYZdq{}}
+            \PY{k}{def} \PY{n+nf}{pl\PYZus{}percent}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:}
+                \PY{n}{x} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{exit\PYZus{}price} \PY{k}{if} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{exit\PYZus{}price} \PY{o}{!=} \PY{k+kc}{None} \PY{k}{else} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{current\PYZus{}price}
+                \PY{k}{if} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{position\PYZus{}type} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{long}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:}  \PY{k}{return} \PY{n}{x} \PY{o}{/} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{entry\PYZus{}price}
+                \PY{k}{if} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{position\PYZus{}type} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{short}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{k}{return} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{entry\PYZus{}price} \PY{o}{/} \PY{n}{x}
+                
+            \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{} Returns the paid fees in the base currency. \PYZdq{}\PYZdq{}\PYZdq{}}
+            \PY{k}{def} \PY{n+nf}{paid\PYZus{}fees}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:}
+                \PY{n}{entry\PYZus{}fee} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{lot\PYZus{}size\PYZus{}base} \PY{o}{*} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{leverage} \PY{o}{*} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{fee\PYZus{}percentage}
+                \PY{n}{exit\PYZus{}fee} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{lot\PYZus{}size\PYZus{}quote} \PY{o}{*} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{leverage} \PY{o}{*} \PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{exit\PYZus{}price} \PY{k}{if} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{exit\PYZus{}price} \PY{o}{!=} \PY{k+kc}{None} \PY{k}{else} \PY{l+m+mi}{0}\PY{p}{)} \PY{o}{*} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{fee\PYZus{}percentage}
+                \PY{k}{return} \PY{n}{entry\PYZus{}fee} \PY{o}{+} \PY{n}{exit\PYZus{}fee}
+            
+            \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{} Closes the order on the current price. \PYZdq{}\PYZdq{}\PYZdq{}}
+            \PY{k}{def} \PY{n+nf}{close}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:}
+                \PY{k}{if} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{state} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{stopped}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{k}{return} \PY{c+c1}{\PYZsh{} order is already closed, and exit price is set }
+                                                   \PY{c+c1}{\PYZsh{} for that stop loss level.}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{exit\PYZus{}price} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{current\PYZus{}price}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{state} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{closed}\PY{l+s+s1}{\PYZsq{}}
+            
+            \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{} Closes the order on the stop loss price. \PYZdq{}\PYZdq{}\PYZdq{}}
+            \PY{k}{def} \PY{n+nf}{stop}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{exit\PYZus{}price} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{stop\PYZus{}loss\PYZus{}price}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{state} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{stopped}\PY{l+s+s1}{\PYZsq{}}
+        
+            \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{} Update current price, this should be called before using any other method. \PYZdq{}\PYZdq{}\PYZdq{}}
+            \PY{k}{def} \PY{n+nf}{update\PYZus{}price}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{current\PYZus{}price}\PY{p}{)}\PY{p}{:}
+                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{current\PYZus{}price} \PY{o}{=} \PY{n}{current\PYZus{}price}
+                \PY{k}{if} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{stop\PYZus{}loss\PYZus{}hit}\PY{p}{(}\PY{p}{)}\PY{p}{:} 
+                    \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{stop}\PY{p}{(}\PY{p}{)}
+        
+            \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{} Returns true if the stop loss price is hit. \PYZdq{}\PYZdq{}\PYZdq{}}
+            \PY{k}{def} \PY{n+nf}{stop\PYZus{}loss\PYZus{}hit}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:}
+                \PY{k}{if} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{position\PYZus{}type} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{long}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:}  \PY{k}{return} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{current\PYZus{}price} \PY{o}{\PYZlt{}} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{stop\PYZus{}loss\PYZus{}price} 
+                \PY{k}{if} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{position\PYZus{}type} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{short}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{k}{return} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{current\PYZus{}price} \PY{o}{\PYZgt{}} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{stop\PYZus{}loss\PYZus{}price}
+        
+            \PY{l+s+sd}{\PYZdq{}\PYZdq{}\PYZdq{} Statistical information. \PYZdq{}\PYZdq{}\PYZdq{}}
+            \PY{k}{def} \PY{n+nf}{statistics}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{state:                    }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{state}\PY{p}{)}\PY{p}{)}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{position\PYZus{}type:            }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{position\PYZus{}type}\PY{p}{)}\PY{p}{)}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{lot\PYZus{}size\PYZus{}base:            }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{lot\PYZus{}size\PYZus{}base}\PY{p}{)}\PY{p}{)}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{lot\PYZus{}size\PYZus{}base\PYZus{}leveraged:  }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{lot\PYZus{}size\PYZus{}base\PYZus{}leveraged}\PY{p}{)}\PY{p}{)}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{lot\PYZus{}size\PYZus{}quote:           }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{lot\PYZus{}size\PYZus{}quote}\PY{p}{)}\PY{p}{)} 
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{lot\PYZus{}size\PYZus{}quote\PYZus{}leveraged: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{lot\PYZus{}size\PYZus{}quote\PYZus{}leveraged}\PY{p}{)}\PY{p}{)} 
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{leverage:                 }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{leverage}\PY{p}{)}\PY{p}{)}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{entry\PYZus{}price:              }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{entry\PYZus{}price}\PY{p}{)}\PY{p}{)}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{exit\PYZus{}price:               }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{exit\PYZus{}price}\PY{p}{)}\PY{p}{)}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{fee\PYZus{}percentage:           }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{fee\PYZus{}percentage}\PY{p}{)}\PY{p}{)}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{stop\PYZus{}loss:                }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{stop\PYZus{}loss}\PY{p}{)}\PY{p}{)}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{stop\PYZus{}loss\PYZus{}percentage:     }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{stop\PYZus{}loss\PYZus{}percentage}\PY{p}{)}\PY{p}{)}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{stop\PYZus{}loss\PYZus{}price:          }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{stop\PYZus{}loss\PYZus{}price}\PY{p}{)}\PY{p}{)}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{order\PYZus{}cost():             }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{order\PYZus{}cost}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{market\PYZus{}value():           }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{market\PYZus{}value}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{pl():                     }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{pl}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{pl\PYZus{}percent():             }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{pl\PYZus{}percent}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+                \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{paid\PYZus{}fees():              }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{paid\PYZus{}fees}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}10}]:} \PY{n}{position\PYZus{}type} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{long}\PY{l+s+s1}{\PYZsq{}}
+         \PY{n}{lot\PYZus{}size} \PY{o}{=} \PY{l+m+mi}{10}
+         \PY{n}{leverage} \PY{o}{=} \PY{l+m+mi}{10}
+         \PY{n}{current\PYZus{}price} \PY{o}{=} \PY{l+m+mi}{500}
+         \PY{n}{stop\PYZus{}loss} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{limit}\PY{l+s+s1}{\PYZsq{}}
+         \PY{n}{stop\PYZus{}loss\PYZus{}percentage} \PY{o}{=} \PY{l+m+mf}{0.01}
+         \PY{n}{fee\PYZus{}percentage} \PY{o}{=} \PY{l+m+mf}{0.00075}
+         
+         \PY{n}{trade1} \PY{o}{=} \PY{n}{Trade}\PY{p}{(}\PY{n}{position\PYZus{}type}\PY{p}{,} \PY{n}{lot\PYZus{}size}\PY{p}{,} \PY{n}{leverage}\PY{p}{,} \PY{n}{current\PYZus{}price}\PY{p}{,} \PY{n}{stop\PYZus{}loss}\PY{p}{,} \PY{n}{stop\PYZus{}loss\PYZus{}percentage}\PY{p}{,} \PY{n}{fee\PYZus{}percentage}\PY{p}{)}
+         \PY{n}{trade1}\PY{o}{.}\PY{n}{update\PYZus{}price}\PY{p}{(}\PY{l+m+mi}{750}\PY{p}{)}
+         \PY{n}{trade1}\PY{o}{.}\PY{n}{close}\PY{p}{(}\PY{p}{)}
+         \PY{n}{trade1}\PY{o}{.}\PY{n}{statistics}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+state:                    closed
+position\_type:            long
+lot\_size\_base:            10
+lot\_size\_base\_leveraged:  100
+lot\_size\_quote:           0.02
+lot\_size\_quote\_leveraged: 0.2
+leverage:                 10
+entry\_price:              500
+exit\_price:               750
+fee\_percentage:           0.00075
+stop\_loss:                limit
+stop\_loss\_percentage:     0.01
+stop\_loss\_price:          495.0
+order\_cost():             100
+market\_value():           150.0
+pl():                     50.0
+pl\_percent():             1.5
+paid\_fees():              0.1875
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}11}]:} \PY{n}{position\PYZus{}type} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{short}\PY{l+s+s1}{\PYZsq{}}
+         \PY{n}{lot\PYZus{}size} \PY{o}{=} \PY{l+m+mi}{1}
+         \PY{n}{leverage} \PY{o}{=} \PY{l+m+mi}{1}
+         \PY{n}{current\PYZus{}price} \PY{o}{=} \PY{l+m+mi}{1000}
+         \PY{n}{stop\PYZus{}loss} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{limit}\PY{l+s+s1}{\PYZsq{}}
+         \PY{n}{stop\PYZus{}loss\PYZus{}percentage} \PY{o}{=} \PY{l+m+mf}{0.01}
+         \PY{n}{fee\PYZus{}percentage} \PY{o}{=} \PY{l+m+mf}{0.00075}
+         
+         \PY{n}{trade2} \PY{o}{=} \PY{n}{Trade}\PY{p}{(}\PY{n}{position\PYZus{}type}\PY{p}{,} \PY{n}{lot\PYZus{}size}\PY{p}{,} \PY{n}{leverage}\PY{p}{,} \PY{n}{current\PYZus{}price}\PY{p}{,} \PY{n}{stop\PYZus{}loss}\PY{p}{,} \PY{n}{stop\PYZus{}loss\PYZus{}percentage}\PY{p}{,} \PY{n}{fee\PYZus{}percentage}\PY{p}{)}
+         \PY{n}{trade2}\PY{o}{.}\PY{n}{update\PYZus{}price}\PY{p}{(}\PY{l+m+mi}{500}\PY{p}{)}
+         \PY{n}{trade2}\PY{o}{.}\PY{n}{close}\PY{p}{(}\PY{p}{)}
+         \PY{n}{trade2}\PY{o}{.}\PY{n}{statistics}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+state:                    closed
+position\_type:            short
+lot\_size\_base:            1
+lot\_size\_base\_leveraged:  1
+lot\_size\_quote:           0.001
+lot\_size\_quote\_leveraged: 0.001
+leverage:                 1
+entry\_price:              1000
+exit\_price:               500
+fee\_percentage:           0.00075
+stop\_loss:                limit
+stop\_loss\_percentage:     0.01
+stop\_loss\_price:          1010.0
+order\_cost():             1
+market\_value():           0.5
+pl():                     0.5
+pl\_percent():             2.0
+paid\_fees():              0.0011250000000000001
+
+    \end{Verbatim}
+
+    !! PL() should yield \texttt{1000.0}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}12}]:} \PY{n}{position\PYZus{}type} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{short}\PY{l+s+s1}{\PYZsq{}}
+         \PY{n}{lot\PYZus{}size} \PY{o}{=} \PY{l+m+mi}{1000}
+         \PY{n}{leverage} \PY{o}{=} \PY{l+m+mi}{1}
+         \PY{n}{current\PYZus{}price} \PY{o}{=} \PY{l+m+mi}{1000}
+         \PY{n}{stop\PYZus{}loss} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{limit}\PY{l+s+s1}{\PYZsq{}}
+         \PY{n}{stop\PYZus{}loss\PYZus{}percentage} \PY{o}{=} \PY{l+m+mf}{0.01}
+         \PY{n}{fee\PYZus{}percentage} \PY{o}{=} \PY{l+m+mf}{0.00075}
+         
+         \PY{n}{trade3} \PY{o}{=} \PY{n}{Trade}\PY{p}{(}\PY{n}{position\PYZus{}type}\PY{p}{,} \PY{n}{lot\PYZus{}size}\PY{p}{,} \PY{n}{leverage}\PY{p}{,} \PY{n}{current\PYZus{}price}\PY{p}{,} \PY{n}{stop\PYZus{}loss}\PY{p}{,} \PY{n}{stop\PYZus{}loss\PYZus{}percentage}\PY{p}{,} \PY{n}{fee\PYZus{}percentage}\PY{p}{)}
+         \PY{n}{trade3}\PY{o}{.}\PY{n}{update\PYZus{}price}\PY{p}{(}\PY{l+m+mi}{1250}\PY{p}{)}
+         \PY{n}{trade3}\PY{o}{.}\PY{n}{statistics}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+state:                    stopped
+position\_type:            short
+lot\_size\_base:            1000
+lot\_size\_base\_leveraged:  1000
+lot\_size\_quote:           1.0
+lot\_size\_quote\_leveraged: 1.0
+leverage:                 1
+entry\_price:              1000
+exit\_price:               1010.0
+fee\_percentage:           0.00075
+stop\_loss:                limit
+stop\_loss\_percentage:     0.01
+stop\_loss\_price:          1010.0
+order\_cost():             1000
+market\_value():           1010.0
+pl():                     -10.0
+pl\_percent():             0.9900990099009901
+paid\_fees():              1.5075
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}13}]:} \PY{n}{position\PYZus{}type} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{short}\PY{l+s+s1}{\PYZsq{}}
+         \PY{n}{lot\PYZus{}size} \PY{o}{=} \PY{l+m+mi}{1000}
+         \PY{n}{leverage} \PY{o}{=} \PY{l+m+mi}{1}
+         \PY{n}{current\PYZus{}price} \PY{o}{=} \PY{l+m+mi}{1000}
+         \PY{n}{stop\PYZus{}loss} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{limit}\PY{l+s+s1}{\PYZsq{}}
+         \PY{n}{stop\PYZus{}loss\PYZus{}percentage} \PY{o}{=} \PY{l+m+mf}{0.01}
+         \PY{n}{fee\PYZus{}percentage} \PY{o}{=} \PY{l+m+mf}{0.00075}
+         
+         \PY{n}{trade4} \PY{o}{=} \PY{n}{Trade}\PY{p}{(}\PY{n}{position\PYZus{}type}\PY{p}{,} \PY{n}{lot\PYZus{}size}\PY{p}{,} \PY{n}{leverage}\PY{p}{,} \PY{n}{current\PYZus{}price}\PY{p}{,} \PY{n}{stop\PYZus{}loss}\PY{p}{,} \PY{n}{stop\PYZus{}loss\PYZus{}percentage}\PY{p}{,} \PY{n}{fee\PYZus{}percentage}\PY{p}{)}
+         \PY{n}{trade4}\PY{o}{.}\PY{n}{update\PYZus{}price}\PY{p}{(}\PY{l+m+mi}{500}\PY{p}{)}
+         \PY{n}{trade4}\PY{o}{.}\PY{n}{statistics}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+state:                    open
+position\_type:            short
+lot\_size\_base:            1000
+lot\_size\_base\_leveraged:  1000
+lot\_size\_quote:           1.0
+lot\_size\_quote\_leveraged: 1.0
+leverage:                 1
+entry\_price:              1000
+exit\_price:               None
+fee\_percentage:           0.00075
+stop\_loss:                limit
+stop\_loss\_percentage:     0.01
+stop\_loss\_price:          1010.0
+order\_cost():             1000
+market\_value():           500.0
+pl():                     500.0
+pl\_percent():             2.0
+paid\_fees():              0.75
+
+    \end{Verbatim}
+
+    Add the ability to reduce positions, and calculate the fee individually
+(in a field \texttt{paid\_fees}, instead of a function).
+
+    \hypertarget{single-position-signal-trading-simulation-system}{%
+\subsubsection{Single Position Signal Trading Simulation
+System}\label{single-position-signal-trading-simulation-system}}
+
+    For simplicity, the trading simulation system will be only keep track of
+a single position. When to enter/exit a position is determined by
+generated signals. Signals are generated with the technical indicator
+data. The simulation system will keep track of an account balance and
+paid fees. Slippage will be ignored. When the simulation is finished a
+statistical report will be generated.
+
+    \hypertarget{high-level-overview}{%
+\paragraph{High-level overview}\label{high-level-overview}}
+
+    \begin{itemize}
+\tightlist
+\item
+  The system will simulate trading on a chart dataset.
+\item
+  The positions are determined with signals which are calculated from
+  the technical indicators and appended to the chart dataset.
+\item
+  The trading system has the following states: \texttt{neutral},
+  \texttt{long}, \texttt{short}.
+\item
+  A signal can produce the following actions: \texttt{open\_long},
+  \texttt{open\_short}, \texttt{close\_long}, \texttt{close\_short}.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \texttt{open\_long} will close all open short positions (if any),
+    and open a long position.
+  \item
+    \texttt{open\_short} will close all open long positions (if any),
+    and open a short position.
+  \item
+    \texttt{close\_long} will close the open short position.
+  \item
+    \texttt{close\_short} will close the open long position.
+  \end{itemize}
+\item
+  The daily account balance is appended to the chart dataset.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    The simulation starts with an initial account balance.
+  \end{itemize}
+\end{itemize}
+
+    \hypertarget{algorithm}{%
+\paragraph{Algorithm}\label{algorithm}}
+
+    The trading simulation system uses the following algorithm:
+
+The program will iterate over every candle in the chart dataset until it
+iterated over the entire period. On each iteration the following
+algorithm runs:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Get \texttt{current} which is the current row in the chart dataset.
+\item
+  If the state is not \texttt{neutral}:
+\item
+  Update the current price for all open orders.
+\item
+  Check if the stop loss has been hit. 1. Close the position with the
+  stop loss exit price. 1. Append the \texttt{Trade} instance to the
+  dataframe. 1. Update account balances. 1. Set the \texttt{Trade}
+  instance to \texttt{None}. 1. Set the state to \texttt{neutral}.
+\item
+  If the \texttt{open\_long} signal is on:
+\item
+  If there is a short position open, close it.
+\item
+  Open a long position. 1. Create a new \texttt{Trade} instance. 1. Set
+  the state to \texttt{long}.
+\item
+  If the \texttt{close\_long} signal is on:
+\item
+  If there is a long position, close it. 1. Append the \texttt{Trade}
+  instance to the dataframe. 1. Update account balances. 1. Set the
+  \texttt{Trade} instance to \texttt{None}. 1. Set the state to
+  \texttt{neutral}.
+\item
+  If the \texttt{open\_short} signal is on:
+\item
+  If there is a long position, close it.
+\item
+  Open a short position. 1. Create a new \texttt{Trade} instance. 1. Set
+  the state to \texttt{short}.
+\item
+  If the \texttt{close\_short} signal is on:
+\item
+  If there is a short, close it. 1. Append the \texttt{Trade} instance
+  to the dataframe. 1. Update account balances. 1. Set the
+  \texttt{Trade} instance to \texttt{None}. 1. Set the state to
+  \texttt{neutral}.
+\item
+  Return the trades dataframe. The account balance data is appended to
+  the chart dataframe.
+\end{enumerate}
+
+When closing positions the account balances should also be updated.
+
+    \textbf{Helper functions}
+
+\begin{itemize}
+\tightlist
+\item
+  Open long(contracts, price)
+\item
+  Close long(price)
+\item
+  Open short(price)
+\item
+  Close short(contracts, price)
+\item
+  Write \texttt{Trade} to dataframe
+\item
+  Lot sizing
+\item
+  Leverage
+\item
+  Stop loss type
+\item
+  Stop loss percentage
+\item
+  Calculate stop loss price (also to use for trail)
+\end{itemize}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+    \end{document}

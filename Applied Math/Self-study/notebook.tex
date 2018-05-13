@@ -290,15 +290,17 @@ Populating the interactive namespace from numpy and matplotlib
 
     \end{Verbatim}
 
-    \hypertarget{monopoly}{%
-\section{Monopoly}\label{monopoly}}
+    \hypertarget{probability-analysis-of-monopoly}{%
+\section{Probability Analysis of
+Monopoly}\label{probability-analysis-of-monopoly}}
 
-    Analysis for the probabilities with Monopoly to answer the question:
-which are the best houses to buy?
+    In this document we are going to analyze the probabilities in Monopoly
+to answer the question: which are the best houses to buy?
 
 To answer this question we will create a simulated version of Monopoly
-and determine the probabilities to land on each square. The square with
-the highest probability will be the best square to have.
+and determine the probabilities to land on each square. Then we
+calculate the expected value for each square. The squares with the
+highest expected values are the best squares to have.
 
     \begin{figure}
 \centering
@@ -313,11 +315,17 @@ the highest probability will be the best square to have.
 Which gives a total of 40 positions where a player can land. The labels
 are numbered starting at GO.
 
+    \hypertarget{labels}{%
+\subsubsection{Labels}\label{labels}}
+
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}2}]:} \PY{n}{squares\PYZus{}labels} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{start}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{b1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{cc1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{b2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{it}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{t1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{lb1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{c1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{lb2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{lb3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{jail}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
-                         \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{p1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ec}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{p2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{p3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ts2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{o1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{cc2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{o2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{o3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{p}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{c2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
-                         \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ts3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ww}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gtj}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{g1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{g2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{cc3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{g3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ts4}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{c3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
-                         \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{db1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{st}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{db2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+{\color{incolor}In [{\color{incolor}2}]:} \PY{n}{squares\PYZus{}labels} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{start}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{b1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{cc1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{b2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{it}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{t1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                          \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{lb1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{c1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{lb2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{lb3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{jail}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{p1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                          \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ec}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{p2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{p3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ts2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{o1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{cc2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                          \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{o2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{o3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{p}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{c2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                          \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ts3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ww}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{y3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gtj}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                          \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{g1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{g2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{cc3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{g3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ts4}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{c3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                          \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{db1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{st}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{db2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
         
         \PY{n}{squares\PYZus{}total} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{squares\PYZus{}labels}\PY{p}{)}
         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{There are }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{ squares.}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{squares\PYZus{}total}\PY{p}{)}\PY{p}{)}
@@ -329,13 +337,25 @@ There are 40 squares.
 
     \end{Verbatim}
 
+    \hypertarget{descriptions}{%
+\subsubsection{Descriptions}\label{descriptions}}
+
+    We also want to know the proper names, so we don't have to look up the
+labels.
+
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}3}]:} \PY{n}{squares\PYZus{}description} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Start}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Brown 1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Community Chest 1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Brown 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Income Tax}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Train Station 1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Light Blue 1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
-                              \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Chance 1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Light Blue 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Light Blue 3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Jail}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Purple 1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Electric Company}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Purple 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
-                              \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Purple 3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Train Station 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Orange 1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Community Chest 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Orange 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Orange 3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Free Parking}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
-                              \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Red 1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Chance 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Red 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Red 3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Train Station 3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Yellow 1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Yellow 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Water Works}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
-                              \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Yellow 3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Go to Jail}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Green 1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Green 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Community Chest 3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Green 3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Train Station 4}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}
-                              \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Chance 3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Dark Blue 1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Super Tax}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Dark Blue 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+{\color{incolor}In [{\color{incolor}3}]:} \PY{n}{squares\PYZus{}description} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Start}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Brown 1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Community Chest 1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Brown 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                               \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Income Tax}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Train Station 1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Light Blue 1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                               \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Chance 1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Light Blue 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Light Blue 3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Jail}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                               \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Purple 1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Electric Company}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Purple 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                               \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Purple 3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Train Station 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Orange 1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                               \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Community Chest 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Orange 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Orange 3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                               \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Free Parking}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Red 1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Chance 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Red 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                               \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Red 3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Train Station 3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Yellow 1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Yellow 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                               \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Water Works}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Yellow 3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Go to Jail}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Green 1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                               \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Green 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Community Chest 3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Green 3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                               \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Train Station 4}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Chance 3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Dark Blue 1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                               \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Super Tax}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Dark Blue 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
 \end{Verbatim}
 
 
@@ -348,6 +368,74 @@ There are 40 squares.
 There are 40 descriptions.
 
     \end{Verbatim}
+
+    \hypertarget{purchasable}{%
+\subsubsection{Purchasable}\label{purchasable}}
+
+    We want to know if they are purchasable so we can sort on that later.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}5}]:} \PY{n}{squares\PYZus{}purchasable} \PY{o}{=} \PY{p}{[}\PY{k+kc}{False}\PY{p}{,} \PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{False}\PY{p}{,} \PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{False}\PY{p}{,} 
+                               \PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{False}\PY{p}{,} \PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{True}\PY{p}{,} 
+                               \PY{k+kc}{False}\PY{p}{,} \PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{True}\PY{p}{,} 
+                               \PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{False}\PY{p}{,} \PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{True}\PY{p}{,} 
+                               \PY{k+kc}{False}\PY{p}{,} \PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{False}\PY{p}{,} \PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{True}\PY{p}{,} 
+                               \PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{True}\PY{p}{,} 
+                               \PY{k+kc}{False}\PY{p}{,} \PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{False}\PY{p}{,} \PY{k+kc}{True}\PY{p}{,} 
+                               \PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{False}\PY{p}{,} \PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{False}\PY{p}{,} \PY{k+kc}{True}\PY{p}{]}
+\end{Verbatim}
+
+
+    \hypertarget{rent}{%
+\subsubsection{Rent}\label{rent}}
+
+    We want to use the rent paid at each square to calculate the expected
+value. The utility company charge \(4\) times roll if one is owned, and
+\(10\) times roll if both owned. For one railway we charge \(25\), two
+\(50\), three \(100\), and all four \(200\).
+
+    To find the rent for a utility company, we find the expected value for
+throwing a dices times \(4\).
+
+\[ 4\cdot E(\bar{k}) = 4 \cdot \dfrac{1}{6} \cdot (1+2+3+4+5+6) \]
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}6}]:} \PY{l+m+mi}{4} \PY{o}{*} \PY{p}{(}\PY{l+m+mi}{1}\PY{o}{+}\PY{l+m+mi}{2}\PY{o}{+}\PY{l+m+mi}{3}\PY{o}{+}\PY{l+m+mi}{4}\PY{o}{+}\PY{l+m+mi}{5}\PY{o}{+}\PY{l+m+mi}{6}\PY{p}{)} \PY{o}{/} \PY{l+m+mi}{6}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}6}]:} 14.0
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}7}]:} \PY{n}{squares\PYZus{}rent} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{4}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{,} \PY{l+m+mi}{8}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{14}\PY{p}{,} 
+                        \PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{12}\PY{p}{,} \PY{l+m+mi}{16}\PY{p}{,} \PY{l+m+mi}{14}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{14}\PY{p}{,} \PY{l+m+mi}{16}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{18}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{18}\PY{p}{,} 
+                        \PY{l+m+mi}{20}\PY{p}{,} \PY{l+m+mi}{26}\PY{p}{,} \PY{l+m+mi}{22}\PY{p}{,} \PY{l+m+mi}{22}\PY{p}{,} \PY{l+m+mi}{14}\PY{p}{,} \PY{l+m+mi}{24}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{26}\PY{p}{,} \PY{l+m+mi}{26}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{28}\PY{p}{,} 
+                        \PY{l+m+mi}{36}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{35}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{50}\PY{p}{]}
+\end{Verbatim}
+
+
+    \hypertarget{grouping}{%
+\subsubsection{Grouping}\label{grouping}}
+
+    We want to know in what group they are so we can aggregate our data
+later.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}8}]:} \PY{n}{squares\PYZus{}aggregate} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Start}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Brown}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Community Chest}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Brown}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                             \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Income Tax}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Train Station}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Light Blue}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                             \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Chance}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Light Blue}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Light Blue}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Jail}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                             \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Purple}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Utilities}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Purple}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Purple}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                             \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Train Station}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Orange}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Community Chest}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                             \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Orange}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Orange}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Free Parking}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                             \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Chance}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Train Station}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Yellow}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                             \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Yellow}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Utilities}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Yellow}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Go to Jail}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                             \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Green}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Green}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Community Chest}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Green}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                             \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Train Station}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Chance}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Dark Blue}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} 
+                             \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Super Tax}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Dark Blue}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\end{Verbatim}
+
 
     \hypertarget{cards}{%
 \subsection{Cards}\label{cards}}
@@ -367,13 +455,18 @@ Each deck contains 16 cards.
     \hypertarget{community-cards}{%
 \subsubsection{Community Cards}\label{community-cards}}
 
+    Monopoly has \(16\) community cards.
+
     \begin{figure}
 \centering
 \includegraphics{monopoly_2.jpg}
 \caption{cc}
 \end{figure}
 
-    \begin{itemize}
+    Because we are only determining the probabilities, we are only
+interested in the following cards:
+
+\begin{itemize}
 \tightlist
 \item
   advance to go
@@ -385,8 +478,16 @@ Each deck contains 16 cards.
   go back 2 spaces
 \end{itemize}
 
+    \hypertarget{community-deck-implementation}{%
+\subsubsection{Community deck
+implementation}\label{community-deck-implementation}}
+
+    We implement the community deck in a class. The class keeps track of a
+list with \(16\) cards. An index points to the next card. When we are
+out of cards, we reset the index and reshuffle the cards.
+
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}5}]:} \PY{k+kn}{from} \PY{n+nn}{random} \PY{k}{import} \PY{n}{shuffle}
+{\color{incolor}In [{\color{incolor}9}]:} \PY{k+kn}{from} \PY{n+nn}{random} \PY{k}{import} \PY{n}{shuffle}
         
         \PY{k}{class} \PY{n+nc}{CommunityDeck}\PY{p}{(}\PY{p}{)}\PY{p}{:}
             \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:}
@@ -407,8 +508,49 @@ Each deck contains 16 cards.
 \end{Verbatim}
 
 
+    Now we test it:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}10}]:} \PY{n}{deck} \PY{o}{=} \PY{n}{CommunityDeck}\PY{p}{(}\PY{p}{)}
+         \PY{n}{deck}\PY{o}{.}\PY{n}{deck}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}10}]:} ['gtg', 'gtj', 'goj', 'gb2', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}11}]:} \PY{n}{deck}\PY{o}{.}\PY{n}{draw\PYZus{}card}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}11}]:} 'goj'
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}12}]:} \PY{n}{deck}\PY{o}{.}\PY{n}{deck}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}12}]:} ['goj', 0, 0, 0, 0, 0, 0, 0, 0, 'gb2', 0, 0, 0, 'gtg', 0, 'gtj']
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}13}]:} \PY{n}{deck}\PY{o}{.}\PY{n}{index}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}13}]:} 1
+\end{Verbatim}
+            
     \hypertarget{chance-cards}{%
 \subsubsection{Chance Cards}\label{chance-cards}}
+
+    Monopoly has \(16\) chance cards.
 
     \begin{figure}
 \centering
@@ -416,7 +558,10 @@ Each deck contains 16 cards.
 \caption{chance}
 \end{figure}
 
-    \begin{itemize}
+    Because we are only determining the probabilities, we are only
+interested in the following cards:
+
+\begin{itemize}
 \tightlist
 \item
   go back three spaces
@@ -430,52 +575,108 @@ Each deck contains 16 cards.
   go to jail
 \end{itemize}
 
+    \hypertarget{chance-deck-implementation}{%
+\subsubsection{Chance deck
+implementation}\label{chance-deck-implementation}}
+
+    We implement the chance deck in a class. The class keeps track of a list
+with \(16\) cards. An index points to the next card. When we are out of
+cards, we reset the index and reshuffle the cards.
+
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}6}]:} \PY{k+kn}{from} \PY{n+nn}{random} \PY{k}{import} \PY{n}{shuffle}
-        
-        \PY{k}{class} \PY{n+nc}{ChanceDeck}\PY{p}{(}\PY{p}{)}\PY{p}{:}
-            \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:}
-                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{deck} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{*} \PY{l+m+mi}{16}
-                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{deck}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gtg}\PY{l+s+s1}{\PYZsq{}} \PY{c+c1}{\PYZsh{} go to go}
-                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{deck}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gtj}\PY{l+s+s1}{\PYZsq{}} \PY{c+c1}{\PYZsh{} go to jail}
-                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{deck}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{goj}\PY{l+s+s1}{\PYZsq{}} \PY{c+c1}{\PYZsh{} get out of jail}
-                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{deck}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gb3}\PY{l+s+s1}{\PYZsq{}} \PY{c+c1}{\PYZsh{} go back 3}
-                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{deck}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r3}\PY{l+s+s1}{\PYZsq{}}  \PY{c+c1}{\PYZsh{} go to red 3 (r3)}
-                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{index} \PY{o}{=} \PY{l+m+mi}{16}
-            
-            \PY{k}{def} \PY{n+nf}{draw\PYZus{}card}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:}
-                \PY{k}{if} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{index} \PY{o}{\PYZgt{}}\PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{deck}\PY{p}{)}\PY{p}{:}
-                    \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{index} \PY{o}{=} \PY{l+m+mi}{0}
-                    \PY{n}{shuffle}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{deck}\PY{p}{)}
-                \PY{n}{card} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{deck}\PY{p}{[}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{index}\PY{p}{]}
-                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{index} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
-                \PY{k}{return} \PY{n}{card}
+{\color{incolor}In [{\color{incolor}14}]:} \PY{k+kn}{from} \PY{n+nn}{random} \PY{k}{import} \PY{n}{shuffle}
+         
+         \PY{k}{class} \PY{n+nc}{ChanceDeck}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+             \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:}
+                 \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{deck} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{*} \PY{l+m+mi}{16}
+                 \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{deck}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gtg}\PY{l+s+s1}{\PYZsq{}} \PY{c+c1}{\PYZsh{} go to go}
+                 \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{deck}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gtj}\PY{l+s+s1}{\PYZsq{}} \PY{c+c1}{\PYZsh{} go to jail}
+                 \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{deck}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{goj}\PY{l+s+s1}{\PYZsq{}} \PY{c+c1}{\PYZsh{} get out of jail}
+                 \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{deck}\PY{p}{[}\PY{l+m+mi}{3}\PY{p}{]} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gb3}\PY{l+s+s1}{\PYZsq{}} \PY{c+c1}{\PYZsh{} go back 3}
+                 \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{deck}\PY{p}{[}\PY{l+m+mi}{4}\PY{p}{]} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r3}\PY{l+s+s1}{\PYZsq{}}  \PY{c+c1}{\PYZsh{} go to red 3 (r3)}
+                 \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{index} \PY{o}{=} \PY{l+m+mi}{16}
+             
+             \PY{k}{def} \PY{n+nf}{draw\PYZus{}card}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:}
+                 \PY{k}{if} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{index} \PY{o}{\PYZgt{}}\PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{deck}\PY{p}{)}\PY{p}{:}
+                     \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{index} \PY{o}{=} \PY{l+m+mi}{0}
+                     \PY{n}{shuffle}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{deck}\PY{p}{)}
+                 \PY{n}{card} \PY{o}{=} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{deck}\PY{p}{[}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{index}\PY{p}{]}
+                 \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{index} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
+                 \PY{k}{return} \PY{n}{card}
 \end{Verbatim}
 
 
+    Now we test it:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}15}]:} \PY{n}{deck} \PY{o}{=} \PY{n}{ChanceDeck}\PY{p}{(}\PY{p}{)}
+         \PY{n}{deck}\PY{o}{.}\PY{n}{deck}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}15}]:} ['gtg', 'gtj', 'goj', 'gb3', 'r3', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}16}]:} \PY{n}{deck}\PY{o}{.}\PY{n}{draw\PYZus{}card}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}16}]:} 0
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}17}]:} \PY{n}{deck}\PY{o}{.}\PY{n}{deck}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}17}]:} [0, 0, 'gtg', 0, 0, 0, 'gtj', 0, 'gb3', 0, 0, 0, 'goj', 'r3', 0, 0]
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}18}]:} \PY{n}{deck}\PY{o}{.}\PY{n}{index}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}18}]:} 1
+\end{Verbatim}
+            
     \hypertarget{dice}{%
 \subsection{Dice}\label{dice}}
 
     We will be implementing the dice as a class. This allows us to
-encapsulate how the result is determined. It makes it easier to
+encapsulate how the result are determined. It makes it easier to
 implements other scenarios such as throwing with multiple dices.
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}7}]:} \PY{k+kn}{from} \PY{n+nn}{random} \PY{k}{import} \PY{n}{randint}
-        
-        \PY{k}{class} \PY{n+nc}{Dice}\PY{p}{(}\PY{p}{)}\PY{p}{:}
-            \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{dices} \PY{o}{=} \PY{l+m+mi}{1}\PY{p}{,} \PY{n}{sides} \PY{o}{=} \PY{l+m+mi}{6}\PY{p}{)}\PY{p}{:}
-                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{dices} \PY{o}{=} \PY{n}{dices}
-                \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{sides} \PY{o}{=} \PY{l+m+mi}{6}
-            
-            \PY{k}{def} \PY{n+nf}{throw}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:}
-                \PY{n}{total} \PY{o}{=} \PY{l+m+mi}{0} 
-                \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{dices}\PY{p}{)}\PY{p}{:}
-                    \PY{n}{total} \PY{o}{+}\PY{o}{=} \PY{n}{randint}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{sides}\PY{p}{)}
-                \PY{k}{return} \PY{n}{total}
+{\color{incolor}In [{\color{incolor}19}]:} \PY{k+kn}{from} \PY{n+nn}{random} \PY{k}{import} \PY{n}{randint}
+         
+         \PY{k}{class} \PY{n+nc}{Dice}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+             \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{dices} \PY{o}{=} \PY{l+m+mi}{1}\PY{p}{,} \PY{n}{sides} \PY{o}{=} \PY{l+m+mi}{6}\PY{p}{)}\PY{p}{:}
+                 \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{dices} \PY{o}{=} \PY{n}{dices}
+                 \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{sides} \PY{o}{=} \PY{l+m+mi}{6}
+             
+             \PY{k}{def} \PY{n+nf}{throw}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:}
+                 \PY{k}{return} \PY{n+nb}{sum}\PY{p}{(}\PY{p}{[}\PY{n}{randint}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{sides}\PY{p}{)} \PY{k}{for} \PY{n}{\PYZus{}} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{dices}\PY{p}{)}\PY{p}{]}\PY{p}{)}
 \end{Verbatim}
 
 
+    Rolling one time:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}20}]:} \PY{n}{dice} \PY{o}{=} \PY{n}{Dice}\PY{p}{(}\PY{p}{)}
+         \PY{n}{dice}\PY{o}{.}\PY{n}{throw}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}20}]:} 1
+\end{Verbatim}
+            
     \hypertarget{simple-one-dice-with-six-sides}{%
 \subsubsection{Simple: one dice with six
 sides}\label{simple-one-dice-with-six-sides}}
@@ -484,7 +685,7 @@ sides}\label{simple-one-dice-with-six-sides}}
 uniformly distributed probabilities.
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}34}]:} \PY{n}{dice} \PY{o}{=} \PY{n}{Dice}\PY{p}{(}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}21}]:} \PY{n}{dice} \PY{o}{=} \PY{n}{Dice}\PY{p}{(}\PY{p}{)}
          \PY{n}{sides} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{*} \PY{n}{dice}\PY{o}{.}\PY{n}{dices} \PY{o}{*} \PY{n}{dice}\PY{o}{.}\PY{n}{sides}
          \PY{n}{N} \PY{o}{=} \PY{l+m+mi}{10000}
          \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{N}\PY{p}{)}\PY{p}{:} \PY{n}{sides}\PY{p}{[}\PY{n}{dice}\PY{o}{.}\PY{n}{throw}\PY{p}{(}\PY{p}{)}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
@@ -494,7 +695,7 @@ uniformly distributed probabilities.
 
 
     \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_24_0.png}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_56_0.png}
     \end{center}
     { \hspace*{\fill} \\}
     
@@ -506,7 +707,7 @@ sides}\label{advanced-two-dice-with-four-sides}}
 This will give normally distributed probabilities.
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}35}]:} \PY{n}{dice} \PY{o}{=} \PY{n}{Dice}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{4}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}22}]:} \PY{n}{dice} \PY{o}{=} \PY{n}{Dice}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{4}\PY{p}{)}
          \PY{n}{sides} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{*} \PY{n}{dice}\PY{o}{.}\PY{n}{dices} \PY{o}{*} \PY{n}{dice}\PY{o}{.}\PY{n}{sides}
          \PY{n}{N} \PY{o}{=} \PY{l+m+mi}{10000}
          \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{N}\PY{p}{)}\PY{p}{:} \PY{n}{sides}\PY{p}{[}\PY{n}{dice}\PY{o}{.}\PY{n}{throw}\PY{p}{(}\PY{p}{)}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{]} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
@@ -516,12 +717,15 @@ This will give normally distributed probabilities.
 
 
     \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_27_0.png}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_59_0.png}
     \end{center}
     { \hspace*{\fill} \\}
     
-    \hypertarget{simulation}{%
-\subsection{Simulation}\label{simulation}}
+    \hypertarget{monopoly-simulation}{%
+\subsection{Monopoly simulation}\label{monopoly-simulation}}
+
+    \hypertarget{algorithm}{%
+\subsubsection{Algorithm}\label{algorithm}}
 
     Here we are going to simulate a game for \(N\) amount of rounds. The
 game algorithm is simple:
@@ -530,7 +734,7 @@ game algorithm is simple:
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  Roll the dice
+  Roll the dices (there are \(2\) dices with \(6\) squares)
 \item
   Move to the new position
 \item
@@ -543,6 +747,10 @@ game algorithm is simple:
   Check and handle chance
 \end{enumerate}
 
+    \hypertarget{modulo-arithmetic-for-position-tracking}{%
+\subsubsection{Modulo arithmetic for position
+tracking}\label{modulo-arithmetic-for-position-tracking}}
+
     We can easily keep track of our position with modulo arithemetic. Let
 \(C\) be our position (or \texttt{index}), \(d\) the result from
 throwing the dice, and \(n\) the current round. To determine our new
@@ -550,59 +758,60 @@ position we calculate:
 
 \[ C_{n+1} \equiv C_n+d \pmod{40}\]
 
+    The modulo is \(40\) because that are the total amount of squares.
+
+    \hypertarget{implementation}{%
+\subsubsection{Implementation}\label{implementation}}
+
+    Below is the implementation for the Monopoly simulation.
+
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}59}]:} \PY{o}{\PYZpc{}\PYZpc{}}\PY{k}{time}
-         dice = Dice()
-         community\PYZus{}deck = CommunityDeck()
-         chance\PYZus{}deck = ChanceDeck()
+{\color{incolor}In [{\color{incolor}23}]:} \PY{n}{dice} \PY{o}{=} \PY{n}{Dice}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{,} \PY{l+m+mi}{6}\PY{p}{)}
+         \PY{n}{community\PYZus{}deck} \PY{o}{=} \PY{n}{CommunityDeck}\PY{p}{(}\PY{p}{)}
+         \PY{n}{chance\PYZus{}deck} \PY{o}{=} \PY{n}{ChanceDeck}\PY{p}{(}\PY{p}{)}
          
-         index = 0
-         total\PYZus{}squares = len(squares\PYZus{}labels)
-         squares = [0] * total\PYZus{}squares
+         \PY{n}{index} \PY{o}{=} \PY{l+m+mi}{0} \PY{c+c1}{\PYZsh{} position}
+         \PY{n}{total\PYZus{}squares} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{squares\PYZus{}labels}\PY{p}{)}
+         \PY{n}{squares} \PY{o}{=} \PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{o}{*} \PY{n}{total\PYZus{}squares}
          
-         rounds = 100000
+         \PY{n}{rounds} \PY{o}{=} \PY{l+m+mi}{1000000}
          
-         for i in range(rounds):
+         \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{rounds}\PY{p}{)}\PY{p}{:}
              
-             \PYZsh{} Throw the dice and move our position on the board.
-             steps = dice.throw()
-             index = (index + steps) \PYZpc{} total\PYZus{}squares
-             squares[index] += 1
+             \PY{c+c1}{\PYZsh{} Throw the dice and move our position on the board.}
+             \PY{n}{steps} \PY{o}{=} \PY{n}{dice}\PY{o}{.}\PY{n}{throw}\PY{p}{(}\PY{p}{)}
+             \PY{n}{index} \PY{o}{=} \PY{p}{(}\PY{n}{index} \PY{o}{+} \PY{n}{steps}\PY{p}{)} \PY{o}{\PYZpc{}} \PY{n}{total\PYZus{}squares}
+             \PY{n}{squares}\PY{p}{[}\PY{n}{index}\PY{p}{]} \PY{o}{+}\PY{o}{=} \PY{l+m+mi}{1}
              
-             \PYZsh{} We landed on go to jail.
-             if squares\PYZus{}labels[index] is \PYZsq{}gtj\PYZsq{}: 
-                 index = squares\PYZus{}labels.index(\PYZsq{}jail\PYZsq{})
+             \PY{c+c1}{\PYZsh{} We landed on go to jail.}
+             \PY{k}{if} \PY{n}{squares\PYZus{}labels}\PY{p}{[}\PY{n}{index}\PY{p}{]} \PY{o+ow}{is} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gtj}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} 
+                 \PY{n}{index} \PY{o}{=} \PY{n}{squares\PYZus{}labels}\PY{o}{.}\PY{n}{index}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{jail}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
              
-             \PYZsh{} We landed on the community card.
-             if squares\PYZus{}labels[index] in [\PYZsq{}cc1\PYZsq{}, \PYZsq{}cc2\PYZsq{}, \PYZsq{}cc3\PYZsq{}]:
-                 card = community\PYZus{}deck.draw\PYZus{}card()
-                 if card is \PYZsq{}gtg\PYZsq{}: index = squares\PYZus{}labels.index(\PYZsq{}start\PYZsq{})
-                 if card is \PYZsq{}gtj\PYZsq{}: index = squares\PYZus{}labels.index(\PYZsq{}jail\PYZsq{})
-                 if card is \PYZsq{}gb2\PYZsq{}: 
-                     if index \PYZgt{}= 2: index \PYZhy{}= 2
-                     if index \PYZlt{} 2: index = total\PYZus{}squares\PYZhy{}abs(index\PYZhy{}2)\PYZhy{}1
+             \PY{c+c1}{\PYZsh{} We landed on the community card.}
+             \PY{k}{if} \PY{n}{squares\PYZus{}labels}\PY{p}{[}\PY{n}{index}\PY{p}{]} \PY{o+ow}{in} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{cc1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{cc2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{cc3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{:}
+                 \PY{n}{card} \PY{o}{=} \PY{n}{community\PYZus{}deck}\PY{o}{.}\PY{n}{draw\PYZus{}card}\PY{p}{(}\PY{p}{)}
+                 \PY{k}{if} \PY{n}{card} \PY{o+ow}{is} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gtg}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{index} \PY{o}{=} \PY{n}{squares\PYZus{}labels}\PY{o}{.}\PY{n}{index}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{start}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+                 \PY{k}{if} \PY{n}{card} \PY{o+ow}{is} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gtj}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{index} \PY{o}{=} \PY{n}{squares\PYZus{}labels}\PY{o}{.}\PY{n}{index}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{jail}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+                 \PY{k}{if} \PY{n}{card} \PY{o+ow}{is} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gb2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} 
+                     \PY{k}{if} \PY{n}{index} \PY{o}{\PYZgt{}}\PY{o}{=} \PY{l+m+mi}{2}\PY{p}{:} \PY{n}{index} \PY{o}{\PYZhy{}}\PY{o}{=} \PY{l+m+mi}{2}
+                     \PY{k}{if} \PY{n}{index} \PY{o}{\PYZlt{}} \PY{l+m+mi}{2}\PY{p}{:} \PY{n}{index} \PY{o}{=} \PY{n}{total\PYZus{}squares}\PY{o}{\PYZhy{}}\PY{n+nb}{abs}\PY{p}{(}\PY{n}{index}\PY{o}{\PYZhy{}}\PY{l+m+mi}{2}\PY{p}{)}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}
              
-             \PYZsh{} We landed on the chance card.
-             if squares\PYZus{}labels[index] in [\PYZsq{}c1\PYZsq{}, \PYZsq{}c2\PYZsq{}, \PYZsq{}c3\PYZsq{}]:
-                 card = chance\PYZus{}deck.draw\PYZus{}card()
-                 if card is \PYZsq{}gtg\PYZsq{}: index = squares\PYZus{}labels.index(\PYZsq{}start\PYZsq{})
-                 if card is \PYZsq{}gtj\PYZsq{}: index = squares\PYZus{}labels.index(\PYZsq{}jail\PYZsq{})
-                 if card is \PYZsq{}r3\PYZsq{}: index = squares\PYZus{}labels.index(\PYZsq{}r3\PYZsq{})
-                 if card is \PYZsq{}gb3\PYZsq{}:
-                     if index \PYZgt{}= 2: index \PYZhy{}= 2
-                     if index \PYZlt{} 2: index = total\PYZus{}squares\PYZhy{}abs(index\PYZhy{}3)\PYZhy{}1
+             \PY{c+c1}{\PYZsh{} We landed on the chance card.}
+             \PY{k}{if} \PY{n}{squares\PYZus{}labels}\PY{p}{[}\PY{n}{index}\PY{p}{]} \PY{o+ow}{in} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{c1}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{c2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{c3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{:}
+                 \PY{n}{card} \PY{o}{=} \PY{n}{chance\PYZus{}deck}\PY{o}{.}\PY{n}{draw\PYZus{}card}\PY{p}{(}\PY{p}{)}
+                 \PY{k}{if} \PY{n}{card} \PY{o+ow}{is} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gtg}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{index} \PY{o}{=} \PY{n}{squares\PYZus{}labels}\PY{o}{.}\PY{n}{index}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{start}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+                 \PY{k}{if} \PY{n}{card} \PY{o+ow}{is} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gtj}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{index} \PY{o}{=} \PY{n}{squares\PYZus{}labels}\PY{o}{.}\PY{n}{index}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{jail}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+                 \PY{k}{if} \PY{n}{card} \PY{o+ow}{is} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:} \PY{n}{index} \PY{o}{=} \PY{n}{squares\PYZus{}labels}\PY{o}{.}\PY{n}{index}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+                 \PY{k}{if} \PY{n}{card} \PY{o+ow}{is} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gb3}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:}
+                     \PY{k}{if} \PY{n}{index} \PY{o}{\PYZgt{}}\PY{o}{=} \PY{l+m+mi}{3}\PY{p}{:} \PY{n}{index} \PY{o}{\PYZhy{}}\PY{o}{=} \PY{l+m+mi}{3}
+                     \PY{k}{if} \PY{n}{index} \PY{o}{\PYZlt{}} \PY{l+m+mi}{3}\PY{p}{:} \PY{n}{index} \PY{o}{=} \PY{n}{total\PYZus{}squares}\PY{o}{\PYZhy{}}\PY{n+nb}{abs}\PY{p}{(}\PY{n}{index}\PY{o}{\PYZhy{}}\PY{l+m+mi}{3}\PY{p}{)}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}
 \end{Verbatim}
 
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-Wall time: 274 ms
+    It takes around \(2.7\) seconds to run a game when \(N=1,000,000\).
 
-    \end{Verbatim}
-
-    It takes around \(2.74\) seconds to run a game when \(N=1,000,000\).
-
-    \hypertarget{analysis}{%
-\subsection{Analysis}\label{analysis}}
+    \hypertarget{probability-statistics}{%
+\subsection{Probability statistics}\label{probability-statistics}}
 
     Now we can proceed to analyze our results.
 
@@ -615,20 +824,32 @@ the probabilities. The probability that a square is visited is:
 
 \[ P(\bar{x}=x) = \dfrac{\text{Times visited}}{\text{# of rounds}} \]
 
+    We can calculate the expected value for each square in terms of money
+with:
+
+    \[ E(\bar{k}) = P(\bar{x}=x)\cdot\text{Rent} \]
+
+    We also want to create a \texttt{DataFrame} in Python to easily keep
+track of everything.
+
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}23}]:} \PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+{\color{incolor}In [{\color{incolor}24}]:} \PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
          \PY{n}{df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{index}\PY{o}{=}\PY{n+nb}{range}\PY{p}{(}\PY{n}{total\PYZus{}squares}\PY{p}{)}\PY{p}{)}
          \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Square}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{squares\PYZus{}labels}
          \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Description}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{squares\PYZus{}description}
+         \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Purchasable}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{squares\PYZus{}purchasable}
+         \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Rent}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{squares\PYZus{}rent}
          \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visited}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{squares}
          \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visited}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{/} \PY{n}{rounds}
+         \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Aggregate}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{squares\PYZus{}aggregate}
+         \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Expected Value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{*} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Rent}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
 \end{Verbatim}
 
 
     We can calculate a quick summary about the data:
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}12}]:} \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Total rounds: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{rounds}\PY{p}{)}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}25}]:} \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Total rounds: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{rounds}\PY{p}{)}\PY{p}{)}
          \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visited avg:  }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visited}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{)}
          \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visited min:  }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visited}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{min}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{)}
          \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visited max:  }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Visited}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{max}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{)}
@@ -639,27 +860,33 @@ the probabilities. The probability that a square is visited is:
     \begin{Verbatim}[commandchars=\\\{\}]
 Total rounds: 1000000
 Visited avg:  25000.0
-Visited min:  18182
-Visited max:  33779
-Visited std:  4586.79
+Visited min:  21903
+Visited max:  28735
+Visited std:  2157.12
 
     \end{Verbatim}
+
+    \hypertarget{plot-of-probabilities-by-square}{%
+\subsubsection{Plot of probabilities by
+square}\label{plot-of-probabilities-by-square}}
 
     If we sort these values descending on the probability, we can easily see
 which squares have the highest probability to be visited.
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}53}]:} \PY{n}{plt}\PY{o}{.}\PY{n}{rc}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{xtick}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{labelsize}\PY{o}{=}\PY{l+m+mi}{16}\PY{p}{)} 
+{\color{incolor}In [{\color{incolor}26}]:} \PY{n}{plt}\PY{o}{.}\PY{n}{rc}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{xtick}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{labelsize}\PY{o}{=}\PY{l+m+mi}{16}\PY{p}{)} 
          \PY{n}{plt}\PY{o}{.}\PY{n}{rc}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ytick}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{labelsize}\PY{o}{=}\PY{l+m+mi}{14}\PY{p}{)} 
-         \PY{n}{df}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Description}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{kind}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bar}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{20}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{)}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{xticks}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{n}{total\PYZus{}squares}\PY{p}{)}\PY{p}{,} \PY{n}{df}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Description}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Description}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+         \PY{n}{df}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Description}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PYZbs{}
+             \PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{kind}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bar}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{20}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{)}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{xticks}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{n}{total\PYZus{}squares}\PY{p}{)}\PY{p}{,} \PY{n}{df}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Description}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}
+             \PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Description}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
          \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability by label}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{;}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability by Square}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{;}
 \end{Verbatim}
 
 
     \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_41_0.png}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_82_0.png}
     \end{center}
     { \hspace*{\fill} \\}
     
@@ -667,56 +894,102 @@ which squares have the highest probability to be visited.
 Also notice that \texttt{Orange\ 2} and \texttt{Orange\ 3} are pretty
 high. It seems that \texttt{Orange} is the best street to have.
 
+\hypertarget{table-of-probabilities-by-square}{%
+\subsubsection{Table of probabilities by
+square}\label{table-of-probabilities-by-square}}
+
 Below is the full table with all the squares and their corresponding
 values.
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}13}]:} \PY{n}{df}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}27}]:} \PY{n}{df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Square}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Expected Value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
 \end{Verbatim}
 
 
 \begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}13}]:}    Square        Description  Visited  Probability
-         16     o1           Orange 1    33779     0.033779
-         15    ts2    Train Station 2    31280     0.031280
-         21     r1              Red 1    30297     0.030297
-         17    cc2  Community Chest 2    30102     0.030102
-         22     c2           Chance 2    29950     0.029950
-         19     o3           Orange 3    29922     0.029922
-         14     p3           Purple 3    29811     0.029811
-         20      p       Free Parking    29746     0.029746
-         30    gtj         Go to Jail    29497     0.029497
-         25    ts3    Train Station 3    29247     0.029247
-         29     y3           Yellow 3    29199     0.029199
-         18     o2           Orange 2    29004     0.029004
-         26     y1           Yellow 1    28909     0.028909
-         27     y2           Yellow 2    28854     0.028854
-         24     r3              Red 3    28662     0.028662
-         28     ww        Water Works    28429     0.028429
-         23     r2              Red 2    28149     0.028149
-         13     p2           Purple 2    27817     0.027817
-         12     ec   Electric Company    26865     0.026865
-         11     p1           Purple 1    26178     0.026178
-         31     g1            Green 1    24094     0.024094
-         32     g2            Green 2    23481     0.023481
-         33    cc3  Community Chest 3    22782     0.022782
-         6     lb1       Light Blue 1    21592     0.021592
-         3      b2            Brown 2    21247     0.021247
-         5      t1    Train Station 1    21130     0.021130
-         4      it         Income Tax    20946     0.020946
-         34     g3            Green 3    20794     0.020794
-         7      c1           Chance 1    20571     0.020571
-         2     cc1  Community Chest 1    20382     0.020382
-         37    db1        Dark Blue 1    20377     0.020377
-         10   jail               Jail    20358     0.020358
-         1      b1            Brown 1    20325     0.020325
-         38     st          Super Tax    19939     0.019939
-         9     lb3       Light Blue 3    19879     0.019879
-         35    ts4    Train Station 4    19767     0.019767
-         8     lb2       Light Blue 2    19696     0.019696
-         0   start              Start    19414     0.019414
-         39    db2        Dark Blue 2    19347     0.019347
-         36     c3           Chance 3    18182     0.018182
+{\color{outcolor}Out[{\color{outcolor}27}]:}    Square        Description  Purchasable  Rent  Visited  Probability  \textbackslash{}
+         17    cc2  Community Chest 2        False     0    28735     0.028735   
+         18     o2           Orange 2         True    14    28406     0.028406   
+         19     o3           Orange 3         True    16    28161     0.028161   
+         16     o1           Orange 1         True    14    27800     0.027800   
+         20      p       Free Parking        False     0    27657     0.027657   
+         21     r1              Red 1         True    18    27307     0.027307   
+         22     c2           Chance 2        False     0    27151     0.027151   
+         25    ts3    Train Station 3         True    26    27076     0.027076   
+         31     g1            Green 1         True    26    27012     0.027012   
+         28     ww        Water Works         True    14    26836     0.026836   
+         26     y1           Yellow 1         True    22    26813     0.026813   
+         29     y3           Yellow 3         True    24    26693     0.026693   
+         27     y2           Yellow 2         True    22    26673     0.026673   
+         30    gtj         Go to Jail        False     0    26610     0.026610   
+         24     r3              Red 3         True    20    26580     0.026580   
+         15    ts2    Train Station 2         True    16    26553     0.026553   
+         23     r2              Red 2         True    18    26448     0.026448   
+         32     g2            Green 2         True    26    26194     0.026194   
+         33    cc3  Community Chest 3        False     0    25390     0.025390   
+         14     p3           Purple 3         True    12    25162     0.025162   
+         34     g3            Green 3         True    28    24971     0.024971   
+         13     p2           Purple 2         True    10    24392     0.024392   
+         35    ts4    Train Station 4         True    36    24168     0.024168   
+         8     lb2       Light Blue 2         True     6    23450     0.023450   
+         7      c1           Chance 1        False     0    23419     0.023419   
+         12     ec   Electric Company         True    14    23241     0.023241   
+         36     c3           Chance 3        False     0    23224     0.023224   
+         3      b2            Brown 2         True     4    23207     0.023207   
+         6     lb1       Light Blue 1         True     6    23163     0.023163   
+         5      t1    Train Station 1         True     6    23149     0.023149   
+         9     lb3       Light Blue 3         True     8    22946     0.022946   
+         4      it         Income Tax        False     0    22867     0.022867   
+         11     p1           Purple 1         True    10    22740     0.022740   
+         10   jail               Jail        False     0    22674     0.022674   
+         2     cc1  Community Chest 1        False     0    22491     0.022491   
+         1      b1            Brown 1         True     2    22351     0.022351   
+         0   start              Start        False     0    22307     0.022307   
+         38     st          Super Tax        False     0    22091     0.022091   
+         39    db2        Dark Blue 2         True    50    21989     0.021989   
+         37    db1        Dark Blue 1         True    35    21903     0.021903   
+         
+                   Aggregate  Expected Value  
+         17  Community Chest        0.000000  
+         18           Orange        0.397684  
+         19           Orange        0.450576  
+         16           Orange        0.389200  
+         20     Free Parking        0.000000  
+         21              Red        0.491526  
+         22           Chance        0.000000  
+         25    Train Station        0.703976  
+         31            Green        0.702312  
+         28        Utilities        0.375704  
+         26           Yellow        0.589886  
+         29           Yellow        0.640632  
+         27           Yellow        0.586806  
+         30       Go to Jail        0.000000  
+         24              Red        0.531600  
+         15    Train Station        0.424848  
+         23              Red        0.476064  
+         32            Green        0.681044  
+         33  Community Chest        0.000000  
+         14           Purple        0.301944  
+         34            Green        0.699188  
+         13           Purple        0.243920  
+         35    Train Station        0.870048  
+         8        Light Blue        0.140700  
+         7            Chance        0.000000  
+         12        Utilities        0.325374  
+         36           Chance        0.000000  
+         3             Brown        0.092828  
+         6        Light Blue        0.138978  
+         5     Train Station        0.138894  
+         9        Light Blue        0.183568  
+         4        Income Tax        0.000000  
+         11           Purple        0.227400  
+         10             Jail        0.000000  
+         2   Community Chest        0.000000  
+         1             Brown        0.044702  
+         0             Start        0.000000  
+         38        Super Tax        0.000000  
+         39        Dark Blue        1.099450  
+         37        Dark Blue        0.766605  
 \end{Verbatim}
             
     \hypertarget{top-10-highest-probability-squares}{%
@@ -724,25 +997,505 @@ values.
 squares}\label{top-10-highest-probability-squares}}
 
     The top 10 squares that have the highest probability for a player to
-land on them are:
+land on are:
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}58}]:} \PY{n}{df}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}28}]:} \PY{n}{df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Purchasable}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{k+kc}{True}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Square}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Expected Value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PYZbs{}
+             \PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}
 \end{Verbatim}
 
 
 \begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}58}]:}    Square        Description  Visited  Probability
-         16     o1           Orange 1    33806     0.033806
-         15    ts2    Train Station 2    31503     0.031503
-         22     c2           Chance 2    30189     0.030189
-         21     r1              Red 1    30121     0.030121
-         20      p       Free Parking    30118     0.030118
-         17    cc2  Community Chest 2    29895     0.029895
-         14     p3           Purple 3    29739     0.029739
-         29     y3           Yellow 3    29614     0.029614
-         30    gtj         Go to Jail    29486     0.029486
-         19     o3           Orange 3    29284     0.029284
+{\color{outcolor}Out[{\color{outcolor}28}]:}    Square      Description  Purchasable  Rent  Visited  Probability  \textbackslash{}
+         18     o2         Orange 2         True    14    28406     0.028406   
+         19     o3         Orange 3         True    16    28161     0.028161   
+         16     o1         Orange 1         True    14    27800     0.027800   
+         21     r1            Red 1         True    18    27307     0.027307   
+         25    ts3  Train Station 3         True    26    27076     0.027076   
+         31     g1          Green 1         True    26    27012     0.027012   
+         28     ww      Water Works         True    14    26836     0.026836   
+         26     y1         Yellow 1         True    22    26813     0.026813   
+         29     y3         Yellow 3         True    24    26693     0.026693   
+         27     y2         Yellow 2         True    22    26673     0.026673   
+         
+                 Aggregate  Expected Value  
+         18         Orange        0.397684  
+         19         Orange        0.450576  
+         16         Orange        0.389200  
+         21            Red        0.491526  
+         25  Train Station        0.703976  
+         31          Green        0.702312  
+         28      Utilities        0.375704  
+         26         Yellow        0.589886  
+         29         Yellow        0.640632  
+         27         Yellow        0.586806  
+\end{Verbatim}
+            
+    The total probability for all 10 squares is:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}29}]:} \PY{n}{df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Purchasable}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{k+kc}{True}\PY{p}{]}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PYZbs{}
+             \PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}29}]:} 0.27277699999999999
+\end{Verbatim}
+            
+    \hypertarget{plot-of-expected-value-per-turn}{%
+\subsubsection{Plot of expected value per
+turn}\label{plot-of-expected-value-per-turn}}
+
+    Now we want to know how much each square generates per turn with the
+found probabilities and the rent the player needs to pay when we land on
+it. First we make a selection to only get the purchasable squares.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}30}]:} \PY{n}{rentable\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Purchasable}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{k+kc}{True}\PY{p}{]}\PY{p}{)}\PY{o}{.}\PY{n}{reindex}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    Plotting this gives:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}31}]:} \PY{n}{plt}\PY{o}{.}\PY{n}{rc}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{xtick}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{labelsize}\PY{o}{=}\PY{l+m+mi}{16}\PY{p}{)} 
+         \PY{n}{plt}\PY{o}{.}\PY{n}{rc}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ytick}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{labelsize}\PY{o}{=}\PY{l+m+mi}{14}\PY{p}{)} 
+         \PY{n}{rentable\PYZus{}df}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Description}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Expected Value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Expected Value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PYZbs{}
+             \PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{kind}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bar}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{14}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{)}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{xticks}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{rentable\PYZus{}df}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{n}{rentable\PYZus{}df}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Description}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Expected Value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}
+             \PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Expected Value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Description}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Expected Value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Expected Value by Square}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_94_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \hypertarget{table-of-expected-value-per-turn}{%
+\subsubsection{Table of expected value per
+turn}\label{table-of-expected-value-per-turn}}
+
+    The full table of expected values is below.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}32}]:} \PY{n}{rentable\PYZus{}df}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Expected Value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}32}]:}    Square       Description  Purchasable  Rent  Visited  Probability  \textbackslash{}
+         39    db2       Dark Blue 2         True    50    21989     0.021989   
+         35    ts4   Train Station 4         True    36    24168     0.024168   
+         37    db1       Dark Blue 1         True    35    21903     0.021903   
+         25    ts3   Train Station 3         True    26    27076     0.027076   
+         31     g1           Green 1         True    26    27012     0.027012   
+         34     g3           Green 3         True    28    24971     0.024971   
+         32     g2           Green 2         True    26    26194     0.026194   
+         29     y3          Yellow 3         True    24    26693     0.026693   
+         26     y1          Yellow 1         True    22    26813     0.026813   
+         27     y2          Yellow 2         True    22    26673     0.026673   
+         24     r3             Red 3         True    20    26580     0.026580   
+         21     r1             Red 1         True    18    27307     0.027307   
+         23     r2             Red 2         True    18    26448     0.026448   
+         19     o3          Orange 3         True    16    28161     0.028161   
+         15    ts2   Train Station 2         True    16    26553     0.026553   
+         18     o2          Orange 2         True    14    28406     0.028406   
+         16     o1          Orange 1         True    14    27800     0.027800   
+         28     ww       Water Works         True    14    26836     0.026836   
+         12     ec  Electric Company         True    14    23241     0.023241   
+         14     p3          Purple 3         True    12    25162     0.025162   
+         13     p2          Purple 2         True    10    24392     0.024392   
+         11     p1          Purple 1         True    10    22740     0.022740   
+         9     lb3      Light Blue 3         True     8    22946     0.022946   
+         8     lb2      Light Blue 2         True     6    23450     0.023450   
+         6     lb1      Light Blue 1         True     6    23163     0.023163   
+         5      t1   Train Station 1         True     6    23149     0.023149   
+         3      b2           Brown 2         True     4    23207     0.023207   
+         1      b1           Brown 1         True     2    22351     0.022351   
+         
+                 Aggregate  Expected Value  
+         39      Dark Blue        1.099450  
+         35  Train Station        0.870048  
+         37      Dark Blue        0.766605  
+         25  Train Station        0.703976  
+         31          Green        0.702312  
+         34          Green        0.699188  
+         32          Green        0.681044  
+         29         Yellow        0.640632  
+         26         Yellow        0.589886  
+         27         Yellow        0.586806  
+         24            Red        0.531600  
+         21            Red        0.491526  
+         23            Red        0.476064  
+         19         Orange        0.450576  
+         15  Train Station        0.424848  
+         18         Orange        0.397684  
+         16         Orange        0.389200  
+         28      Utilities        0.375704  
+         12      Utilities        0.325374  
+         14         Purple        0.301944  
+         13         Purple        0.243920  
+         11         Purple        0.227400  
+         9      Light Blue        0.183568  
+         8      Light Blue        0.140700  
+         6      Light Blue        0.138978  
+         5   Train Station        0.138894  
+         3           Brown        0.092828  
+         1           Brown        0.044702  
+\end{Verbatim}
+            
+    \hypertarget{grouped-probability-statistics}{%
+\subsection{Grouped probability
+statistics}\label{grouped-probability-statistics}}
+
+    We want to answer the following questions:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  What are the best streets to have?
+\item
+  What is the probability to be in jail?
+\item
+  What is the probability to draw a card?
+\end{enumerate}
+
+    \hypertarget{aggregating-grouping-by}{%
+\subsubsection{Aggregating (grouping
+by)}\label{aggregating-grouping-by}}
+
+    To find what the probabilities are per street, chance, community chest,
+etc., we are going to aggregate the possibilities.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}33}]:} \PY{n}{aggregated\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{df}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Aggregate}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{reset\PYZus{}index}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    Now we plot the aggregated probabilities.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}34}]:} \PY{n}{plt}\PY{o}{.}\PY{n}{rc}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{xtick}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{labelsize}\PY{o}{=}\PY{l+m+mi}{16}\PY{p}{)} 
+         \PY{n}{plt}\PY{o}{.}\PY{n}{rc}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ytick}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{labelsize}\PY{o}{=}\PY{l+m+mi}{14}\PY{p}{)} 
+         \PY{n}{aggregated\PYZus{}df}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Aggregate}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PYZbs{}
+             \PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{kind}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bar}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{)}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{xticks}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{aggregated\PYZus{}df}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{n}{aggregated\PYZus{}df}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Aggregate}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}
+             \PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Aggregate}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability by Group}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_104_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \hypertarget{overview-of-probabilities-by-group}{%
+\subsubsection{Overview of probabilities by
+group}\label{overview-of-probabilities-by-group}}
+
+    A total overview of all the probabilities can be found in the table
+below:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}35}]:} \PY{n}{aggregated\PYZus{}df}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}35}]:}           Aggregate  Probability
+         15    Train Station     0.100946
+         10           Orange     0.084367
+         12              Red     0.080335
+         17           Yellow     0.080179
+         6             Green     0.078177
+         2   Community Chest     0.076616
+         1            Chance     0.073794
+         11           Purple     0.072294
+         9        Light Blue     0.069559
+         16        Utilities     0.050077
+         0             Brown     0.045558
+         3         Dark Blue     0.043892
+         4      Free Parking     0.027657
+         5        Go to Jail     0.026610
+         7        Income Tax     0.022867
+         8              Jail     0.022674
+         13            Start     0.022307
+         14        Super Tax     0.022091
+\end{Verbatim}
+            
+    \hypertarget{plot-of-expected-values-by-aggregate}{%
+\subsubsection{Plot of expected values by
+aggregate}\label{plot-of-expected-values-by-aggregate}}
+
+    If we find the expected values by each aggregate we can find out which
+group generated the most money per turn.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}36}]:} \PY{n}{aggregated\PYZus{}ev\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Purchasable}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{k+kc}{True}\PY{p}{]}\PY{o}{.}\PY{n}{groupby}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Aggregate}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Expected Value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{reset\PYZus{}index}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    Plotting this gives:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}37}]:} \PY{n}{plt}\PY{o}{.}\PY{n}{rc}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{xtick}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{labelsize}\PY{o}{=}\PY{l+m+mi}{16}\PY{p}{)} 
+         \PY{n}{plt}\PY{o}{.}\PY{n}{rc}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ytick}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{labelsize}\PY{o}{=}\PY{l+m+mi}{14}\PY{p}{)} 
+         \PY{n}{aggregated\PYZus{}ev\PYZus{}df}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Aggregate}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Expected Value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Expected Value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PYZbs{}
+             \PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{kind}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bar}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{,}\PY{l+m+mi}{4}\PY{p}{)}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{xticks}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{aggregated\PYZus{}ev\PYZus{}df}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{n}{aggregated\PYZus{}ev\PYZus{}df}\PY{p}{[}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Aggregate}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Expected Value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{]}
+             \PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Expected Value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Aggregate}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Expected Value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Expected Value by Group}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_112_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    We can conclude that the \texttt{Train\ Station} yields the most. This
+are however \(4\) squares. The best street to have is \texttt{Green}.
+
+    \hypertarget{table-of-expected-values-by-aggregate}{%
+\subsubsection{Table of expected values by
+aggregate}\label{table-of-expected-values-by-aggregate}}
+
+    A full table of expected values can be found below
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}38}]:} \PY{n}{aggregated\PYZus{}ev\PYZus{}df}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Expected Value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}38}]:}        Aggregate  Expected Value
+         7  Train Station        2.137766
+         2          Green        2.082544
+         1      Dark Blue        1.866055
+         9         Yellow        1.817324
+         6            Red        1.499190
+         4         Orange        1.237460
+         5         Purple        0.773264
+         8      Utilities        0.701078
+         3     Light Blue        0.463246
+         0          Brown        0.137530
+\end{Verbatim}
+            
+    \hypertarget{train-station-probabilities}{%
+\subsubsection{Train station
+probabilities}\label{train-station-probabilities}}
+
+    We can conclude that \texttt{Train\ Station} has the highest probability
+to land on. However, we need to take into account that there are four
+squares to land on.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}39}]:} \PY{n}{df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Aggregate}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Train Station}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Square}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Expected Value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}39}]:}    Square      Description  Purchasable  Rent  Visited  Probability  \textbackslash{}
+         25    ts3  Train Station 3         True    26    27076     0.027076   
+         15    ts2  Train Station 2         True    16    26553     0.026553   
+         35    ts4  Train Station 4         True    36    24168     0.024168   
+         5      t1  Train Station 1         True     6    23149     0.023149   
+         
+                 Aggregate  Expected Value  
+         25  Train Station        0.703976  
+         15  Train Station        0.424848  
+         35  Train Station        0.870048  
+         5   Train Station        0.138894  
+\end{Verbatim}
+            
+    \hypertarget{probability-to-be-in-jail}{%
+\subsubsection{Probability to be in
+jail}\label{probability-to-be-in-jail}}
+
+    To find the total probability to be in jail, we need to take into
+account that:
+
+\begin{itemize}
+\tightlist
+\item
+  We can land on jail.
+\item
+  We can land on go to jail.
+\item
+  There is one community card which sends you to jail.
+\item
+  There is one chance card which sends you to jail.
+\end{itemize}
+
+Each deck has \(16\) cards, therefore the probability to draw go to jail
+is \(P(\bar{x}=\text{go to jail})=\dfrac{1}{16}\).
+
+\[P(\bar{x}=\text{in jail}) = P(\bar{x}=\text{jail}) + P(\bar{x}=\text{go to jail}) + \dfrac{1}{16}\left[ P(\bar{x}=\text{community chest}) + P(\bar{x}=\text{chance})\right] \]
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}40}]:} \PY{n}{P\PYZus{}jail}           \PY{o}{=} \PY{n+nb}{sum}\PY{p}{(}\PY{n}{aggregated\PYZus{}df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{aggregated\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Aggregate}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Jail}\PY{l+s+s1}{\PYZsq{}}           \PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+         \PY{n}{P\PYZus{}go\PYZus{}to\PYZus{}jail}     \PY{o}{=} \PY{n+nb}{sum}\PY{p}{(}\PY{n}{aggregated\PYZus{}df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{aggregated\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Aggregate}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Go to Jail}\PY{l+s+s1}{\PYZsq{}}     \PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+         \PY{n}{P\PYZus{}community\PYZus{}card} \PY{o}{=} \PY{n+nb}{sum}\PY{p}{(}\PY{n}{aggregated\PYZus{}df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{aggregated\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Aggregate}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Community Chest}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+         \PY{n}{P\PYZus{}chance\PYZus{}card}    \PY{o}{=} \PY{n+nb}{sum}\PY{p}{(}\PY{n}{aggregated\PYZus{}df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{aggregated\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Aggregate}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Chance}\PY{l+s+s1}{\PYZsq{}}         \PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}41}]:} \PY{n}{P\PYZus{}jail} \PY{o}{+} \PY{n}{P\PYZus{}go\PYZus{}to\PYZus{}jail} \PY{o}{+} \PY{l+m+mi}{1}\PY{o}{/}\PY{l+m+mi}{16} \PY{o}{*} \PY{p}{(}\PY{n}{P\PYZus{}community\PYZus{}card} \PY{o}{+} \PY{n}{P\PYZus{}chance\PYZus{}card}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}41}]:} 0.058684625000000004
+\end{Verbatim}
+            
+    \hypertarget{probability-to-draw-a-card}{%
+\subsubsection{Probability to draw a
+card}\label{probability-to-draw-a-card}}
+
+    To find the probability to draw a card, we simply calculate:
+
+\[ P(\bar{x}=\text{draw a card}) = P(\bar{x}=\text{community chest}) + P(\bar{x}=\text{chance})\]
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}42}]:} \PY{n}{P\PYZus{}community\PYZus{}card} \PY{o}{+} \PY{n}{P\PYZus{}chance\PYZus{}card}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}42}]:} 0.15040999999999999
+\end{Verbatim}
+            
+    Where the probabilities for the community chest square are:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}43}]:} \PY{n}{df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Aggregate}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Community Chest}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Square}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}43}]:}    Square        Description  Purchasable  Rent  Visited  Probability
+         17    cc2  Community Chest 2        False     0    28735     0.028735
+         33    cc3  Community Chest 3        False     0    25390     0.025390
+         2     cc1  Community Chest 1        False     0    22491     0.022491
+\end{Verbatim}
+            
+    And the probabilities for the chance square are:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}44}]:} \PY{n}{df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Aggregate}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Chance}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Square}\PY{l+s+s1}{\PYZsq{}}\PY{p}{:}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}44}]:}    Square Description  Purchasable  Rent  Visited  Probability
+         22     c2    Chance 2        False     0    27151     0.027151
+         7      c1    Chance 1        False     0    23419     0.023419
+         36     c3    Chance 3        False     0    23224     0.023224
+\end{Verbatim}
+            
+    \hypertarget{conclusion}{%
+\subsection{Conclusion}\label{conclusion}}
+
+    We saw the expected values per turn for each square. Buying them should
+be done with the following priority:
+
+    \hypertarget{top-10-streets}{%
+\subsubsection{Top 10 streets}\label{top-10-streets}}
+
+A table of the top 10 squares by expected value.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}45}]:} \PY{n}{df}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Expected Value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}45}]:}    Square      Description  Purchasable  Rent  Visited  Probability  \textbackslash{}
+         39    db2      Dark Blue 2         True    50    21989     0.021989   
+         35    ts4  Train Station 4         True    36    24168     0.024168   
+         37    db1      Dark Blue 1         True    35    21903     0.021903   
+         25    ts3  Train Station 3         True    26    27076     0.027076   
+         31     g1          Green 1         True    26    27012     0.027012   
+         34     g3          Green 3         True    28    24971     0.024971   
+         32     g2          Green 2         True    26    26194     0.026194   
+         29     y3         Yellow 3         True    24    26693     0.026693   
+         26     y1         Yellow 1         True    22    26813     0.026813   
+         27     y2         Yellow 2         True    22    26673     0.026673   
+         
+                 Aggregate  Expected Value  
+         39      Dark Blue        1.099450  
+         35  Train Station        0.870048  
+         37      Dark Blue        0.766605  
+         25  Train Station        0.703976  
+         31          Green        0.702312  
+         34          Green        0.699188  
+         32          Green        0.681044  
+         29         Yellow        0.640632  
+         26         Yellow        0.589886  
+         27         Yellow        0.586806  
+\end{Verbatim}
+            
+    \hypertarget{top-10-groups}{%
+\subsubsection{Top 10 groups}\label{top-10-groups}}
+
+A table of the top 10 groups by expected value.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}46}]:} \PY{n}{aggregated\PYZus{}ev\PYZus{}df}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Expected Value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}46}]:}        Aggregate  Expected Value
+         7  Train Station        2.137766
+         2          Green        2.082544
+         1      Dark Blue        1.866055
+         9         Yellow        1.817324
+         6            Red        1.499190
+         4         Orange        1.237460
+         5         Purple        0.773264
+         8      Utilities        0.701078
+         3     Light Blue        0.463246
+         0          Brown        0.137530
+\end{Verbatim}
+            
+    \hypertarget{probability-to-go-to-jail}{%
+\subsubsection{Probability to go to
+jail}\label{probability-to-go-to-jail}}
+
+    The probability to go to jail is:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}47}]:} \PY{n}{P\PYZus{}jail} \PY{o}{+} \PY{n}{P\PYZus{}go\PYZus{}to\PYZus{}jail} \PY{o}{+} \PY{l+m+mi}{1}\PY{o}{/}\PY{l+m+mi}{16} \PY{o}{*} \PY{p}{(}\PY{n}{P\PYZus{}community\PYZus{}card} \PY{o}{+} \PY{n}{P\PYZus{}chance\PYZus{}card}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}47}]:} 0.058684625000000004
+\end{Verbatim}
+            
+    \hypertarget{probability-to-draw-a-card}{%
+\subsubsection{Probability to draw a
+card}\label{probability-to-draw-a-card}}
+
+    The probability to draw a card is:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}48}]:} \PY{n}{P\PYZus{}community\PYZus{}card} \PY{o}{+} \PY{n}{P\PYZus{}chance\PYZus{}card}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}48}]:} 0.15040999999999999
 \end{Verbatim}
             
 

@@ -1,0 +1,29 @@
+\contentsline {section}{\numberline {1}Monopoly}{3}{section.1}
+\contentsline {subsection}{\numberline {1.1}Squares}{4}{subsection.1.1}
+\contentsline {subsubsection}{\numberline {1.1.1}Labels}{4}{subsubsection.1.1.1}
+\contentsline {subsubsection}{\numberline {1.1.2}Descriptions}{4}{subsubsection.1.1.2}
+\contentsline {subsubsection}{\numberline {1.1.3}Purchasable}{5}{subsubsection.1.1.3}
+\contentsline {subsubsection}{\numberline {1.1.4}Grouping}{5}{subsubsection.1.1.4}
+\contentsline {subsection}{\numberline {1.2}Cards}{6}{subsection.1.2}
+\contentsline {subsubsection}{\numberline {1.2.1}Community cards}{6}{subsubsection.1.2.1}
+\contentsline {subsubsection}{\numberline {1.2.2}Community deck implementation}{7}{subsubsection.1.2.2}
+\contentsline {subsubsection}{\numberline {1.2.3}Chance cards}{8}{subsubsection.1.2.3}
+\contentsline {subsubsection}{\numberline {1.2.4}Chance deck implementation}{9}{subsubsection.1.2.4}
+\contentsline {subsection}{\numberline {1.3}Dice}{10}{subsection.1.3}
+\contentsline {subsubsection}{\numberline {1.3.1}Simple: one dice with six sides}{10}{subsubsection.1.3.1}
+\contentsline {subsubsection}{\numberline {1.3.2}Advanced: two dice with four sides}{11}{subsubsection.1.3.2}
+\contentsline {subsection}{\numberline {1.4}Monopoly simulation}{12}{subsection.1.4}
+\contentsline {subsubsection}{\numberline {1.4.1}Algorithm}{12}{subsubsection.1.4.1}
+\contentsline {subsubsection}{\numberline {1.4.2}Modulo arithmetic for position tracking}{12}{subsubsection.1.4.2}
+\contentsline {subsubsection}{\numberline {1.4.3}Implementation}{12}{subsubsection.1.4.3}
+\contentsline {subsection}{\numberline {1.5}Detailed probability analysis}{14}{subsection.1.5}
+\contentsline {subsubsection}{\numberline {1.5.1}Determining probabilities}{14}{subsubsection.1.5.1}
+\contentsline {subsubsection}{\numberline {1.5.2}Plot of probabilities by square}{14}{subsubsection.1.5.2}
+\contentsline {subsubsection}{\numberline {1.5.3}Table of probabilities by square}{15}{subsubsection.1.5.3}
+\contentsline {subsubsection}{\numberline {1.5.4}Top 10 highest probability squares}{16}{subsubsection.1.5.4}
+\contentsline {subsection}{\numberline {1.6}High-level probability analysis}{17}{subsection.1.6}
+\contentsline {subsubsection}{\numberline {1.6.1}Aggregating (grouping by)}{17}{subsubsection.1.6.1}
+\contentsline {subsubsection}{\numberline {1.6.2}Overview of all the probabilities by aggregate}{18}{subsubsection.1.6.2}
+\contentsline {subsubsection}{\numberline {1.6.3}Train station probabilities}{18}{subsubsection.1.6.3}
+\contentsline {subsubsection}{\numberline {1.6.4}Probability to be in jail}{18}{subsubsection.1.6.4}
+\contentsline {subsubsection}{\numberline {1.6.5}Probability to draw a card}{19}{subsubsection.1.6.5}

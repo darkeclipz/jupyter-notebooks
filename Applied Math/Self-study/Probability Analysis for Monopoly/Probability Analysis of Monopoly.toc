@@ -1,0 +1,41 @@
+\contentsline {section}{\numberline {1}Goal}{4}{section.1}
+\contentsline {section}{\numberline {2}Game rules}{4}{section.2}
+\contentsline {subsection}{\numberline {2.1}Squares}{4}{subsection.2.1}
+\contentsline {subsubsection}{\numberline {2.1.1}Labels}{5}{subsubsection.2.1.1}
+\contentsline {subsubsection}{\numberline {2.1.2}Descriptions}{5}{subsubsection.2.1.2}
+\contentsline {subsubsection}{\numberline {2.1.3}Purchasable}{5}{subsubsection.2.1.3}
+\contentsline {subsubsection}{\numberline {2.1.4}Rent}{6}{subsubsection.2.1.4}
+\contentsline {subsubsection}{\numberline {2.1.5}Grouping}{6}{subsubsection.2.1.5}
+\contentsline {subsection}{\numberline {2.2}Cards}{6}{subsection.2.2}
+\contentsline {subsubsection}{\numberline {2.2.1}Community Cards}{7}{subsubsection.2.2.1}
+\contentsline {subsubsection}{\numberline {2.2.2}Community deck implementation}{7}{subsubsection.2.2.2}
+\contentsline {subsubsection}{\numberline {2.2.3}Chance Cards}{8}{subsubsection.2.2.3}
+\contentsline {subsubsection}{\numberline {2.2.4}Chance deck implementation}{9}{subsubsection.2.2.4}
+\contentsline {subsection}{\numberline {2.3}Dice}{9}{subsection.2.3}
+\contentsline {subsubsection}{\numberline {2.3.1}Simple: one dice with six sides}{10}{subsubsection.2.3.1}
+\contentsline {subsubsection}{\numberline {2.3.2}Advanced: two dice with six sides}{11}{subsubsection.2.3.2}
+\contentsline {section}{\numberline {3}Simulated model}{12}{section.3}
+\contentsline {subsection}{\numberline {3.1}Algorithm}{12}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Modulo arithmetic for position tracking}{12}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}Implementation}{13}{subsection.3.3}
+\contentsline {section}{\numberline {4}Probability statistics}{14}{section.4}
+\contentsline {subsection}{\numberline {4.1}Determining probabilities}{14}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}Plot of probabilities by square}{15}{subsection.4.2}
+\contentsline {subsection}{\numberline {4.3}Table of probabilities by square}{15}{subsection.4.3}
+\contentsline {subsection}{\numberline {4.4}Top 10 highest probability squares}{16}{subsection.4.4}
+\contentsline {subsection}{\numberline {4.5}Plot of expected value per turn}{17}{subsection.4.5}
+\contentsline {subsection}{\numberline {4.6}Table of expected value per turn}{18}{subsection.4.6}
+\contentsline {section}{\numberline {5}Grouped probability statistics}{18}{section.5}
+\contentsline {subsection}{\numberline {5.1}Plot of probabilities by group}{18}{subsection.5.1}
+\contentsline {subsection}{\numberline {5.2}Table of probabilities by group}{19}{subsection.5.2}
+\contentsline {subsection}{\numberline {5.3}Plot of expected values by group}{20}{subsection.5.3}
+\contentsline {subsection}{\numberline {5.4}Table of expected values by group}{21}{subsection.5.4}
+\contentsline {section}{\numberline {6}Other probabilities}{21}{section.6}
+\contentsline {subsection}{\numberline {6.1}Train station probabilities}{21}{subsection.6.1}
+\contentsline {subsection}{\numberline {6.2}Probability to be in jail}{22}{subsection.6.2}
+\contentsline {subsection}{\numberline {6.3}Probability to draw a card}{22}{subsection.6.3}
+\contentsline {section}{\numberline {7}Markov matrix model}{23}{section.7}
+\contentsline {subsection}{\numberline {7.1}Probabilities for throwing two dices}{23}{subsection.7.1}
+\contentsline {subsection}{\numberline {7.2}Probabilities for any position}{24}{subsection.7.2}
+\contentsline {subsection}{\numberline {7.3}Stable situation of \(M\)}{27}{subsection.7.3}
+\contentsline {subsection}{\numberline {7.4}Error analysis}{30}{subsection.7.4}

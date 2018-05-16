@@ -1,0 +1,41 @@
+\BOOKMARK [1][-]{section.1}{Goal}{}% 1
+\BOOKMARK [1][-]{section.2}{Game rules}{}% 2
+\BOOKMARK [2][-]{subsection.2.1}{Squares}{section.2}% 3
+\BOOKMARK [3][-]{subsubsection.2.1.1}{Labels}{subsection.2.1}% 4
+\BOOKMARK [3][-]{subsubsection.2.1.2}{Descriptions}{subsection.2.1}% 5
+\BOOKMARK [3][-]{subsubsection.2.1.3}{Purchasable}{subsection.2.1}% 6
+\BOOKMARK [3][-]{subsubsection.2.1.4}{Rent}{subsection.2.1}% 7
+\BOOKMARK [3][-]{subsubsection.2.1.5}{Grouping}{subsection.2.1}% 8
+\BOOKMARK [2][-]{subsection.2.2}{Cards}{section.2}% 9
+\BOOKMARK [3][-]{subsubsection.2.2.1}{Community Cards}{subsection.2.2}% 10
+\BOOKMARK [3][-]{subsubsection.2.2.2}{Community deck implementation}{subsection.2.2}% 11
+\BOOKMARK [3][-]{subsubsection.2.2.3}{Chance Cards}{subsection.2.2}% 12
+\BOOKMARK [3][-]{subsubsection.2.2.4}{Chance deck implementation}{subsection.2.2}% 13
+\BOOKMARK [2][-]{subsection.2.3}{Dice}{section.2}% 14
+\BOOKMARK [3][-]{subsubsection.2.3.1}{Simple: one dice with six sides}{subsection.2.3}% 15
+\BOOKMARK [3][-]{subsubsection.2.3.2}{Advanced: two dice with six sides}{subsection.2.3}% 16
+\BOOKMARK [1][-]{section.3}{Simulated model}{}% 17
+\BOOKMARK [2][-]{subsection.3.1}{Algorithm}{section.3}% 18
+\BOOKMARK [2][-]{subsection.3.2}{Modulo arithmetic for position tracking}{section.3}% 19
+\BOOKMARK [2][-]{subsection.3.3}{Implementation}{section.3}% 20
+\BOOKMARK [1][-]{section.4}{Probability statistics}{}% 21
+\BOOKMARK [2][-]{subsection.4.1}{Determining probabilities}{section.4}% 22
+\BOOKMARK [2][-]{subsection.4.2}{Plot of probabilities by square}{section.4}% 23
+\BOOKMARK [2][-]{subsection.4.3}{Table of probabilities by square}{section.4}% 24
+\BOOKMARK [2][-]{subsection.4.4}{Top 10 highest probability squares}{section.4}% 25
+\BOOKMARK [2][-]{subsection.4.5}{Plot of expected value per turn}{section.4}% 26
+\BOOKMARK [2][-]{subsection.4.6}{Table of expected value per turn}{section.4}% 27
+\BOOKMARK [1][-]{section.5}{Grouped probability statistics}{}% 28
+\BOOKMARK [2][-]{subsection.5.1}{Plot of probabilities by group}{section.5}% 29
+\BOOKMARK [2][-]{subsection.5.2}{Table of probabilities by group}{section.5}% 30
+\BOOKMARK [2][-]{subsection.5.3}{Plot of expected values by group}{section.5}% 31
+\BOOKMARK [2][-]{subsection.5.4}{Table of expected values by group}{section.5}% 32
+\BOOKMARK [1][-]{section.6}{Other probabilities}{}% 33
+\BOOKMARK [2][-]{subsection.6.1}{Train station probabilities}{section.6}% 34
+\BOOKMARK [2][-]{subsection.6.2}{Probability to be in jail}{section.6}% 35
+\BOOKMARK [2][-]{subsection.6.3}{Probability to draw a card}{section.6}% 36
+\BOOKMARK [1][-]{section.7}{Markov matrix model}{}% 37
+\BOOKMARK [2][-]{subsection.7.1}{Probabilities for throwing two dices}{section.7}% 38
+\BOOKMARK [2][-]{subsection.7.2}{Probabilities for any position}{section.7}% 39
+\BOOKMARK [2][-]{subsection.7.3}{Stable situation of M}{section.7}% 40
+\BOOKMARK [2][-]{subsection.7.4}{Error analysis}{section.7}% 41

@@ -67,7 +67,7 @@
                                 % normalem makes italics be italics, not underlines
     
 
-    
+    \usepackage{float}
     
     % Colors for the hyperref package
     \definecolor{urlcolor}{rgb}{0,.145,.698}
@@ -277,7 +277,9 @@
     
     \maketitle
     
+    \newpage
     
+    Throughout this document the following Jupyter notebook style and packages are used.
 
     
     \begin{Verbatim}[commandchars=\\\{\}]
@@ -307,8 +309,10 @@ Populating the interactive namespace from numpy and matplotlib
 {\color{incolor}In [{\color{incolor}3}]:} \PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
 \end{Verbatim}
 
-
-    \begin{figure}
+	\newpage
+	\tableofcontents
+	\newpage
+    \begin{figure}[H]
 \centering
 \includegraphics{monopoly_1.jpg}
 \caption{monopoly}
@@ -483,13 +487,13 @@ Each deck contains 16 cards.
 
     Monopoly has \(16\) community cards.
 
-    \begin{figure}
+    \begin{figure}[H]
 \centering
 \includegraphics{monopoly_2.jpg}
 \caption{cc}
 \end{figure}
 
-    Because we are only determining the probabilities, we are only
+    Because we are determining the probabilities, we are only
 interested in the following cards:
 
 \begin{itemize}
@@ -578,13 +582,13 @@ out of cards, we reset the index and reshuffle the cards.
 
     Monopoly has \(16\) chance cards.
 
-    \begin{figure}
+    \begin{figure}[H]
 \centering
 \includegraphics{monopoly_3.jpg}
 \caption{chance}
 \end{figure}
 
-    Because we are only determining the probabilities, we are only
+    Because we are determining the probabilities, we are only
 interested in the following cards:
 
 \begin{itemize}
@@ -753,8 +757,8 @@ probability distribution:
     \end{center}
     { \hspace*{\fill} \\}
     
-    \hypertarget{monopoly-simulation}{%
-\section{Monopoly simulation}\label{monopoly-simulation}}
+    \hypertarget{simulated-model}{%
+\section{Simulated model}\label{simulated-model}}
 
     We are playing a simplified version of Monopoly. We will not keep track
 of money. There will only be one player. If a player goes to jail, the
@@ -1360,152 +1364,8 @@ card}\label{probability-to-draw-a-card}}
          36     c3    Chance 3     0.018737
 \end{Verbatim}
             
-    \hypertarget{conclusion}{%
-\section{Conclusion}\label{conclusion}}
-
-    We saw the expected values per turn for each square. Train stations are
-by far the best to buy. The multiplier for them is not taken into
-account here. Which means that the actual results are even better. After
-that, buying should be done in a priority. I wouldn't buy utilities,
-brown and light blue squares because they have a very low expected
-value.
-
-    \hypertarget{top-10-streets}{%
-\subsection{Top 10 streets}\label{top-10-streets}}
-
-A table of the top 10 squares by expected value.
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}48}]:} \PY{n}{df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{p}{:}\PY{p}{,}\PY{n}{df}\PY{o}{.}\PY{n}{columns}\PY{o}{.}\PY{n}{isin}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Square}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Description}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Probability}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Expected Value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{p}{]}\PYZbs{}
-             \PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Expected Value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}48}]:}    Square      Description  Probability  Expected Value
-         39    db2      Dark Blue 2     0.021942        1.097100
-         37    db1      Dark Blue 1     0.023417        0.819595
-         31     g1          Green 1     0.028344        0.736944
-         15    ts2  Train Station 2     0.028584        0.714600
-         34     g3          Green 3     0.024771        0.693588
-         32     g2          Green 2     0.026300        0.683800
-         25    ts3  Train Station 3     0.026798        0.669950
-         29     y3         Yellow 3     0.026966        0.647184
-         24     r3            Red 3     0.030681        0.613620
-         35    ts4  Train Station 4     0.024023        0.600575
-\end{Verbatim}
-            
-    \hypertarget{top-10-groups}{%
-\subsection{Top 10 groups}\label{top-10-groups}}
-
-A table of the top 10 groups by expected value.
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}49}]:} \PY{n}{aggregated\PYZus{}ev\PYZus{}df}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Expected Value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}49}]:}        Aggregate  Expected Value
-         7  Train Station        2.562100
-         2          Green        2.114332
-         1      Dark Blue        1.916695
-         9         Yellow        1.838308
-         6            Red        1.580472
-         4         Orange        1.236796
-         5         Purple        0.769538
-         8      Utilities        0.702576
-         3     Light Blue        0.463308
-         0          Brown        0.137264
-\end{Verbatim}
-            
-    \hypertarget{additional-note-about-train-stations}{%
-\subsubsection{Additional note about train
-stations}\label{additional-note-about-train-stations}}
-
-    Notice that if you own all \(4\) train stations, any visitor has to pay
-\(\$200\) instead of the \(\$25\) for owning one. From this we can find
-that the expected value is multiplied by \(8\), if you own them all.
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}50}]:} \PY{l+m+mi}{8} \PY{o}{*} \PY{n}{df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Aggregate}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Train Station}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Expected Value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}50}]:} 20.4968
-\end{Verbatim}
-            
-    And for \(3\) train stations, any visitor has to pay \(\$100\), which
-multiplied by \(4\) gives:
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}51}]:} \PY{l+m+mi}{4} \PY{o}{*} \PY{n}{df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Aggregate}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Train Station}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Expected Value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}51}]:} 10.2484
-\end{Verbatim}
-            
-    Finally for \(2\) train stations, any visitor has to pay \(\$50\), which
-multiplied by \(2\) gives:
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}52}]:} \PY{l+m+mi}{2} \PY{o}{*} \PY{n}{df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Aggregate}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Train Station}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Expected Value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}52}]:} 5.1242000000000001
-\end{Verbatim}
-            
-    Now keep in mind that if you own the \textbf{entire} best street, the
-results are:
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}53}]:} \PY{n}{aggregated\PYZus{}ev\PYZus{}df}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Expected Value}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{iloc}\PY{p}{[}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{,}\PY{l+m+mi}{3}\PY{p}{]}\PY{p}{]}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}53}]:}    Aggregate  Expected Value
-         2      Green        2.114332
-         1  Dark Blue        1.916695
-         9     Yellow        1.838308
-\end{Verbatim}
-            
-    \hypertarget{probability-to-go-to-jail}{%
-\subsection{Probability to go to jail}\label{probability-to-go-to-jail}}
-
-    The probability to go to jail is:
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}54}]:} \PY{n}{P\PYZus{}jail} \PY{o}{+} \PY{n}{P\PYZus{}go\PYZus{}to\PYZus{}jail} \PY{o}{+} \PY{l+m+mi}{1}\PY{o}{/}\PY{l+m+mi}{16} \PY{o}{*} \PY{p}{(}\PY{n}{P\PYZus{}community\PYZus{}card} \PY{o}{+} \PY{n}{P\PYZus{}chance\PYZus{}card}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}54}]:} 0.066712812499999996
-\end{Verbatim}
-            
-    \hypertarget{probability-to-draw-a-card}{%
-\subsection{Probability to draw a
-card}\label{probability-to-draw-a-card}}
-
-    The probability to draw a card is:
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}55}]:} \PY{n}{P\PYZus{}community\PYZus{}card} \PY{o}{+} \PY{n}{P\PYZus{}chance\PYZus{}card}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}55}]:} 0.122157
-\end{Verbatim}
-            
-    \hypertarget{markov-matrix}{%
-\section{Markov matrix}\label{markov-matrix}}
+    \hypertarget{markov-matrix-model}{%
+\section{Markov matrix model}\label{markov-matrix-model}}
 
     Another way to find the probabilities, would be to create a Markov
 matrix with the probability to go another square, for each individual
@@ -1563,7 +1423,7 @@ distribution for two dices.
 
 
     \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_167_0.png}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_146_0.png}
     \end{center}
     { \hspace*{\fill} \\}
     
@@ -1734,14 +1594,14 @@ the probabilities for all the squares.
 \end{Verbatim}
             
     \hypertarget{converging-m}{%
-\subsection{\texorpdfstring{Converging
-\(M\)}{Converging M}}\label{converging-m}}
+\subsection{\texorpdfstring{Stable situation of 
+\(M\)}{Stable situation of M}}\label{converging-m}}
 
-    Which we do. Next we apply \(\lim\limits_{n\rightarrow\infty}M^n\), to
-converge to the stable situation of that matrix. Because of floating
-point arithmetic we keep iterating until we run out of our bit space,
-which is around \(M^{64}\). If we plot a heat map for every \(M^n\),
-where \(n\) is between \([1,64]\), we get:
+    Next we apply \(\lim\limits_{n\rightarrow\infty}M^n\), to converge to
+the stable situation of that matrix. Because of floating point
+arithmetic we keep iterating until we run out of our bit space, which is
+around \(M^{64}\). If we plot a heat map for every \(M^n\), where \(n\)
+is between \([1,64]\), we get:
 
     \begin{Verbatim}[commandchars=\\\{\}]
 {\color{incolor}In [{\color{incolor}65}]:} \PY{k+kn}{from} \PY{n+nn}{mpl\PYZus{}toolkits}\PY{n+nn}{.}\PY{n+nn}{axes\PYZus{}grid1} \PY{k}{import} \PY{n}{Grid}
@@ -1767,7 +1627,7 @@ where \(n\) is between \([1,64]\), we get:
 
 
     \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_184_0.png}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_163_0.png}
     \end{center}
     { \hspace*{\fill} \\}
     
@@ -1791,11 +1651,11 @@ and \(M^{64}\):
 
 
     \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_186_0.png}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_165_0.png}
     \end{center}
     { \hspace*{\fill} \\}
     
-    The first column of \(M\) holds the probability values.
+    Any row from \(M\) has the same probability values.
 
     \begin{Verbatim}[commandchars=\\\{\}]
 {\color{incolor}In [{\color{incolor}68}]:} \PY{n}{Mn}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,}\PY{p}{]}
@@ -1813,7 +1673,7 @@ and \(M^{64}\):
                  0.02511513,  0.02027001,  0.02479571,  0.02463601,  0.02436713])
 \end{Verbatim}
             
-    If we plot the coefficicients of the first column of \(M\):
+    If we plot the coefficicients of the first row of \(M\):
 
     \begin{Verbatim}[commandchars=\\\{\}]
 {\color{incolor}In [{\color{incolor}69}]:} \PY{n}{plt}\PY{o}{.}\PY{n}{bar}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{Mn}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,}\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{n}{Mn}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,}\PY{p}{]}\PY{p}{,} \PY{n}{facecolor}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
@@ -1824,7 +1684,7 @@ and \(M^{64}\):
 
 
     \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_190_0.png}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_169_0.png}
     \end{center}
     { \hspace*{\fill} \\}
     
@@ -1961,11 +1821,11 @@ and our exact probabilities, we get:
 
 
     \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_195_0.png}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_174_0.png}
     \end{center}
     { \hspace*{\fill} \\}
     
-    We can see that the simulation is quite accurate. Calculating the
+    Calculating the
 accuracy for the simulated model by subtracting the average error
 yields:
 

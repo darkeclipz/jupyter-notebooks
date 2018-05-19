@@ -141,7 +141,7 @@
     \def\gt{>}
     \def\lt{<}
     % Document parameters
-    \title{Technical Analysis Library}
+    \title{Multi Exponential Moving Average Strategy with Fibonacci Retrace Order Filling}
     
     
     
@@ -280,6 +280,8 @@
     
 
     
+    Throughout this document the following imports and styles are used.
+
     \begin{Verbatim}[commandchars=\\\{\}]
 {\color{incolor}In [{\color{incolor}1}]:} \PY{o}{\PYZpc{}}\PY{k}{pylab} inline
 \end{Verbatim}
@@ -290,602 +292,974 @@ Populating the interactive namespace from numpy and matplotlib
 
     \end{Verbatim}
 
-    \hypertarget{abstract}{%
-\section{Abstract}\label{abstract}}
+    \hypertarget{goal}{%
+\section{Goal}\label{goal}}
 
-    This library is a sub-system of the algorithmic trading application.
-This library provides all the technical indicators. The indicators are
-provided by appending them to the original dataframe which holds the
-chart data.
+    In this document we will be testing a multiple exponential moving
+average crossover strategy. We will also create an entry position
+calculated with a Fibonacci between the point of the crossover and the
+low/high of the candle.
 
-    \hypertarget{functionality}{%
-\section{Functionality}\label{functionality}}
+    \hypertarget{issues-with-our-model}{%
+\subsection{Issues with our model}\label{issues-with-our-model}}
 
-    The library supports the following technical indicators:
+    This model still has a few unsolved issues:
 
-\begin{itemize}
-\tightlist
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
 \item
-  \textbf{Daily returns}:
-  \texttt{daily\_returns(df,\ source\_column,\ target\_column)}
+  We have created a target price for which the older should be opened.
+  It is however opened on the close price for the candle where the
+  target price is hit with the high or low. The assumption is that it
+  gives minimal effect.
 \item
-  \textbf{Simple moving average}:
-  \texttt{sma(df,\ periods,\ source\_column,\ target\_column)}
-\item
-  \textbf{Weighted moving average}:
-  \texttt{wma(df,\ periods,\ source\_column,\ target\_column)}
-\item
-  \textbf{Exponential moving average}:
-  \texttt{ema(df,\ periods,\ source\_column,\ target\_column)}
-\item
-  \textbf{Simple moving stdev}:
-  \texttt{std(df,\ periods,\ source\_column,\ target\_column)}
-\item
-  \textbf{Bollinger bands}:
-  \texttt{bbands(df,\ periods,\ source\_column,\ target\_column)}
-\item
-  \textbf{Relative strength index}:
-  \texttt{rsi(df,\ periods,\ source\_column,\ target\_column)}
-\end{itemize}
+  Short position P/L is perhaps not calculated correctly.
+\end{enumerate}
 
-Ideas:
+    \hypertarget{imports}{%
+\section{Imports}\label{imports}}
 
-\begin{itemize}
-\tightlist
-\item
-  Parabolic SAR
-\item
-  MACD
-\item
-  Bollinger Band \% (distance)
-\item
-  Average True Range (ATR)
-\item
-  Single candle pattern detection
-\item
-  Clouds
-\item
-  Heiken-Ashi
-\end{itemize}
+    \hypertarget{general-libraries}{%
+\subsection{General libraries}\label{general-libraries}}
 
-\textbf{Local (High/Low) Range \% (\texttt{local\_range})}
-
-For any window \(n\):
-
-\begin{itemize}
-\tightlist
-\item
-  local high = max(window)
-\item
-  local low = min(window)
-\item
-  local range = local high - local low
-\item
-  range \% = (current - local low) / local range
-\end{itemize}
-
-    \hypertarget{test-data}{%
-\section{Test data}\label{test-data}}
-
-    The following \texttt{USDT\_BTC} chart is used to the test and display
-the indicators in this notebook.
+    These are the general Python libraries that are used.
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}2}]:} \PY{k+kn}{import} \PY{n+nn}{poloniex} \PY{k}{as} \PY{n+nn}{plnx}
-        \PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd} 
-        \PY{k+kn}{from} \PY{n+nn}{datetime} \PY{k}{import} \PY{n}{datetime}\PY{p}{,} \PY{n}{timedelta}
+{\color{incolor}In [{\color{incolor}2}]:} \PY{k+kn}{from} \PY{n+nn}{datetime} \PY{k}{import} \PY{n}{datetime}\PY{p}{,} \PY{n}{timedelta}
+        \PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+        \PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
 \end{Verbatim}
 
 
+    \hypertarget{custom-libraries}{%
+\subsection{Custom libraries}\label{custom-libraries}}
+
+    These are the custom libraries that hold the framework to perform and
+analyze a backtest.
+
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}3}]:} \PY{n}{pair} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{USDT\PYZus{}BTC}\PY{l+s+s1}{\PYZsq{}}
-        \PY{n}{timeframe} \PY{o}{=} \PY{l+m+mi}{15} \PY{o}{*} \PY{l+m+mi}{60}
+{\color{incolor}In [{\color{incolor}3}]:} \PY{k+kn}{import} \PY{n+nn}{poloniex} \PY{k}{as} \PY{n+nn}{plnx}
+        \PY{k+kn}{import} \PY{n+nn}{ta\PYZus{}lib} \PY{k}{as} \PY{n+nn}{ta}
+        \PY{k+kn}{import} \PY{n+nn}{signals} \PY{k}{as} \PY{n+nn}{sg}
+        \PY{k+kn}{import} \PY{n+nn}{backtest} \PY{k}{as} \PY{n+nn}{bt}
+\end{Verbatim}
+
+
+    \hypertarget{technical-analysis-for-trading-signals}{%
+\section{Technical Analysis for Trading
+Signals}\label{technical-analysis-for-trading-signals}}
+
+    To run a backtest trading simulation we will need to set it up with
+parameters. The parameters will be explained per section.
+
+    \hypertarget{chart-data}{%
+\subsection{Chart data}\label{chart-data}}
+
+    We are using data from http://www.poloniex.com API. Our test is done on
+the \texttt{USDT\_BTC} pair..
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}4}]:} \PY{n}{pair} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{USDT\PYZus{}BTC}\PY{l+s+s1}{\PYZsq{}}
+        \PY{n}{timeframe} \PY{o}{=} \PY{l+m+mi}{30} \PY{o}{*} \PY{l+m+mi}{60}
         \PY{n}{end} \PY{o}{=} \PY{n}{datetime}\PY{o}{.}\PY{n}{utcnow}\PY{p}{(}\PY{p}{)}
-        \PY{n}{start} \PY{o}{=} \PY{n}{end} \PY{o}{\PYZhy{}} \PY{n}{timedelta}\PY{p}{(}\PY{n}{days}\PY{o}{=}\PY{l+m+mf}{0.5}\PY{p}{)}
-        \PY{n}{verbose\PYZus{}logging} \PY{o}{=} \PY{k+kc}{True}
-        \PY{n}{chart} \PY{o}{=} \PY{n}{plnx}\PY{o}{.}\PY{n}{get\PYZus{}chart}\PY{p}{(}\PY{n}{pair}\PY{p}{,} \PY{n}{timeframe}\PY{p}{,} \PY{n}{start}\PY{p}{,} \PY{n}{end}\PY{p}{,} \PY{n}{verbose\PYZus{}logging}\PY{p}{)}
+        \PY{n}{start} \PY{o}{=} \PY{n}{end} \PY{o}{\PYZhy{}} \PY{n}{timedelta}\PY{p}{(}\PY{n}{days}\PY{o}{=}\PY{l+m+mi}{365}\PY{o}{*}\PY{l+m+mi}{3}\PY{p}{)}
+        \PY{n}{chart} \PY{o}{=} \PY{n}{plnx}\PY{o}{.}\PY{n}{get\PYZus{}chart}\PY{p}{(}\PY{n}{pair}\PY{p}{,} \PY{n}{timeframe}\PY{p}{,} \PY{n}{start}\PY{p}{,} \PY{n}{end}\PY{p}{)}
+\end{Verbatim}
+
+
+    \hypertarget{technical-indicators}{%
+\subsection{Technical Indicators}\label{technical-indicators}}
+
+    We will be using the following technical indicators to generate signals:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}5}]:} \PY{n}{ta}\PY{o}{.}\PY{n}{ema}\PY{p}{(}\PY{n}{chart}\PY{p}{,} \PY{l+m+mi}{8}\PY{p}{)}
+        \PY{n}{ta}\PY{o}{.}\PY{n}{ema}\PY{p}{(}\PY{n}{chart}\PY{p}{,} \PY{l+m+mi}{13}\PY{p}{)}
+        \PY{n}{ta}\PY{o}{.}\PY{n}{ema}\PY{p}{(}\PY{n}{chart}\PY{p}{,} \PY{l+m+mi}{21}\PY{p}{)}
+        \PY{n}{ta}\PY{o}{.}\PY{n}{ema}\PY{p}{(}\PY{n}{chart}\PY{p}{,} \PY{l+m+mi}{55}\PY{p}{)}
 \end{Verbatim}
 
 
     \begin{Verbatim}[commandchars=\\\{\}]
-https://poloniex.com/public?command=returnChartData\&currencyPair=USDT\_BTC\&start=1525042762\&end=1525085962\&period=900
-Retrieved 48 records.
-
-    \end{Verbatim}
-
-    \hypertarget{daily-returns}{%
-\section{Daily returns}\label{daily-returns}}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}4}]:} \PY{k}{def} \PY{n+nf}{daily\PYZus{}returns}\PY{p}{(}\PY{n}{df}\PY{p}{,} \PY{n}{source\PYZus{}column} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{target\PYZus{}column} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{daily\PYZus{}return}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{:} 
-            \PY{n}{df}\PY{p}{[}\PY{n}{target\PYZus{}column}\PY{p}{]} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{n}{source\PYZus{}column}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n}{df}\PY{p}{[}\PY{n}{source\PYZus{}column}\PY{p}{]}\PY{o}{.}\PY{n}{shift}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}5}]:} \PY{n}{daily\PYZus{}returns}\PY{p}{(}\PY{n}{chart}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}6}]:} \PY{n}{chart}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}6}]:} \PY{n}{chart}\PY{p}{[}\PY{l+m+mi}{50}\PY{p}{:}\PY{l+m+mi}{60}\PY{p}{]}
 \end{Verbatim}
 
 
 \begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}6}]:}          close                 date         high          low         open  \textbackslash{}
-        0  9431.641721  2018-04-30 01:00:00  9432.934620  9390.000000  9402.720313   
-        1  9430.000000  2018-04-30 01:15:00  9431.512595  9390.117883  9431.512595   
-        2  9392.022381  2018-04-30 01:30:00  9430.067142  9390.000000  9430.000000   
-        3  9423.799996  2018-04-30 01:45:00  9429.534159  9392.022381  9392.022381   
-        4  9435.000000  2018-04-30 02:00:00  9436.738865  9409.000000  9423.799996   
+{\color{outcolor}Out[{\color{outcolor}6}]:}          close                 date        high         low        open  \textbackslash{}
+        50  232.506980  2015-05-21 16:00:00  232.506980  232.506980  232.506980   
+        51  232.506980  2015-05-21 16:30:00  232.506980  232.506980  232.506980   
+        52  232.506980  2015-05-21 17:00:00  232.506980  232.506980  232.506980   
+        53  232.506980  2015-05-21 17:30:00  232.506980  232.506980  232.506980   
+        54  230.840005  2015-05-21 18:00:00  230.840005  230.840005  230.840005   
+        55  230.840005  2015-05-21 18:30:00  230.840005  230.840005  230.840005   
+        56  230.840005  2015-05-21 19:00:00  230.840005  230.840005  230.840005   
+        57  230.840005  2015-05-21 19:30:00  230.840005  230.840005  230.840005   
+        58  232.506980  2015-05-21 20:00:00  232.506980  232.506980  232.506980   
+        59  232.506980  2015-05-21 20:30:00  232.506980  232.506980  232.506980   
         
-           daily\_return  
-        0           NaN  
-        1     -1.641721  
-        2    -37.977619  
-        3     31.777616  
-        4     11.200004  
+                  ema8       ema13       ema21       ema55  
+        50  232.361509  232.115389  232.170177         NaN  
+        51  232.444565  232.175505  232.193722         NaN  
+        52  232.506980  232.226392  232.215027         NaN  
+        53  232.506980  232.302578  232.234304         NaN  
+        54  232.045796  232.078046  232.070977  232.819881  
+        55  231.699226  231.887984  231.923192  232.741568  
+        56  231.438787  231.727101  231.789471  232.666103  
+        57  231.243073  231.590915  231.677024  232.593382  
+        58  231.557183  231.731548  231.756005  232.593005  
+        59  231.793229  231.850591  231.827469  232.592641  
 \end{Verbatim}
             
+    \hypertarget{signals}{%
+\subsection{Signals}\label{signals}}
+
+    We will be using multiple EMA's to generate crossover signals.
+
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}7}]:} \PY{n}{plot}\PY{p}{(}\PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{daily\PYZus{}return}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}7}]:} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{open\PYZus{}long}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{open\PYZus{}short}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close\PYZus{}long}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close\PYZus{}short}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{l+m+mi}{0}
 \end{Verbatim}
 
 
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}7}]:} [<matplotlib.lines.Line2D at 0x1b0e26d9d30>]
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}8}]:} \PY{k}{def} \PY{n+nf}{getFib}\PY{p}{(}\PY{n}{crossover\PYZus{}price}\PY{p}{,} \PY{n}{candle\PYZus{}high\PYZus{}low}\PY{p}{,} \PY{n}{lvl}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{n}{crossover\PYZus{}price}\PY{o}{\PYZhy{}}\PY{p}{(}\PY{n}{crossover\PYZus{}price}\PY{o}{\PYZhy{}}\PY{n}{candle\PYZus{}high\PYZus{}low}\PY{p}{)}\PY{o}{*}\PY{n}{lvl}
 \end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}9}]:} \PY{n}{head} \PY{o}{=} \PY{l+m+mi}{56}
+        \PY{n}{ema1} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ema8}\PY{l+s+s1}{\PYZsq{}}
+        \PY{n}{ema2} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ema13}\PY{l+s+s1}{\PYZsq{}}
+        \PY{n}{ema3} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ema21}\PY{l+s+s1}{\PYZsq{}}
+        \PY{n}{ema4} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ema55}\PY{l+s+s1}{\PYZsq{}}
+        
+        \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{crossover}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{target\PYZus{}price}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{target\PYZus{}low}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dbg\PYZus{}long}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dbg\PYZus{}short}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{l+m+mi}{0}
+        \PY{n}{state} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{none}\PY{l+s+s1}{\PYZsq{}}
+        \PY{n}{order\PYZus{}filled} \PY{o}{=} \PY{k+kc}{False}
+        
+        \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{head}\PY{p}{,} \PY{n+nb}{len}\PY{p}{(}\PY{n}{chart}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+            \PY{n}{p1} \PY{o}{=} \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{n}{ema1}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{n}{ema4}\PY{p}{]}
+            \PY{n}{p2} \PY{o}{=} \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{n}{ema2}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{n}{ema4}\PY{p}{]}
+            \PY{n}{p3} \PY{o}{=} \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{n}{ema3}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{n}{ema4}\PY{p}{]}
+            \PY{k}{if}\PY{p}{(}\PY{n}{p1} \PY{o}{\PYZgt{}} \PY{l+m+mi}{0} \PY{o+ow}{and} \PY{n}{p2} \PY{o}{\PYZgt{}} \PY{l+m+mi}{0} \PY{o+ow}{and} \PY{n}{p3} \PY{o}{\PYZgt{}} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{:} \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{crossover}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{l+m+mi}{1}
+            \PY{k}{if}\PY{p}{(}\PY{n}{p2} \PY{o}{\PYZlt{}} \PY{l+m+mi}{0} \PY{o+ow}{and} \PY{n}{p2} \PY{o}{\PYZlt{}} \PY{l+m+mi}{0} \PY{o+ow}{and} \PY{n}{p3} \PY{o}{\PYZlt{}} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{:} \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{crossover}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}
+            \PY{n}{prev} \PY{o}{=} \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{i}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{crossover}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+            \PY{n}{current} \PY{o}{=} \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{crossover}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
             
+            \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{target\PYZus{}price}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{i}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{target\PYZus{}price}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+            
+            \PY{k}{if} \PY{p}{(}\PY{n}{prev} \PY{o}{==} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1} \PY{o+ow}{or} \PY{n}{prev} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{)} \PY{o+ow}{and} \PY{n}{current} \PY{o}{==} \PY{l+m+mi}{1}\PY{p}{:} 
+                \PY{k}{if} \PY{n}{state} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{short}\PY{l+s+s1}{\PYZsq{}} \PY{o+ow}{and} \PY{n}{order\PYZus{}filled}\PY{p}{:}
+                    \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close\PYZus{}short}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{l+m+mi}{1}
+                \PY{n}{state} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{long}\PY{l+s+s1}{\PYZsq{}}
+                \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{target\PYZus{}price}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{getFib}\PY{p}{(}\PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{n}{ema4}\PY{p}{]}\PY{p}{,} \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{low}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}\PY{o}{.}\PY{l+m+mi}{702}\PY{p}{)}
+                \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dbg\PYZus{}long}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{l+m+mi}{1}
+                \PY{n}{order\PYZus{}filled} \PY{o}{=} \PY{k+kc}{False}
+                
+            \PY{k}{if} \PY{p}{(}\PY{n}{prev} \PY{o}{==} \PY{l+m+mi}{1} \PY{o+ow}{or} \PY{n}{prev} \PY{o}{==} \PY{l+m+mi}{0}\PY{p}{)} \PY{o+ow}{and} \PY{n}{current} \PY{o}{==} \PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{:} 
+                \PY{k}{if} \PY{n}{state} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{long}\PY{l+s+s1}{\PYZsq{}} \PY{o+ow}{and} \PY{n}{order\PYZus{}filled}\PY{p}{:}
+                    \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close\PYZus{}long}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{l+m+mi}{1}
+                \PY{n}{state} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{short}\PY{l+s+s1}{\PYZsq{}}
+                \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{target\PYZus{}price}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{getFib}\PY{p}{(}\PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{n}{ema4}\PY{p}{]}\PY{p}{,} \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{high}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}\PY{o}{.}\PY{l+m+mi}{702}\PY{p}{)}
+                \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dbg\PYZus{}short}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{l+m+mi}{1}
+                \PY{n}{order\PYZus{}filled} \PY{o}{=} \PY{k+kc}{False}
+                 
+            \PY{k}{if} \PY{n}{state} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{long}\PY{l+s+s1}{\PYZsq{}} \PY{o+ow}{and} \PY{o+ow}{not} \PY{n}{order\PYZus{}filled}\PY{p}{:}
+                \PY{k}{if} \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{target\PYZus{}price}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{\PYZgt{}} \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{low}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{:}
+                    \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{open\PYZus{}long}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{l+m+mi}{1}
+                    \PY{n}{order\PYZus{}filled} \PY{o}{=} \PY{k+kc}{True}
+        
+            \PY{k}{if} \PY{n}{state} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{short}\PY{l+s+s1}{\PYZsq{}} \PY{o+ow}{and} \PY{o+ow}{not} \PY{n}{order\PYZus{}filled}\PY{p}{:}
+                \PY{k}{if} \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{target\PYZus{}price}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{\PYZlt{}} \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{high}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{:}
+                    \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{open\PYZus{}short}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{l+m+mi}{1}
+                    \PY{n}{order\PYZus{}filled} \PY{o}{=} \PY{k+kc}{True}
+\end{Verbatim}
+
+
+    \hypertarget{plotting-strategy-indicators}{%
+\subsection{Plotting strategy
+indicators}\label{plotting-strategy-indicators}}
+
+    If we plot all our technical indicators in a chart.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}10}]:} \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{p}{(}\PY{l+m+mi}{120}\PY{p}{,}\PY{l+m+mi}{12}\PY{p}{)}\PY{p}{)}
+         \PY{n}{plot}\PY{p}{(}\PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{high}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{lime}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{lw}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{alpha}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+         \PY{n}{plot}\PY{p}{(}\PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{low}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{lw}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{alpha}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+         \PY{n}{plot}\PY{p}{(}\PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ema55}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{magenta}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{plot}\PY{p}{(}\PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{target\PYZus{}price}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{\PYZgt{}} \PY{l+m+mi}{0}\PY{p}{]}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{target\PYZus{}price}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{b}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{ls}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dashed}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{dbg\PYZus{}long} \PY{o}{=} \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dbg\PYZus{}long}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{\PYZgt{}} \PY{l+m+mi}{0}\PY{p}{]}
+         \PY{n}{dbg\PYZus{}short} \PY{o}{=} \PY{n}{chart}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dbg\PYZus{}short}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{\PYZgt{}} \PY{l+m+mi}{0}\PY{p}{]}
+         \PY{n}{scatter}\PY{p}{(}\PY{n}{dbg\PYZus{}long}\PY{o}{.}\PY{n}{index}\PY{p}{,} \PY{n}{dbg\PYZus{}long}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{lime}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{lw}\PY{o}{=}\PY{l+m+mi}{20}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.5}\PY{p}{)}
+         \PY{n}{scatter}\PY{p}{(}\PY{n}{dbg\PYZus{}short}\PY{o}{.}\PY{n}{index}\PY{p}{,} \PY{n}{dbg\PYZus{}short}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{red}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{lw}\PY{o}{=}\PY{l+m+mi}{20}\PY{p}{,} \PY{n}{marker}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.5}\PY{p}{)}
+         \PY{n}{legend}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{High}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Low}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{EMA55}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Target price}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Long}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Short}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+         \PY{n}{grid}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
     \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_13_1.png}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_29_0.png}
     \end{center}
     { \hspace*{\fill} \\}
     
-    \hypertarget{moving-averages}{%
-\section{Moving Averages}\label{moving-averages}}
-
-    \hypertarget{simple-moving-average-sma}{%
-\subsection{Simple Moving Average
-(SMA)}\label{simple-moving-average-sma}}
-
-    A simple moving average over \(n\) periods, and weights in each period
-with equal weight.
+    \hypertarget{close-and-ema55-distance-indicator}{%
+\subsubsection{Close and EMA55 distance
+indicator}\label{close-and-ema55-distance-indicator}}
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}8}]:} \PY{n}{x}\PY{p}{,} \PY{n}{y} \PY{o}{=} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{15}\PY{p}{)}\PY{p}{,} \PY{p}{[}\PY{l+m+mi}{1}\PY{o}{/}\PY{l+m+mi}{15}\PY{p}{]}\PY{o}{*}\PY{l+m+mi}{15}
-        \PY{n}{bar}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{facecolor}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-        \PY{n}{axes} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{gca}\PY{p}{(}\PY{p}{)}
-        \PY{n}{axes}\PY{o}{.}\PY{n}{set\PYZus{}ylim}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mf}{0.2}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}11}]:} \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{p}{(}\PY{l+m+mi}{20}\PY{p}{,}\PY{l+m+mi}{6}\PY{p}{)}\PY{p}{)}
+         \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dist}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ema55}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+         \PY{n}{plot}\PY{p}{(}\PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dist}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+         \PY{n}{fill\PYZus{}between}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{chart}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dist}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.25}\PY{p}{)}
+         \PY{n}{axhline}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{black}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{grid}\PY{p}{(}\PY{p}{)}
 \end{Verbatim}
 
 
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}8}]:} (0, 0.2)
-\end{Verbatim}
-            
     \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_17_1.png}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_31_0.png}
     \end{center}
     { \hspace*{\fill} \\}
     
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}9}]:} \PY{k}{def} \PY{n+nf}{sma}\PY{p}{(}\PY{n}{df}\PY{p}{,} \PY{n}{periods} \PY{o}{=} \PY{l+m+mi}{7}\PY{p}{,} \PY{n}{source\PYZus{}column} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{target\PYZus{}column} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{sma}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{:}
-            \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{target\PYZus{}column}\PY{p}{,} \PY{n}{periods}\PY{p}{)}\PY{p}{]} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{n}{source\PYZus{}column}\PY{p}{]}\PY{o}{.}\PY{n}{rolling}\PY{p}{(}\PY{n}{window}\PY{o}{=}\PY{n}{periods}\PY{p}{)}\PY{o}{.}\PY{n}{mean}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
+    \hypertarget{ema-crossover-indicator}{%
+\subsubsection{EMA crossover indicator}\label{ema-crossover-indicator}}
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}10}]:} \PY{n}{sma}\PY{p}{(}\PY{n}{chart}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}11}]:} \PY{n}{chart}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}11}]:}          close                 date         high          low         open  \textbackslash{}
-         0  9431.641721  2018-04-30 01:00:00  9432.934620  9390.000000  9402.720313   
-         1  9430.000000  2018-04-30 01:15:00  9431.512595  9390.117883  9431.512595   
-         2  9392.022381  2018-04-30 01:30:00  9430.067142  9390.000000  9430.000000   
-         3  9423.799996  2018-04-30 01:45:00  9429.534159  9392.022381  9392.022381   
-         4  9435.000000  2018-04-30 02:00:00  9436.738865  9409.000000  9423.799996   
-         
-            daily\_return  sma7  
-         0           NaN   NaN  
-         1     -1.641721   NaN  
-         2    -37.977619   NaN  
-         3     31.777616   NaN  
-         4     11.200004   NaN  
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}12}]:} \PY{n}{plot}\PY{p}{(}\PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{black}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plot}\PY{p}{(}\PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{sma7}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}12}]:} [<matplotlib.lines.Line2D at 0x1b0e481d630>]
-\end{Verbatim}
-            
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_21_1.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
-    \hypertarget{weighted-moving-average-wma}{%
-\subsection{Weighted Moving Average
-(WMA)}\label{weighted-moving-average-wma}}
-
-    Moving average where the weight of later periods is linearly decreasing.
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}13}]:} \PY{k}{def} \PY{n+nf}{triangular}\PY{p}{(}\PY{n}{n}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{n}{n} \PY{o}{*} \PY{p}{(}\PY{n}{n} \PY{o}{+} \PY{l+m+mi}{1}\PY{p}{)} \PY{o}{/} \PY{l+m+mi}{2}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}14}]:} \PY{n}{n} \PY{o}{=} \PY{l+m+mi}{15}
-         \PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{n}\PY{p}{,} \PY{n}{n}\PY{p}{)}
-         \PY{n}{y} \PY{o}{=} \PY{p}{(}\PY{n}{n}\PY{o}{\PYZhy{}}\PY{n}{x}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)} \PY{o}{/} \PY{n}{triangular}\PY{p}{(}\PY{n}{n}\PY{p}{)}
-         \PY{n}{bar}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{y}\PY{p}{,} \PY{n}{facecolor}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{axes} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{gca}\PY{p}{(}\PY{p}{)}
-         \PY{n}{axes}\PY{o}{.}\PY{n}{set\PYZus{}ylim}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mf}{0.2}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}14}]:} (0, 0.2)
-\end{Verbatim}
-            
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_25_1.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}15}]:} \PY{k+kn}{from} \PY{n+nn}{scipy}\PY{n+nn}{.}\PY{n+nn}{ndimage}\PY{n+nn}{.}\PY{n+nn}{interpolation} \PY{k}{import} \PY{n}{shift}
-         \PY{k+kn}{from} \PY{n+nn}{pandas} \PY{k}{import} \PY{n}{Series}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}16}]:} \PY{k}{def} \PY{n+nf}{wma}\PY{p}{(}\PY{n}{df}\PY{p}{,} \PY{n}{periods} \PY{o}{=} \PY{l+m+mi}{7}\PY{p}{,} \PY{n}{source\PYZus{}column} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{target\PYZus{}column} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{wma}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{:}
-             \PY{n}{x} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{periods}\PY{p}{,} \PY{n}{periods}\PY{p}{)}
-             \PY{n}{weights} \PY{o}{=} \PY{p}{(}\PY{n}{periods}\PY{o}{\PYZhy{}}\PY{n}{x}\PY{o}{+}\PY{l+m+mi}{1}\PY{p}{)} \PY{o}{/} \PY{n}{triangular}\PY{p}{(}\PY{n}{periods}\PY{p}{)}
-             \PY{n}{wma} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{convolve}\PY{p}{(}\PY{n}{weights}\PY{p}{,} \PY{n}{df}\PY{p}{[}\PY{n}{source\PYZus{}column}\PY{p}{]}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{valid}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-             \PY{n}{wma}\PY{o}{.}\PY{n}{resize}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{wma}\PY{p}{)}\PY{o}{+}\PY{n}{periods}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}
-             \PY{n}{wma} \PY{o}{=} \PY{n}{Series}\PY{p}{(}\PY{n}{wma}\PY{p}{)}
-             \PY{n}{wma} \PY{o}{=} \PY{n}{wma}\PY{o}{.}\PY{n}{shift}\PY{p}{(}\PY{n}{periods}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}
-             \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{target\PYZus{}column}\PY{p}{,} \PY{n}{periods}\PY{p}{)}\PY{p}{]} \PY{o}{=} \PY{n}{wma}  
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}17}]:} \PY{n}{wma}\PY{p}{(}\PY{n}{chart}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}18}]:} \PY{n}{plot}\PY{p}{(}\PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{black}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plot}\PY{p}{(}\PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{wma7}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}18}]:} [<matplotlib.lines.Line2D at 0x1b0f4091d68>]
-\end{Verbatim}
-            
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_29_1.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
-    \hypertarget{exponential-moving-average-ema}{%
-\subsection{Exponential Moving Average
-(EMA)}\label{exponential-moving-average-ema}}
-
-    Moving average where the weight of later periods is exponentially
-decreasing.
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}52}]:} \PY{n}{weights} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{exp}\PY{p}{(}\PY{l+m+mi}{1}\PY{o}{\PYZhy{}}\PY{n}{linspace}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{,}\PY{n}{n}\PY{p}{)}\PY{p}{)}
-         \PY{n}{weights} \PY{o}{/}\PY{o}{=} \PY{n}{weights}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{)}
-         \PY{n}{bar}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{n}{weights}\PY{p}{,} \PY{n}{facecolor}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{axes} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{gca}\PY{p}{(}\PY{p}{)}
-         \PY{n}{axes}\PY{o}{.}\PY{n}{set\PYZus{}ylim}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mf}{0.2}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}52}]:} (0, 0.2)
-\end{Verbatim}
-            
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_32_1.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}49}]:} \PY{n+nb}{sum}\PY{p}{(}\PY{n}{weights}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}49}]:} 1.0000000000000002
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}20}]:} \PY{k+kn}{from} \PY{n+nn}{scipy}\PY{n+nn}{.}\PY{n+nn}{ndimage}\PY{n+nn}{.}\PY{n+nn}{interpolation} \PY{k}{import} \PY{n}{shift}
-         \PY{k+kn}{from} \PY{n+nn}{pandas} \PY{k}{import} \PY{n}{Series}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}21}]:} \PY{k}{def} \PY{n+nf}{ema}\PY{p}{(}\PY{n}{df}\PY{p}{,} \PY{n}{periods} \PY{o}{=} \PY{l+m+mi}{7}\PY{p}{,} \PY{n}{source\PYZus{}column} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{target\PYZus{}column} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ema}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{:}
-             \PY{n}{weights} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{exp}\PY{p}{(}\PY{l+m+mi}{1}\PY{o}{\PYZhy{}}\PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{,} \PY{n}{periods}\PY{p}{)}\PY{p}{)}
-             \PY{n}{weights} \PY{o}{/}\PY{o}{=} \PY{n}{weights}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{p}{)}
-             \PY{n}{ema} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{convolve}\PY{p}{(}\PY{n}{weights}\PY{p}{,} \PY{n}{df}\PY{p}{[}\PY{n}{source\PYZus{}column}\PY{p}{]}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{valid}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-             \PY{n}{ema}\PY{o}{.}\PY{n}{resize}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{ema}\PY{p}{)}\PY{o}{+}\PY{n}{periods}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}
-             \PY{n}{ema} \PY{o}{=} \PY{n}{Series}\PY{p}{(}\PY{n}{ema}\PY{p}{)}
-             \PY{n}{ema} \PY{o}{=} \PY{n}{ema}\PY{o}{.}\PY{n}{shift}\PY{p}{(}\PY{n}{periods}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{)}
-             \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{target\PYZus{}column}\PY{p}{,} \PY{n}{periods}\PY{p}{)}\PY{p}{]} \PY{o}{=} \PY{n}{ema} 
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}22}]:} \PY{n}{ema}\PY{p}{(}\PY{n}{chart}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}23}]:} \PY{n}{plot}\PY{p}{(}\PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{black}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plot}\PY{p}{(}\PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ema7}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}23}]:} [<matplotlib.lines.Line2D at 0x1b0f417bdd8>]
-\end{Verbatim}
-            
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_37_1.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
-    \hypertarget{comparison}{%
-\subsection{Comparison}\label{comparison}}
-
-    Comparison between the SMA, WMA and EMA.
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}24}]:} \PY{n}{ema}\PY{p}{(}\PY{n}{chart}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{20}\PY{p}{,}\PY{l+m+mi}{7}\PY{p}{)}\PY{p}{)}
-         \PY{n}{plot}\PY{p}{(}\PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{black}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plot}\PY{p}{(}\PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ema7}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plot}\PY{p}{(}\PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{wma7}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{b}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plot}\PY{p}{(}\PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{sma7}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gray}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{legend}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ema}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{wma}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{sma}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}12}]:} \PY{n}{plot}\PY{p}{(}\PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{crossover}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+         \PY{n}{fill\PYZus{}between}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{chart}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{crossover}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.25}\PY{p}{)}
+         \PY{n}{axhline}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{ls}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dashed}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{black}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
          \PY{n}{grid}\PY{p}{(}\PY{p}{)}\PY{p}{;}
 \end{Verbatim}
 
 
     \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_40_0.png}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_33_0.png}
     \end{center}
     { \hspace*{\fill} \\}
     
-    \hypertarget{standard-deviation}{%
-\section{Standard deviation}\label{standard-deviation}}
-
-    Simple moving standard deviation which is used to calculate the
-Bollinger bands.
+    \hypertarget{signal-indicator}{%
+\subsubsection{Signal indicator}\label{signal-indicator}}
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}25}]:} \PY{k}{def} \PY{n+nf}{std}\PY{p}{(}\PY{n}{df}\PY{p}{,} \PY{n}{periods} \PY{o}{=} \PY{l+m+mi}{20}\PY{p}{,} \PY{n}{source\PYZus{}column} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{target\PYZus{}column} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{std}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{:}
-             \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{target\PYZus{}column}\PY{p}{,} \PY{n}{periods}\PY{p}{)}\PY{p}{]} \PY{o}{=} \PY{n}{df}\PY{p}{[}\PY{n}{source\PYZus{}column}\PY{p}{]}\PY{o}{.}\PY{n}{rolling}\PY{p}{(}\PY{n}{window}\PY{o}{=}\PY{n}{periods}\PY{p}{)}\PY{o}{.}\PY{n}{std}\PY{p}{(}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}13}]:} \PY{n}{plt}\PY{o}{.}\PY{n}{step}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{chart}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{open\PYZus{}long}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}\PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{lime}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{step}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{chart}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{open\PYZus{}short}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}\PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{step}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{chart}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close\PYZus{}long}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{lime}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linestyle}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dashed}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{step}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{chart}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close\PYZus{}short}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,}\PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{linestyle}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dashed}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{step}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{chart}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{zeros}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{chart}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{t}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Signal On/Off}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Signals}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{p}{)}\PY{p}{;}
 \end{Verbatim}
 
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}26}]:} \PY{n}{std}\PY{p}{(}\PY{n}{chart}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}27}]:} \PY{n}{chart}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}27}]:}          close                 date         high          low         open  \textbackslash{}
-         0  9431.641721  2018-04-30 01:00:00  9432.934620  9390.000000  9402.720313   
-         1  9430.000000  2018-04-30 01:15:00  9431.512595  9390.117883  9431.512595   
-         2  9392.022381  2018-04-30 01:30:00  9430.067142  9390.000000  9430.000000   
-         3  9423.799996  2018-04-30 01:45:00  9429.534159  9392.022381  9392.022381   
-         4  9435.000000  2018-04-30 02:00:00  9436.738865  9409.000000  9423.799996   
-         
-            daily\_return  sma7  wma7  ema7  std20  
-         0           NaN   NaN   NaN   NaN    NaN  
-         1     -1.641721   NaN   NaN   NaN    NaN  
-         2    -37.977619   NaN   NaN   NaN    NaN  
-         3     31.777616   NaN   NaN   NaN    NaN  
-         4     11.200004   NaN   NaN   NaN    NaN  
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}28}]:} \PY{n}{plot}\PY{p}{(}\PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{std20}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}28}]:} [<matplotlib.lines.Line2D at 0x1b0f4264be0>]
-\end{Verbatim}
-            
     \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_46_1.png}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_35_0.png}
     \end{center}
     { \hspace*{\fill} \\}
     
-    \hypertarget{bollinger-bands}{%
-\section{Bollinger Bands}\label{bollinger-bands}}
-
-    Bollinger band is calculated as follows:
-
-\begin{itemize}
-\tightlist
-\item
-  Standard deviation (\(\sigma\)) moving average for \(n\) periods.
-\item
-  EMA for \(n\) periods
-\item
-  The upper band is \(\text{EMA} + 2\sigma\).
-\item
-  The lower band is \(\text{EMA} - 2\sigma\).
-\end{itemize}
-
-The default period is \(20\).
+    \hypertarget{optimal-stop-loss-percentage}{%
+\subsection{Optimal stop loss
+percentage}\label{optimal-stop-loss-percentage}}
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}29}]:} \PY{k}{def} \PY{n+nf}{bbands}\PY{p}{(}\PY{n}{df}\PY{p}{,} \PY{n}{periods} \PY{o}{=} \PY{l+m+mi}{20}\PY{p}{,} \PY{n}{source\PYZus{}column} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{target\PYZus{}column} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bb}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{:}
-             \PY{n}{temp\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{df}\PY{p}{[}\PY{n}{source\PYZus{}column}\PY{p}{]}\PY{p}{)}
-             \PY{n}{std}\PY{p}{(}\PY{n}{temp\PYZus{}df}\PY{p}{,} \PY{n}{periods}\PY{p}{)}
-             \PY{n}{ema}\PY{p}{(}\PY{n}{temp\PYZus{}df}\PY{p}{,} \PY{n}{periods}\PY{p}{)}
-             \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZus{}mid}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{target\PYZus{}column}\PY{p}{)}\PY{p}{]} \PY{o}{=} \PY{n}{temp\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ema}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{periods}\PY{p}{)}\PY{p}{]}
-             \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZus{}upper}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{target\PYZus{}column}\PY{p}{)}\PY{p}{]} \PY{o}{=} \PY{n}{temp\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ema}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{periods}\PY{p}{)}\PY{p}{]} \PY{o}{+} \PY{l+m+mi}{2}\PY{o}{*}\PY{n}{temp\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{std}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{periods}\PY{p}{)}\PY{p}{]}
-             \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZus{}lower}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{target\PYZus{}column}\PY{p}{)}\PY{p}{]} \PY{o}{=} \PY{n}{temp\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ema}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{periods}\PY{p}{)}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{l+m+mi}{2}\PY{o}{*}\PY{n}{temp\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{std}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{periods}\PY{p}{)}\PY{p}{]}
+{\color{incolor}In [{\color{incolor}14}]:} \PY{n}{use\PYZus{}leverage} \PY{o}{=} \PY{l+m+mi}{1}
 \end{Verbatim}
 
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}30}]:} \PY{n}{bbands}\PY{p}{(}\PY{n}{chart}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}15}]:} \PY{n}{results} \PY{o}{=} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}}
+         \PY{k}{for} \PY{n}{slp} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{11}\PY{p}{)}\PY{p}{:} \PY{c+c1}{\PYZsh{} 11}
+             \PY{n}{slp} \PY{o}{/}\PY{o}{=} \PY{l+m+mi}{100}
+             \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Simulating for }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{slp}\PY{p}{)}\PY{p}{)}
+             \PY{n}{sim} \PY{o}{=} \PY{n}{bt}\PY{o}{.}\PY{n}{TradingSim}\PY{p}{(}\PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{chart}\PY{p}{)}\PY{p}{)}
+             \PY{n}{sim}\PY{o}{.}\PY{n}{balance} \PY{o}{=} \PY{l+m+mi}{1000}
+             \PY{n}{sim}\PY{o}{.}\PY{n}{lot\PYZus{}size} \PY{o}{=} \PY{l+m+mf}{0.1}
+             \PY{n}{sim}\PY{o}{.}\PY{n}{fee\PYZus{}percentage} \PY{o}{=} \PY{l+m+mf}{0.00050}
+             \PY{n}{sim}\PY{o}{.}\PY{n}{leverage} \PY{o}{=} \PY{n}{use\PYZus{}leverage}
+             \PY{n}{sim}\PY{o}{.}\PY{n}{stop\PYZus{}loss\PYZus{}type} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{limit}\PY{l+s+s1}{\PYZsq{}}
+             \PY{n}{sim}\PY{o}{.}\PY{n}{stop\PYZus{}loss\PYZus{}percentage} \PY{o}{=} \PY{n}{slp}
+             \PY{n}{sim}\PY{o}{.}\PY{n}{run}\PY{p}{(}\PY{p}{)}    
+             \PY{n}{results}\PY{p}{[}\PY{n}{slp}\PY{p}{]} \PY{o}{=} \PY{n}{sim}\PY{o}{.}\PY{n}{balance}
+             
+         \PY{n}{x}\PY{p}{,}\PY{n}{y} \PY{o}{=} \PY{n+nb}{list}\PY{p}{(}\PY{n}{results}\PY{o}{.}\PY{n}{keys}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{n+nb}{list}\PY{p}{(}\PY{n}{results}\PY{o}{.}\PY{n}{values}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{5}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{)}\PY{p}{)}
+         \PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,}\PY{n}{y}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+         \PY{n}{optimal\PYZus{}stop\PYZus{}loss\PYZus{}percentage} \PY{o}{=} \PY{n}{x}\PY{p}{[}\PY{n}{y}\PY{o}{.}\PY{n}{index}\PY{p}{(}\PY{n+nb}{max}\PY{p}{(}\PY{n}{y}\PY{p}{)}\PY{p}{)}\PY{p}{]}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Optimal solution at: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{optimal\PYZus{}stop\PYZus{}loss\PYZus{}percentage}\PY{p}{)}\PY{p}{)}
 \end{Verbatim}
 
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}31}]:} \PY{n}{chart}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
+Simulating for 0.01
+Simulating for 0.02
+Simulating for 0.03
+Simulating for 0.04
+Simulating for 0.05
+Simulating for 0.06
+Simulating for 0.07
+Simulating for 0.08
+Simulating for 0.09
+Simulating for 0.1
 
+    \end{Verbatim}
 
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}31}]:}          close                 date         high          low         open  \textbackslash{}
-         0  9431.641721  2018-04-30 01:00:00  9432.934620  9390.000000  9402.720313   
-         1  9430.000000  2018-04-30 01:15:00  9431.512595  9390.117883  9431.512595   
-         2  9392.022381  2018-04-30 01:30:00  9430.067142  9390.000000  9430.000000   
-         3  9423.799996  2018-04-30 01:45:00  9429.534159  9392.022381  9392.022381   
-         4  9435.000000  2018-04-30 02:00:00  9436.738865  9409.000000  9423.799996   
-         
-            daily\_return  sma7  wma7  ema7  std20  bb\_mid  bb\_upper  bb\_lower  
-         0           NaN   NaN   NaN   NaN    NaN     NaN       NaN       NaN  
-         1     -1.641721   NaN   NaN   NaN    NaN     NaN       NaN       NaN  
-         2    -37.977619   NaN   NaN   NaN    NaN     NaN       NaN       NaN  
-         3     31.777616   NaN   NaN   NaN    NaN     NaN       NaN       NaN  
-         4     11.200004   NaN   NaN   NaN    NaN     NaN       NaN       NaN  
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}32}]:} \PY{n}{plot}\PY{p}{(}\PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{close}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{black}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plot}\PY{p}{(}\PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bb\PYZus{}mid}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plot}\PY{p}{(}\PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bb\PYZus{}upper}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gray}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plot}\PY{p}{(}\PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{bb\PYZus{}lower}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{gray}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}32}]:} [<matplotlib.lines.Line2D at 0x1b0f42d52b0>]
-\end{Verbatim}
-            
     \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_52_1.png}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_38_1.png}
     \end{center}
     { \hspace*{\fill} \\}
     
-    \hypertarget{relative-strength-index-rsi}{%
-\section{Relative Strength Index
-(RSI)}\label{relative-strength-index-rsi}}
+    \begin{Verbatim}[commandchars=\\\{\}]
+Optimal solution at: 0.08
 
-    The relative strength index is calculated with the following formula:
+    \end{Verbatim}
 
-\begin{itemize}
-\tightlist
-\item
-  \(\text{RSI}=100-100/(1+\text{RS})\)
-\item
-  \(\text{RS}=U / D\)
-\item
-  \(U\) is EMA of all positive moves in the last \(n\) periods.
-\item
-  \(D\) is EMA of (absolute values of) all negative moves in the last
-  \(n\) periods.
-\item
-  \(n\) is the period of RSI.
-\end{itemize}
+    \hypertarget{optimal-lot-size}{%
+\subsection{Optimal lot size}\label{optimal-lot-size}}
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}53}]:} \PY{k}{def} \PY{n+nf}{rsi}\PY{p}{(}\PY{n}{df}\PY{p}{,} \PY{n}{periods} \PY{o}{=} \PY{l+m+mi}{14}\PY{p}{,} \PY{n}{source\PYZus{}column}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{daily\PYZus{}return}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{target\PYZus{}column}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{rsi}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}\PY{p}{:}
-             \PY{n}{temp\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{df}\PY{p}{[}\PY{n}{source\PYZus{}column}\PY{p}{]}\PY{p}{)}
-             \PY{n}{temp\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{closing\PYZus{}gains}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{temp\PYZus{}df}\PY{p}{[}\PY{n}{source\PYZus{}column}\PY{p}{]}\PY{o}{.}\PY{n}{apply}\PY{p}{(}\PY{k}{lambda} \PY{n}{x}\PY{p}{:} \PY{n+nb}{max}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{)}
-             \PY{n}{temp\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{closing\PYZus{}losses}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{temp\PYZus{}df}\PY{p}{[}\PY{n}{source\PYZus{}column}\PY{p}{]}\PY{o}{.}\PY{n}{apply}\PY{p}{(}\PY{k}{lambda} \PY{n}{x}\PY{p}{:} \PY{n+nb}{abs}\PY{p}{(}\PY{n+nb}{min}\PY{p}{(}\PY{n}{x}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{)}\PY{p}{)}\PY{p}{)}
-             \PY{n}{ema}\PY{p}{(}\PY{n}{temp\PYZus{}df}\PY{p}{,} \PY{n}{periods}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{closing\PYZus{}gains}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{closing\PYZus{}gains\PYZus{}ema}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-             \PY{n}{ema}\PY{p}{(}\PY{n}{temp\PYZus{}df}\PY{p}{,} \PY{n}{periods}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{closing\PYZus{}losses}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{closing\PYZus{}losses\PYZus{}ema}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-             \PY{n}{temp\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{rs}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{temp\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{closing\PYZus{}gains\PYZus{}ema}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{periods}\PY{p}{)}\PY{p}{]} \PY{o}{/} \PY{n}{temp\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{closing\PYZus{}losses\PYZus{}ema}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{periods}\PY{p}{)}\PY{p}{]}
-             \PY{n}{df}\PY{p}{[}\PY{n}{target\PYZus{}column}\PY{p}{]} \PY{o}{=} \PY{l+m+mi}{100} \PY{o}{\PYZhy{}} \PY{l+m+mi}{100} \PY{o}{/} \PY{p}{(}\PY{l+m+mi}{1} \PY{o}{+} \PY{n}{temp\PYZus{}df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{rs}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}54}]:} \PY{n}{rsi}\PY{p}{(}\PY{n}{chart}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}16}]:} \PY{n}{results} \PY{o}{=} \PY{p}{\PYZob{}}\PY{p}{\PYZcb{}}
+         \PY{k}{for} \PY{n}{ls} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{11}\PY{p}{)}\PY{p}{:} \PY{c+c1}{\PYZsh{} 11}
+             \PY{n}{ls} \PY{o}{/}\PY{o}{=} \PY{l+m+mi}{10}
+             \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Simulating for }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{ls}\PY{p}{)}\PY{p}{)}
+             \PY{n}{sim} \PY{o}{=} \PY{n}{bt}\PY{o}{.}\PY{n}{TradingSim}\PY{p}{(}\PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{chart}\PY{p}{)}\PY{p}{)}
+             \PY{n}{sim}\PY{o}{.}\PY{n}{balance} \PY{o}{=} \PY{l+m+mi}{1000}
+             \PY{n}{sim}\PY{o}{.}\PY{n}{lot\PYZus{}size} \PY{o}{=} \PY{n}{ls}
+             \PY{n}{sim}\PY{o}{.}\PY{n}{fee\PYZus{}percentage} \PY{o}{=} \PY{l+m+mf}{0.00050}
+             \PY{n}{sim}\PY{o}{.}\PY{n}{leverage} \PY{o}{=} \PY{n}{use\PYZus{}leverage}
+             \PY{n}{sim}\PY{o}{.}\PY{n}{stop\PYZus{}loss\PYZus{}type} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{limit}\PY{l+s+s1}{\PYZsq{}}
+             \PY{n}{sim}\PY{o}{.}\PY{n}{stop\PYZus{}loss\PYZus{}percentage} \PY{o}{=} \PY{n}{optimal\PYZus{}stop\PYZus{}loss\PYZus{}percentage}
+             \PY{n}{sim}\PY{o}{.}\PY{n}{run}\PY{p}{(}\PY{p}{)}    
+             \PY{n}{results}\PY{p}{[}\PY{n}{ls}\PY{p}{]} \PY{o}{=} \PY{n}{sim}\PY{o}{.}\PY{n}{balance}
+             
+         \PY{n}{x}\PY{p}{,}\PY{n}{y} \PY{o}{=} \PY{n+nb}{list}\PY{p}{(}\PY{n}{results}\PY{o}{.}\PY{n}{keys}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{n+nb}{list}\PY{p}{(}\PY{n}{results}\PY{o}{.}\PY{n}{values}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{5}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{)}\PY{p}{)}
+         \PY{n}{plot}\PY{p}{(}\PY{n}{x}\PY{p}{,}\PY{n}{y}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+         \PY{n}{optimal\PYZus{}lot\PYZus{}size} \PY{o}{=} \PY{n}{x}\PY{p}{[}\PY{n}{y}\PY{o}{.}\PY{n}{index}\PY{p}{(}\PY{n+nb}{max}\PY{p}{(}\PY{n}{y}\PY{p}{)}\PY{p}{)}\PY{p}{]}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Optimal solution at: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{optimal\PYZus{}lot\PYZus{}size}\PY{p}{)}\PY{p}{)}
 \end{Verbatim}
 
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}55}]:} \PY{n}{fig}\PY{p}{,} \PY{n}{ax} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{p}{)}
-         \PY{n}{plot}\PY{p}{(}\PY{n}{chart}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{rsi}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{black}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{axhline}\PY{p}{(}\PY{n}{y}\PY{o}{=}\PY{l+m+mi}{80}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{r}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{plt}\PY{o}{.}\PY{n}{axhline}\PY{p}{(}\PY{n}{y}\PY{o}{=}\PY{l+m+mi}{20}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{lime}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}ylim}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+m+mi}{100}\PY{p}{)}
-         \PY{n}{fill\PYZus{}between}\PY{p}{(}\PY{n+nb}{list}\PY{p}{(}\PY{n}{chart}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{,} \PY{l+m+mi}{20}\PY{p}{,} \PY{l+m+mi}{80}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{grey}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{alpha}\PY{o}{=}\PY{l+m+mi}{0}\PY{p}{)}
-\end{Verbatim}
+Simulating for 0.1
+Simulating for 0.2
+Simulating for 0.3
+Simulating for 0.4
+Simulating for 0.5
+Simulating for 0.6
+Simulating for 0.7
+Simulating for 0.8
+Simulating for 0.9
+Simulating for 1.0
 
+    \end{Verbatim}
 
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}55}]:} <matplotlib.collections.PolyCollection at 0x1b0f46f0cc0>
-\end{Verbatim}
-            
     \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_57_1.png}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_40_1.png}
     \end{center}
     { \hspace*{\fill} \\}
     
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}36}]:} \PY{n}{chart}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{p}{)}
+Optimal solution at: 0.3
+
+    \end{Verbatim}
+
+    \hypertarget{simulation}{%
+\section{Simulation}\label{simulation}}
+
+    We will start with \(\$1000\) and use the following parameters:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}17}]:} \PY{n}{sim} \PY{o}{=} \PY{n}{bt}\PY{o}{.}\PY{n}{TradingSim}\PY{p}{(}\PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{n}{chart}\PY{p}{)}\PY{p}{)}
+         \PY{n}{sim}\PY{o}{.}\PY{n}{balance} \PY{o}{=} \PY{l+m+mi}{1000}
+         \PY{n}{sim}\PY{o}{.}\PY{n}{lot\PYZus{}size} \PY{o}{=} \PY{n}{optimal\PYZus{}lot\PYZus{}size}
+         \PY{n}{sim}\PY{o}{.}\PY{n}{fee\PYZus{}percentage} \PY{o}{=} \PY{l+m+mf}{0.00050}
+         \PY{n}{sim}\PY{o}{.}\PY{n}{leverage} \PY{o}{=} \PY{n}{use\PYZus{}leverage}
+         \PY{n}{sim}\PY{o}{.}\PY{n}{stop\PYZus{}loss\PYZus{}type} \PY{o}{=} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{limit}\PY{l+s+s1}{\PYZsq{}}
+         \PY{n}{sim}\PY{o}{.}\PY{n}{stop\PYZus{}loss\PYZus{}percentage} \PY{o}{=} \PY{n}{optimal\PYZus{}stop\PYZus{}loss\PYZus{}percentage}
+         \PY{n}{sim}\PY{o}{.}\PY{n}{run}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}18}]:} \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Final balance: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{sim}\PY{o}{.}\PY{n}{balance}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Final balance: 1073.4134501666726
+
+    \end{Verbatim}
+
+    \hypertarget{performance-analysis}{%
+\section{Performance analysis}\label{performance-analysis}}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}19}]:} \PY{n}{analysis} \PY{o}{=} \PY{n}{bt}\PY{o}{.}\PY{n}{AnalyzeSim}\PY{p}{(}\PY{n}{sim}\PY{p}{)}
+         
+         \PY{n}{analysis}\PY{o}{.}\PY{n}{sim}\PY{o}{.}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{max\PYZus{}balance}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{l+m+mi}{0}
+         \PY{n}{analysis}\PY{o}{.}\PY{n}{sim}\PY{o}{.}\PY{n}{df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{max\PYZus{}balance}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{analysis}\PY{o}{.}\PY{n}{sim}\PY{o}{.}\PY{n}{df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{balance}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+         \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{n+nb}{len}\PY{p}{(}\PY{n}{analysis}\PY{o}{.}\PY{n}{sim}\PY{o}{.}\PY{n}{df}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+             \PY{n}{analysis}\PY{o}{.}\PY{n}{sim}\PY{o}{.}\PY{n}{df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{max\PYZus{}balance}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n+nb}{max}\PY{p}{(}\PY{n}{analysis}\PY{o}{.}\PY{n}{sim}\PY{o}{.}\PY{n}{df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{i}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{max\PYZus{}balance}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{analysis}\PY{o}{.}\PY{n}{sim}\PY{o}{.}\PY{n}{df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{balance}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}
+             
+         \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{20}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{)}\PY{p}{)}
+         \PY{n}{plot}\PY{p}{(}\PY{n}{analysis}\PY{o}{.}\PY{n}{sim}\PY{o}{.}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{balance}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{lw}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{)}
+         \PY{n}{fill\PYZus{}between}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{analysis}\PY{o}{.}\PY{n}{sim}\PY{o}{.}\PY{n}{df}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{n}{analysis}\PY{o}{.}\PY{n}{sim}\PY{o}{.}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{balance}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.25}\PY{p}{)}
+         \PY{n}{xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Time in periods}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Equity}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{title}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Equity curve}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         \PY{n}{grid}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_46_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}20}]:} \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{There are }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{ trades}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{analysis}\PY{o}{.}\PY{n}{trades}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+         \PY{n}{good\PYZus{}trades} \PY{o}{=} \PY{n}{analysis}\PY{o}{.}\PY{n}{trades}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{analysis}\PY{o}{.}\PY{n}{trades}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{pl}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{\PYZgt{}} \PY{l+m+mi}{0}\PY{p}{]}
+         \PY{n}{bad\PYZus{}trades} \PY{o}{=} \PY{n}{analysis}\PY{o}{.}\PY{n}{trades}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{analysis}\PY{o}{.}\PY{n}{trades}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{pl}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{\PYZlt{}} \PY{l+m+mi}{0}\PY{p}{]}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Good trades: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{good\PYZus{}trades}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Bad trades: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{bad\PYZus{}trades}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Stopped trades: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{analysis}\PY{o}{.}\PY{n}{trades}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{analysis}\PY{o}{.}\PY{n}{trades}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{state}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{stopped}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Win ratio is }\PY{l+s+si}{\PYZob{}:.2f\PYZcb{}}\PY{l+s+s1}{\PYZpc{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{good\PYZus{}trades}\PY{p}{)}\PY{o}{/}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{good\PYZus{}trades}\PY{p}{)}\PY{o}{+}\PY{n+nb}{len}\PY{p}{(}\PY{n}{bad\PYZus{}trades}\PY{p}{)}\PY{p}{)}\PY{o}{*}\PY{l+m+mi}{100}\PY{p}{)}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Leverage: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{use\PYZus{}leverage}\PY{p}{)}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Stop loss percentage: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{optimal\PYZus{}stop\PYZus{}loss\PYZus{}percentage}\PY{p}{)}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Lot size: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{optimal\PYZus{}lot\PYZus{}size}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+There are 1214 trades
+Good trades: 350
+Bad trades: 864
+Stopped trades: 6
+Win ratio is 28.83\%
+Leverage: 1
+Stop loss percentage: 0.08
+Lot size: 0.3
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}21}]:} \PY{n}{analysis}\PY{o}{.}\PY{n}{roe}\PY{p}{(}\PY{p}{)}
 \end{Verbatim}
 
 
 \begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}36}]:}          close                 date         high          low         open  \textbackslash{}
-         0  9431.641721  2018-04-30 01:00:00  9432.934620  9390.000000  9402.720313   
-         1  9430.000000  2018-04-30 01:15:00  9431.512595  9390.117883  9431.512595   
-         2  9392.022381  2018-04-30 01:30:00  9430.067142  9390.000000  9430.000000   
-         3  9423.799996  2018-04-30 01:45:00  9429.534159  9392.022381  9392.022381   
-         4  9435.000000  2018-04-30 02:00:00  9436.738865  9409.000000  9423.799996   
-         
-            daily\_return  sma7  wma7  ema7  std20  bb\_mid  bb\_upper  bb\_lower  rsi  
-         0           NaN   NaN   NaN   NaN    NaN     NaN       NaN       NaN  NaN  
-         1     -1.641721   NaN   NaN   NaN    NaN     NaN       NaN       NaN  NaN  
-         2    -37.977619   NaN   NaN   NaN    NaN     NaN       NaN       NaN  NaN  
-         3     31.777616   NaN   NaN   NaN    NaN     NaN       NaN       NaN  NaN  
-         4     11.200004   NaN   NaN   NaN    NaN     NaN       NaN       NaN  NaN  
+{\color{outcolor}Out[{\color{outcolor}21}]:} 0.073413450166672556
 \end{Verbatim}
             
-    \hypertarget{parabolic-sar-stop-and-reverse}{%
-\section{Parabolic SAR (stop and
-reverse)}\label{parabolic-sar-stop-and-reverse}}
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}22}]:} \PY{n}{analysis}\PY{o}{.}\PY{n}{paid\PYZus{}fees}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
 
-    tba.
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}22}]:} 279.07524542297313
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}23}]:} \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{20}\PY{p}{,}\PY{l+m+mi}{5}\PY{p}{)}\PY{p}{)}
+         \PY{n}{drawdown} \PY{o}{=} \PY{n}{analysis}\PY{o}{.}\PY{n}{sim}\PY{o}{.}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{max\PYZus{}balance}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{n}{analysis}\PY{o}{.}\PY{n}{sim}\PY{o}{.}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{balance}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+         \PY{n}{plot}\PY{p}{(}\PY{n}{drawdown}\PY{p}{,} \PY{n}{lw}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{)}
+         \PY{n}{fill\PYZus{}between}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{analysis}\PY{o}{.}\PY{n}{sim}\PY{o}{.}\PY{n}{df}\PY{o}{.}\PY{n}{index}\PY{p}{)}\PY{p}{)}\PY{p}{,} \PY{n}{drawdown}\PY{p}{,} \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.25}\PY{p}{)}
+         \PY{n}{grid}\PY{p}{(}\PY{p}{)}
+         \PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+         \PY{n}{max\PYZus{}drawdown} \PY{o}{=} \PY{n+nb}{max}\PY{p}{(}\PY{n}{drawdown}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Max drawdown: }\PY{l+s+si}{\PYZob{}:.2f\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{l+m+mi}{1}\PY{o}{\PYZhy{}}\PY{n}{max\PYZus{}drawdown} \PY{o}{/} \PY{n}{analysis}\PY{o}{.}\PY{n}{sim}\PY{o}{.}\PY{n}{df}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{drawdown}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{drawdown} \PY{o}{==} \PY{n}{max\PYZus{}drawdown}\PY{p}{]}\PY{o}{.}\PY{n}{index}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{balance}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_50_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+Max drawdown: 0.07
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}24}]:} \PY{n}{analysis}\PY{o}{.}\PY{n}{trades}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}24}]:}        state position\_type  lot\_size\_base  lot\_size\_base\_leveraged  \textbackslash{}
+         0     closed         short     300.000000               300.000000   
+         1     closed          long     299.902828               299.902828   
+         2     closed         short     299.812857               299.812857   
+         3     closed          long     299.537369               299.537369   
+         4     closed         short     299.447508               299.447508   
+         5     closed          long     299.796336               299.796336   
+         6     closed         short     299.449610               299.449610   
+         7     closed          long     299.359775               299.359775   
+         8     closed         short     298.182408               298.182408   
+         9     closed          long     297.787970               297.787970   
+         10    closed         short     297.698633               297.698633   
+         11    closed          long     297.609324               297.609324   
+         12    closed         short     297.520041               297.520041   
+         13    closed          long     296.305147               296.305147   
+         14    closed          long     295.713265               295.713265   
+         15    closed         short     293.045529               293.045529   
+         16    closed          long     293.331903               293.331903   
+         17    closed         short     291.707563               291.707563   
+         18    closed          long     289.107405               289.107405   
+         19    closed         short     287.506457               287.506457   
+         20    closed          long     287.420205               287.420205   
+         21    closed         short     287.333979               287.333979   
+         22    closed          long     287.247779               287.247779   
+         23    closed         short     286.778806               286.778806   
+         24    closed          long     286.692773               286.692773   
+         25    closed         short     288.517094               288.517094   
+         26    closed          long     288.430539               288.430539   
+         27    closed         short     288.532844               288.532844   
+         28    closed          long     288.446284               288.446284   
+         29    closed         short     288.359750               288.359750   
+         {\ldots}      {\ldots}           {\ldots}            {\ldots}                      {\ldots}   
+         1184  closed          long     321.136750               321.136750   
+         1185  closed         short     320.274665               320.274665   
+         1186  closed          long     318.557594               318.557594   
+         1187  closed         short     327.823674               327.823674   
+         1188  closed          long     327.256911               327.256911   
+         1189  closed         short     330.183121               330.183121   
+         1190  closed          long     328.716117               328.716117   
+         1191  closed         short     328.596103               328.596103   
+         1192  closed          long     326.816342               326.816342   
+         1193  closed         short     325.323178               325.323178   
+         1194  closed          long     325.143470               325.143470   
+         1195  closed         short     324.317572               324.317572   
+         1196  closed          long     325.823501               325.823501   
+         1197  closed         short     332.475594               332.475594   
+         1198  closed          long     331.561177               331.561177   
+         1199  closed         short     332.497330               332.497330   
+         1200  closed          long     331.079097               331.079097   
+         1201  closed          long     329.832155               329.832155   
+         1202  closed          long     328.681639               328.681639   
+         1203  closed          long     328.509831               328.509831   
+         1204  closed         short     326.262025               326.262025   
+         1205  closed          long     324.718153               324.718153   
+         1206  closed         short     323.313630               323.313630   
+         1207  closed          long     322.260210               322.260210   
+         1208  closed         short     321.476100               321.476100   
+         1209  closed          long     317.320382               317.320382   
+         1210  closed         short     315.548626               315.548626   
+         1211  closed          long     317.326999               317.326999   
+         1212  closed         short     317.835087               317.835087   
+         1213  closed          long     319.780900               319.780900   
+         
+               lot\_size\_quote  lot\_size\_quote\_leveraged  leverage  entry\_price  \textbackslash{}
+         0           1.290284                  1.290284         1   232.506980   
+         1           1.272629                  1.272629         1   235.656085   
+         2           1.236342                  1.236342         1   242.500000   
+         3           1.264287                  1.264287         1   236.922050   
+         4           1.237386                  1.237386         1   242.000000   
+         5           1.270323                  1.270323         1   236.000000   
+         6           1.242530                  1.242530         1   241.000000   
+         7           1.248276                  1.248276         1   239.818617   
+         8           1.254448                  1.254448         1   237.700000   
+         9           1.254218                  1.254218         1   237.429160   
+         10          1.245601                  1.245601         1   239.000000   
+         11          1.253860                  1.253860         1   237.354602   
+         12          1.250084                  1.250084         1   238.000000   
+         13          1.264496                  1.264496         1   234.326594   
+         14          1.232241                  1.232241         1   239.979996   
+         15          1.247002                  1.247002         1   235.000000   
+         16          1.280925                  1.280925         1   229.000000   
+         17          1.287892                  1.287892         1   226.500000   
+         18          1.262478                  1.262478         1   229.000000   
+         19          1.255487                  1.255487         1   229.000000   
+         20          1.277423                  1.277423         1   225.000000   
+         21          1.254734                  1.254734         1   229.000000   
+         22          1.276657                  1.276657         1   225.000000   
+         23          1.263343                  1.263343         1   227.000000   
+         24          1.274190                  1.274190         1   225.000000   
+         25          1.217372                  1.217372         1   237.000000   
+         26          1.259522                  1.259522         1   229.000000   
+         27          1.202225                  1.202225         1   239.999000   
+         28          1.259591                  1.259591         1   229.000000   
+         29          1.259213                  1.259213         1   229.000000   
+         {\ldots}              {\ldots}                       {\ldots}       {\ldots}          {\ldots}   
+         1184        0.040378                  0.040378         1  7953.246141   
+         1185        0.040286                  0.040286         1  7950.000000   
+         1186        0.039797                  0.039797         1  8004.497520   
+         1187        0.036959                  0.036959         1  8869.940393   
+         1188        0.036928                  0.036928         1  8862.000001   
+         1189        0.036144                  0.036144         1  9135.134327   
+         1190        0.035683                  0.035683         1  9212.000000   
+         1191        0.035463                  0.035463         1  9265.857272   
+         1192        0.034862                  0.034862         1  9374.459578   
+         1193        0.034974                  0.034974         1  9301.727473   
+         1194        0.034926                  0.034926         1  9309.549343   
+         1195        0.035054                  0.035054         1  9251.813016   
+         1196        0.036042                  0.036042         1  9040.020705   
+         1197        0.034357                  0.034357         1  9677.000000   
+         1198        0.034046                  0.034046         1  9738.555605   
+         1199        0.033790                  0.033790         1  9840.000000   
+         1200        0.033442                  0.033442         1  9900.000000   
+         1201        0.035119                  0.035119         1  9391.758863   
+         1202        0.035902                  0.035902         1  9155.000000   
+         1203        0.038715                  0.038715         1  8485.235594   
+         1204        0.038909                  0.038909         1  8385.209772   
+         1205        0.038330                  0.038330         1  8471.752489   
+         1206        0.038688                  0.038688         1  8356.936255   
+         1207        0.038186                  0.038186         1  8439.300000   
+         1208        0.038072                  0.038072         1  8444.000000   
+         1209        0.036652                  0.036652         1  8657.550000   
+         1210        0.037102                  0.037102         1  8505.000000   
+         1211        0.038473                  0.038473         1  8248.000000   
+         1212        0.038292                  0.038292         1  8300.295132   
+         1213        0.039369                  0.039369         1  8122.700000   
+         
+                exit\_price  fee\_percentage stop\_loss  stop\_loss\_percentage  \textbackslash{}
+         0      232.525500          0.0005     limit                  0.08   
+         1      235.656085          0.0005     limit                  0.08   
+         2      243.000000          0.0005     limit                  0.08   
+         3      236.922050          0.0005     limit                  0.08   
+         4      240.818900          0.0005     limit                  0.08   
+         5      235.325854          0.0005     limit                  0.08   
+         6      241.000000          0.0005     limit                  0.08   
+         7      236.913000          0.0005     limit                  0.08   
+         8      238.510000          0.0005     limit                  0.08   
+         9      237.429160          0.0005     limit                  0.08   
+         10     239.000000          0.0005     limit                  0.08   
+         11     237.354602          0.0005     limit                  0.08   
+         12     241.000000          0.0005     limit                  0.08   
+         13     233.000000          0.0005     limit                  0.08   
+         14     233.000000          0.0005     limit                  0.08   
+         15     234.000000          0.0005     limit                  0.08   
+         16     225.000004          0.0005     limit                  0.08   
+         17     233.000000          0.0005     limit                  0.08   
+         18     225.000000          0.0005     limit                  0.08   
+         19     229.000000          0.0005     limit                  0.08   
+         20     225.000000          0.0005     limit                  0.08   
+         21     229.000000          0.0005     limit                  0.08   
+         22     224.000017          0.0005     limit                  0.08   
+         23     226.999998          0.0005     limit                  0.08   
+         24     230.000000          0.0005     limit                  0.08   
+         25     237.000000          0.0005     limit                  0.08   
+         26     229.500000          0.0005     limit                  0.08   
+         27     239.999000          0.0005     limit                  0.08   
+         28     229.000000          0.0005     limit                  0.08   
+         29     239.999000          0.0005     limit                  0.08   
+         {\ldots}           {\ldots}             {\ldots}       {\ldots}                   {\ldots}   
+         1184  7890.000000          0.0005     limit                  0.08   
+         1185  8084.055923          0.0005     limit                  0.08   
+         1186  8789.000000          0.0005     limit                  0.08   
+         1187  8912.165818          0.0005     limit                  0.08   
+         1188  9135.134327          0.0005     limit                  0.08   
+         1189  9261.227492          0.0005     limit                  0.08   
+         1190  9210.000000          0.0005     limit                  0.08   
+         1191  9423.799996          0.0005     limit                  0.08   
+         1192  9241.000000          0.0005     limit                  0.08   
+         1193  9309.549343          0.0005     limit                  0.08   
+         1194  9240.000000          0.0005     limit                  0.08   
+         1195  9099.438496          0.0005     limit                  0.08   
+         1196  9664.584036          0.0005     limit                  0.08   
+         1197  9756.000000          0.0005     limit                  0.08   
+         1198  9840.000000          0.0005     limit                  0.08   
+         1199  9970.000000          0.0005     limit                  0.08   
+         1200  9785.555000          0.0005     limit                  0.08   
+         1201  9291.900000          0.0005     limit                  0.08   
+         1202  9148.200000          0.0005     limit                  0.08   
+         1203  8300.096056          0.0005     limit                  0.08   
+         1204  8509.025318          0.0005     limit                  0.08   
+         1205  8358.022700          0.0005     limit                  0.08   
+         1206  8439.300000          0.0005     limit                  0.08   
+         1207  8379.262151          0.0005     limit                  0.08   
+         1208  8799.229999          0.0005     limit                  0.08   
+         1209  8505.000000          0.0005     limit                  0.08   
+         1210  8336.803816          0.0005     limit                  0.08   
+         1211  8300.295132          0.0005     limit                  0.08   
+         1212  8122.700000          0.0005     limit                  0.08   
+         1213  8320.846764          0.0005     limit                  0.08   
+         
+               stop\_loss\_price  order\_cost  market\_value         pl  pl\_percent  \textbackslash{}
+         0          251.107538  300.000000    300.023896  -0.323908    0.999920   
+         1          216.803598  299.902828    299.902828  -0.299903    1.000000   
+         2          261.900000  299.812857    300.431028  -0.918293    0.997942   
+         3          217.968286  299.537369    299.537369  -0.299537    1.000000   
+         4          261.360000  299.447508    297.986031   1.162760    1.004905   
+         5          217.120000  299.796336    298.939952  -1.155752    0.997143   
+         6          260.280000  299.449610    299.449610  -0.299450    1.000000   
+         7          220.633128  299.359775    295.732763  -3.924558    0.987884   
+         8          256.716000  298.182408    299.198511  -1.314794    0.996604   
+         9          218.434827  297.787970    297.787970  -0.297788    1.000000   
+         10         258.120000  297.698633    297.698633  -0.297699    1.000000   
+         11         218.366234  297.609324    297.609324  -0.297609    1.000000   
+         12         257.040000  297.520041    301.270294  -4.049648    0.987552   
+         13         215.580466  296.305147    294.627673  -1.972940    0.994339   
+         14         220.781596  295.713265    287.112225  -8.892452    0.970914   
+         15         253.800000  293.045529    291.798527   0.954580    1.004274   
+         16         210.680000  293.331903    288.208206  -5.414467    0.982533   
+         17         244.620000  291.707563    300.078862  -8.667192    0.972103   
+         18         210.680000  289.107405    284.057494  -5.336493    0.982533   
+         19         247.320000  287.506457    287.506457  -0.287506    1.000000   
+         20         207.000000  287.420205    287.420205  -0.287420    1.000000   
+         21         247.320000  287.333979    287.333979  -0.287334    1.000000   
+         22         207.000000  287.247779    285.971144  -1.563245    0.995556   
+         23         245.160000  286.778806    286.778804  -0.286777    1.000000   
+         24         207.000000  286.692773    293.063723   6.081072    1.022222   
+         25         255.960000  288.517094    288.517094  -0.288517    1.000000   
+         26         210.680000  288.430539    289.060300   0.341016    1.002183   
+         27         259.198920  288.532844    288.532844  -0.288533    1.000000   
+         28         210.680000  288.446284    288.446284  -0.288446    1.000000   
+         29         247.320000  288.359750    302.209832 -14.145367    0.954171   
+         {\ldots}               {\ldots}         {\ldots}           {\ldots}        {\ldots}         {\ldots}   
+         1184      7316.986450  321.136750    318.582993  -2.873617    0.992048   
+         1185      8586.000000  320.274665    325.675258  -5.723568    0.983417   
+         1186      7364.137719  318.557594    349.778695  30.886933    1.098008   
+         1187      9579.535624  327.823674    329.384282  -1.889211    0.995262   
+         1188      8153.040001  327.256911    337.343245   9.754034    1.030821   
+         1189      9865.945073  330.183121    334.740671  -4.890012    0.986385   
+         1190      8475.040000  328.716117    328.644750  -0.400047    0.999783   
+         1191     10007.125853  328.596103    334.197243  -5.932537    0.983240   
+         1192      8624.502812  326.816342    322.163618  -4.977214    0.985763   
+         1193     10045.865671  325.323178    325.596744  -0.599026    0.999160   
+         1194      8564.785396  325.143470    322.714404  -2.752995    0.992529   
+         1195      9991.958057  324.317572    318.976161   5.019764    1.016745   
+         1196      8316.819048  325.823501    348.334225  22.173645    1.069089   
+         1197     10451.160000  332.475594    335.189821  -3.048059    0.991902   
+         1198      8959.471157  331.561177    335.014977   3.120512    1.010417   
+         1199     10627.200000  332.497330    336.890079  -4.727443    0.986961   
+         1200      9108.000000  331.079097    327.251789  -4.156473    0.988440   
+         1201      8640.418154  329.832155    326.325180  -3.835054    0.989367   
+         1202      8422.600000  328.681639    328.437506  -0.572692    0.999257   
+         1203      7806.416746  328.509831    321.342068  -7.492689    0.978181   
+         1204      9056.026554  326.262025    331.079592  -5.146238    0.985449   
+         1205      7794.012290  324.718153    320.358946  -4.681746    0.986575   
+         1206      9025.491155  323.313630    326.500123  -3.511400    0.990240   
+         1207      7764.156000  322.260210    319.967625  -2.613699    0.992886   
+         1208      9119.520000  321.476100    335.000254 -13.852392    0.959629   
+         1209      7964.946000  317.320382    311.729052  -5.905855    0.982380   
+         1210      9185.400000  315.548626    309.308288   5.927910    1.020175   
+         1211      7588.160000  317.326999    319.338960   1.693628    1.006340   
+         1212      8964.318743  317.835087    311.034610   6.486042    1.021864   
+         1213      7472.884000  319.780900    327.581699   7.477118    1.024394   
+         
+               paid\_fees  
+         0      0.300012  
+         1      0.299903  
+         2      0.300122  
+         3      0.299537  
+         4      0.298717  
+         5      0.299368  
+         6      0.299450  
+         7      0.297546  
+         8      0.298690  
+         9      0.297788  
+         10     0.297699  
+         11     0.297609  
+         12     0.299395  
+         13     0.295466  
+         14     0.291413  
+         15     0.292422  
+         16     0.290770  
+         17     0.295893  
+         18     0.286582  
+         19     0.287506  
+         20     0.287420  
+         21     0.287334  
+         22     0.286609  
+         23     0.286779  
+         24     0.289878  
+         25     0.288517  
+         26     0.288745  
+         27     0.288533  
+         28     0.288446  
+         29     0.295285  
+         {\ldots}         {\ldots}  
+         1184   0.319860  
+         1185   0.322975  
+         1186   0.334168  
+         1187   0.328604  
+         1188   0.332300  
+         1189   0.332462  
+         1190   0.328680  
+         1191   0.331397  
+         1192   0.324490  
+         1193   0.325460  
+         1194   0.323929  
+         1195   0.321647  
+         1196   0.337079  
+         1197   0.333833  
+         1198   0.333288  
+         1199   0.334694  
+         1200   0.329165  
+         1201   0.328079  
+         1202   0.328560  
+         1203   0.324926  
+         1204   0.328671  
+         1205   0.322539  
+         1206   0.324907  
+         1207   0.321114  
+         1208   0.328238  
+         1209   0.314525  
+         1210   0.312428  
+         1211   0.318333  
+         1212   0.314435  
+         1213   0.323681  
+         
+         [1214 rows x 18 columns]
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}25}]:} \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{There are }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{ stopped trades.}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{analysis}\PY{o}{.}\PY{n}{trades}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{analysis}\PY{o}{.}\PY{n}{trades}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{state}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{stopped}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+         \PY{n}{analysis}\PY{o}{.}\PY{n}{trades}\PY{o}{.}\PY{n}{loc}\PY{p}{[}\PY{n}{analysis}\PY{o}{.}\PY{n}{trades}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{state}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{stopped}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+There are 6 stopped trades.
+
+    \end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}25}]:}         state position\_type  lot\_size\_base  lot\_size\_base\_leveraged  \textbackslash{}
+         356   stopped         short     216.939823               216.939823   
+         394   stopped         short     193.048484               193.048484   
+         830   stopped          long     188.301559               188.301559   
+         1105  stopped          long     363.031000               363.031000   
+         1114  stopped          long     351.418307               351.418307   
+         1179  stopped         short     333.038719               333.038719   
+         
+               lot\_size\_quote  lot\_size\_quote\_leveraged  leverage   entry\_price  \textbackslash{}
+         356         0.611098                  0.611098         1    355.000000   
+         394         0.501425                  0.501425         1    385.000000   
+         830         0.157091                  0.157091         1   1198.681000   
+         1105        0.025081                  0.025081         1  14474.177125   
+         1114        0.029959                  0.029959         1  11730.000000   
+         1179        0.047974                  0.047974         1   6942.048634   
+         
+                 exit\_price  fee\_percentage stop\_loss  stop\_loss\_percentage  \textbackslash{}
+         356     383.400000          0.0005     limit                  0.08   
+         394     415.800000          0.0005     limit                  0.08   
+         830    1102.786520          0.0005     limit                  0.08   
+         1105  13316.242955          0.0005     limit                  0.08   
+         1114  10791.600000          0.0005     limit                  0.08   
+         1179   7497.412525          0.0005     limit                  0.08   
+         
+               stop\_loss\_price  order\_cost  market\_value         pl  pl\_percent  \textbackslash{}
+         356        383.400000  216.939823    234.295009 -17.580803    0.925926   
+         394        415.800000  193.048484    208.492363 -15.644649    0.925926   
+         830       1102.786520  188.301559    173.237434 -15.244894    0.920000   
+         1105     13316.242955  363.031000    333.988520 -29.390990    0.920000   
+         1114     10791.600000  351.418307    323.304842 -28.450826    0.920000   
+         1179      7497.412525  333.038719    359.681817 -26.989458    0.925926   
+         
+               paid\_fees  
+         356    0.225617  
+         394    0.200770  
+         830    0.180769  
+         1105   0.348510  
+         1114   0.337362  
+         1179   0.346360  
+\end{Verbatim}
+            
+    \hypertarget{fibonacci-levels}{%
+\section{Fibonacci levels}\label{fibonacci-levels}}
+
+    We can use this to calculate the Fibonacci level between two points.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}26}]:} \PY{n}{a} \PY{o}{=} \PY{l+m+mi}{9174} \PY{c+c1}{\PYZsh{} crossover price EMA55}
+         \PY{n}{b} \PY{o}{=} \PY{l+m+mi}{8135} \PY{c+c1}{\PYZsh{} high of crossover candle if long, low of crossover if short}
+         \PY{n}{r} \PY{o}{=} \PY{n}{a}\PY{o}{\PYZhy{}}\PY{n}{b}
+         \PY{n}{f5} \PY{o}{=} \PY{n}{a}\PY{o}{\PYZhy{}}\PY{n}{r}\PY{o}{*}\PY{l+m+mf}{0.5}
+         \PY{n}{f618} \PY{o}{=} \PY{n}{a}\PY{o}{\PYZhy{}}\PY{n}{r}\PY{o}{*}\PY{l+m+mf}{0.618}
+         \PY{n}{f702} \PY{o}{=} \PY{n}{a}\PY{o}{\PYZhy{}}\PY{n}{r}\PY{o}{*}\PY{l+m+mf}{0.702}
+         \PY{n}{f702}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}26}]:} 8444.622
+\end{Verbatim}
+            
+    Actually it can be done for any level.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}27}]:} \PY{k}{def} \PY{n+nf}{getFib}\PY{p}{(}\PY{n}{crossover\PYZus{}price}\PY{p}{,} \PY{n}{candle\PYZus{}high\PYZus{}low}\PY{p}{,} \PY{n}{lvl}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{n}{crossover\PYZus{}price}\PY{o}{\PYZhy{}}\PY{p}{(}\PY{n}{crossover\PYZus{}price}\PY{o}{\PYZhy{}}\PY{n}{candle\PYZus{}high\PYZus{}low}\PY{p}{)}\PY{o}{*}\PY{n}{lvl}
+\end{Verbatim}
+
+
+    We are using \texttt{0.702} which is a mid-level.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}28}]:} \PY{n}{getFib}\PY{p}{(}\PY{l+m+mi}{9174}\PY{p}{,} \PY{l+m+mi}{8135}\PY{p}{,} \PY{o}{.}\PY{l+m+mi}{702}\PY{p}{)} \PY{c+c1}{\PYZsh{} Long}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}28}]:} 8444.622
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}29}]:} \PY{n}{getFib}\PY{p}{(}\PY{l+m+mi}{8135}\PY{p}{,} \PY{l+m+mi}{9174}\PY{p}{,} \PY{o}{.}\PY{l+m+mi}{702}\PY{p}{)} \PY{c+c1}{\PYZsh{} Short}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}29}]:} 8864.378
+\end{Verbatim}
+            
+    Generating the Fibonacci sequence.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}30}]:} \PY{k}{def} \PY{n+nf}{fibo}\PY{p}{(}\PY{n}{n}\PY{p}{)}\PY{p}{:}
+             \PY{n}{a} \PY{o}{=} \PY{l+m+mi}{1}
+             \PY{n}{b} \PY{o}{=} \PY{l+m+mi}{1}
+             \PY{n+nb}{print}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{)}
+             \PY{n+nb}{print}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{)}
+             \PY{k}{for} \PY{n}{\PYZus{}} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{n}\PY{p}{)}\PY{p}{:}
+                 \PY{n}{c}\PY{o}{=}\PY{n}{a}\PY{o}{+}\PY{n}{b}
+                 \PY{n}{a}\PY{o}{=}\PY{n}{b}
+                 \PY{n}{b}\PY{o}{=}\PY{n}{c}
+                 \PY{k}{yield} \PY{n}{c}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}31}]:} \PY{k}{for} \PY{n}{n} \PY{o+ow}{in} \PY{n}{fibo}\PY{p}{(}\PY{l+m+mi}{25}\PY{p}{)}\PY{p}{:} \PY{n+nb}{print}\PY{p}{(}\PY{n}{n}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+1
+1
+2
+3
+5
+8
+13
+21
+34
+55
+89
+144
+233
+377
+610
+987
+1597
+2584
+4181
+6765
+10946
+17711
+28657
+46368
+75025
+121393
+196418
+
+    \end{Verbatim}
 
 
     % Add a bibliography block to the postdoc

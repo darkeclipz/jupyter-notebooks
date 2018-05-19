@@ -47,3 +47,6 @@ def rsi(df, periods = 14, source_column='daily_return', target_column='rsi'):
     ema(temp_df, periods, 'closing_losses', 'closing_losses_ema')
     temp_df['rs'] = temp_df['closing_gains_ema{}'.format(periods)] / temp_df['closing_losses_ema{}'.format(periods)]
     df[target_column] = 100 - 100 / (1 + temp_df['rs'])
+
+def fib_tool(a, b, alpha):
+    return b-(b-a)*alpha

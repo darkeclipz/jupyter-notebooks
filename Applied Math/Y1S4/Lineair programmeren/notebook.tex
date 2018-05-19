@@ -141,7 +141,7 @@
     \def\gt{>}
     \def\lt{<}
     % Document parameters
-    \title{Simplex method (Linear programming)}
+    \title{Hoofdstuk 3 - Opdrachten}
     
     
     
@@ -280,280 +280,102 @@
     
 
     
-    \hypertarget{problem}{%
-\section{Problem}\label{problem}}
+    \hypertarget{opgave-27}{%
+\section{Opgave 27}\label{opgave-27}}
 
-    A business produces two products \(X\) and \(Y\). To make these two
-products he needs \(3\) machines and a quantity of labor.
+    \hypertarget{probleem}{%
+\subsection{Probleem}\label{probleem}}
 
-To produce \(1\)kg of \(X\) we need:
-
-\begin{itemize}
-\tightlist
-\item
-  \(2\) hours on machine \(1\)
-\item
-  \(1\) hour on machine \(2\)
-\item
-  \(2\) hours on machine \(3\)
-\item
-  \(1\) hour of labor
-\end{itemize}
-
-To produce \(1\)kg of \(Y\) we need:
-
-\begin{itemize}
-\tightlist
-\item
-  \(1\) hour on machine \(1\)
-\item
-  \(2\) hours on machine \(2\)
-\item
-  \(1\) hour of labor
-\end{itemize}
-
-On the first and second machine there are a maximum of \(140\) hours
-available. The last machine has \(130\) hours available. There are a
-maximum of \(90\) hours of labor.
-
-The profit for \(1\)kg of \(X\) is \(\$30\), and for \(1\)kg of \(Y\) it
-is \(\$20\). The business wants to maximize their profits.
-
-How many kg \(X\) and \(Y\) does he needs to make? Assuming that all
-produced products will be sold.
-
-    \hypertarget{linear-programming-model}{%
-\section{Linear programming model}\label{linear-programming-model}}
-
-    First we convert the linear programming problem into a linear
-programming model.
+    We hebben het volgende lineaire programmeermodel:
 
     \begin{itemize}
 \tightlist
 \item
-  Let \(x\): quantity required to produce in kg for \(X\).
+  \(\text{max } 3x+2y\)
 \item
-  Let \(y\): quantity required to product in kg for \(Y\).
+  \(x+y \leq 16\)
 \item
-  max \(30x + 20y\)
-\item
-  \(2x+y \leq 140\)
-\item
-  \(x+2y\leq 140\)
-\item
-  \(2x \leq 130\)
-\item
-  \(x + y \leq 90\)
+  \(2x+y \leq 20\)
 \end{itemize}
 
-    \hypertarget{solving-it-graphically}{%
-\subsection{Solving it graphically}\label{solving-it-graphically}}
+    Hier moeten we de spelingsvariabelen aan toevoegen. Dit geeft het
+volgende stelsel:
 
-    To find the intersections we solve:
+\[ \begin{cases} 3x + 2y &= 0 \\ x + y + s_1 &= 16 \\ 2x + y + s_2 &= 20 \end{cases} \]
 
-\[ S_1 = \begin{cases} x+y=90 \\ x+2y=140 \end{cases} \]
+    \hypertarget{simplex-tableau}{%
+\subsection{Simplex tableau}\label{simplex-tableau}}
 
-\[ S_2 = \begin{cases} 2x+y=140 \\ x+2y=140 \end{cases} \]
-
-\[ S_3 = \begin{cases} x+2y=140 \\ 2x=130 \end{cases} \]
-
-\[ S_4 = \begin{cases} x+y=90 \\ 2x+y=140 \end{cases} \]
+    Als we het model omzetten naar een Simplex tableau krijgen we:
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}299}]:} S1 \PY{o}{=} \PY{k+kp}{solve}\PY{p}{(}\PY{k+kp}{cbind}\PY{p}{(}\PY{k+kt}{c}\PY{p}{(}\PY{l+m}{1}\PY{p}{,}\PY{l+m}{1}\PY{p}{)}\PY{p}{,}\PY{k+kt}{c}\PY{p}{(}\PY{l+m}{1}\PY{p}{,}\PY{l+m}{2}\PY{p}{)}\PY{p}{)}\PY{p}{,}\PY{k+kt}{c}\PY{p}{(}\PY{l+m}{90}\PY{p}{,}\PY{l+m}{140}\PY{p}{)}\PY{p}{)} 
-          S2 \PY{o}{=} \PY{k+kp}{solve}\PY{p}{(}\PY{k+kp}{cbind}\PY{p}{(}\PY{k+kt}{c}\PY{p}{(}\PY{l+m}{2}\PY{p}{,}\PY{l+m}{1}\PY{p}{)}\PY{p}{,}\PY{k+kt}{c}\PY{p}{(}\PY{l+m}{1}\PY{p}{,}\PY{l+m}{2}\PY{p}{)}\PY{p}{)}\PY{p}{,}\PY{k+kt}{c}\PY{p}{(}\PY{l+m}{140}\PY{p}{,}\PY{l+m}{140}\PY{p}{)}\PY{p}{)}
-          S3 \PY{o}{=} \PY{k+kp}{solve}\PY{p}{(}\PY{k+kp}{cbind}\PY{p}{(}\PY{k+kt}{c}\PY{p}{(}\PY{l+m}{1}\PY{p}{,}\PY{l+m}{2}\PY{p}{)}\PY{p}{,}\PY{k+kt}{c}\PY{p}{(}\PY{l+m}{2}\PY{p}{,}\PY{l+m}{0}\PY{p}{)}\PY{p}{)}\PY{p}{,}\PY{k+kt}{c}\PY{p}{(}\PY{l+m}{140}\PY{p}{,}\PY{l+m}{130}\PY{p}{)}\PY{p}{)}
-          S4 \PY{o}{=} \PY{k+kp}{solve}\PY{p}{(}\PY{k+kp}{cbind}\PY{p}{(}\PY{k+kt}{c}\PY{p}{(}\PY{l+m}{1}\PY{p}{,}\PY{l+m}{2}\PY{p}{)}\PY{p}{,}\PY{k+kt}{c}\PY{p}{(}\PY{l+m}{1}\PY{p}{,}\PY{l+m}{1}\PY{p}{)}\PY{p}{)}\PY{p}{,}\PY{k+kt}{c}\PY{p}{(}\PY{l+m}{90}\PY{p}{,}\PY{l+m}{140}\PY{p}{)}\PY{p}{)}
-          s \PY{o}{=} \PY{k+kp}{cbind}\PY{p}{(}S1\PY{p}{,}S2\PY{p}{,}S3\PY{p}{,}S4\PY{p}{)}
-          \PY{k+kp}{rownames}\PY{p}{(}s\PY{p}{)} \PY{o}{\PYZlt{}\PYZhy{}} \PY{k+kt}{c}\PY{p}{(}\PY{l+s}{\PYZsq{}}\PY{l+s}{x\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{y\PYZsq{}}\PY{p}{)}
-          s
+{\color{incolor}In [{\color{incolor}22}]:} d \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{1}\PY{p}{,}\PY{l+m}{0}\PY{p}{,}\PY{l+m}{0}\PY{p}{)}
+         x \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{\PYZhy{}3}\PY{p}{,} \PY{l+m}{1}\PY{p}{,} \PY{l+m}{2}\PY{p}{)}
+         y \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{\PYZhy{}2}\PY{p}{,} \PY{l+m}{1}\PY{p}{,} \PY{l+m}{1}\PY{p}{)}
+         s1 \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{0}\PY{p}{,} \PY{l+m}{1}\PY{p}{,} \PY{l+m}{0}\PY{p}{)}
+         s2 \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{0}\PY{p}{,} \PY{l+m}{0}\PY{p}{,} \PY{l+m}{1}\PY{p}{)}
+         RHS \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{0}\PY{p}{,} \PY{l+m}{16}\PY{p}{,} \PY{l+m}{20}\PY{p}{)}
+         M \PY{o}{=} \PY{k+kp}{cbind}\PY{p}{(}d\PY{p}{,}x\PY{p}{,}y\PY{p}{,}s1\PY{p}{,}s2\PY{p}{,}RHS\PY{p}{)}
+         \PY{k+kp}{rownames}\PY{p}{(}M\PY{p}{)} \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+s}{\PYZsq{}}\PY{l+s}{d\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{s1\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{s2\PYZsq{}}\PY{p}{)}
+         M
 \end{Verbatim}
 
 
-    \begin{tabular}{r|llll}
-  & S1 & S2 & S3 & S4\\
+    \begin{tabular}{r|llllll}
+  & d & x & y & s1 & s2 & RHS\\
 \hline
-	x & 40       & 46.66667 & 65.0     & 50      \\
-	y & 50       & 46.66667 & 37.5     & 40      \\
+	d & 1  & -3 & -2 & 0  & 0  &  0\\
+	s1 & 0  &  1 &  1 & 1  & 0  & 16\\
+	s2 & 0  &  2 &  1 & 0  & 1  & 20\\
 \end{tabular}
 
 
     
-    We calculate the profit for each of the points:
+    Eerst lossen we het model op voor \(x\):
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}300}]:} \PY{k+kr}{for} \PY{p}{(}i \PY{k+kr}{in} \PY{l+m}{1}\PY{o}{:}\PY{l+m}{4}\PY{p}{)} \PY{p}{\PYZob{}}
-              \PY{k+kp}{print}\PY{p}{(}\PY{k+kp}{paste}\PY{p}{(}\PY{l+s}{\PYZsq{}}\PY{l+s}{X=\PYZsq{}}\PY{p}{,} s\PY{p}{[}\PY{l+m}{1}\PY{p}{,}i\PY{p}{]}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{Y=\PYZsq{}}\PY{p}{,} s\PY{p}{[}\PY{l+m}{2}\PY{p}{,}i\PY{p}{]}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{Profit=\PYZsq{}}\PY{p}{,} \PY{l+m}{30}\PY{o}{*}s\PY{p}{[}\PY{l+m}{1}\PY{p}{,}i\PY{p}{]}\PY{l+m}{+20}\PY{o}{*}s\PY{p}{[}\PY{l+m}{2}\PY{p}{,}i\PY{p}{]}\PY{p}{)}\PY{p}{)}
-          \PY{p}{\PYZcb{}}
+{\color{incolor}In [{\color{incolor}23}]:} M\PY{p}{[}\PY{l+m}{1}\PY{p}{,}\PY{p}{]} \PY{o}{=} M\PY{p}{[}\PY{l+m}{1}\PY{p}{,}\PY{p}{]} \PY{o}{+} M\PY{p}{[}\PY{l+m}{3}\PY{p}{,}\PY{p}{]}
+         M\PY{p}{[}\PY{l+m}{1}\PY{p}{,}\PY{p}{]} \PY{o}{=} M\PY{p}{[}\PY{l+m}{1}\PY{p}{,}\PY{p}{]} \PY{o}{+} M\PY{p}{[}\PY{l+m}{2}\PY{p}{,}\PY{p}{]}
+         M\PY{p}{[}\PY{l+m}{3}\PY{p}{,}\PY{p}{]} \PY{o}{=} M\PY{p}{[}\PY{l+m}{3}\PY{p}{,}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{l+m}{2}\PY{o}{*}M\PY{p}{[}\PY{l+m}{2}\PY{p}{,}\PY{p}{]}
+         \PY{k+kp}{rownames}\PY{p}{(}M\PY{p}{)} \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+s}{\PYZsq{}}\PY{l+s}{d\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{x\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{s2\PYZsq{}}\PY{p}{)}
+         M
 \end{Verbatim}
 
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-[1] "X= 40 Y= 50 Profit= 2200"
-[1] "X= 46.6666666666667 Y= 46.6666666666667 Profit= 2333.33333333333"
-[1] "X= 65 Y= 37.5 Profit= 2700"
-[1] "X= 50 Y= 40 Profit= 2300"
-
-    \end{Verbatim}
-
-    Only \(S_1\) and \(S_4\) are viable solutions. We create the goal
-function \(d(x)\) through \(S_4\) which is \((50, 40)\):
-
-\[ 30x + 20y = 0 \iff y = -\frac{3}{2}x\]
-
-Finally we plug-in the point \((50,40)\):
-
-\[ y = -\frac{3}{2}(x-50)+40 \]
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}301}]:} d \PY{o}{\PYZlt{}\PYZhy{}} \PY{k+kr}{function}\PY{p}{(}x\PY{p}{)} \PY{l+m}{\PYZhy{}3}\PY{o}{/}\PY{l+m}{2}\PY{o}{*}\PY{p}{(}x\PY{l+m}{\PYZhy{}50}\PY{p}{)}\PY{l+m}{+40}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}302}]:} a \PY{o}{=} \PY{l+m}{0}
-          b \PY{o}{=} \PY{l+m}{140}
-          X \PY{o}{=} Y \PY{o}{=} a\PY{o}{:}b
-          plot\PY{p}{(}X\PY{p}{,}Y\PY{p}{,}col\PY{o}{=}\PY{l+s}{\PYZsq{}}\PY{l+s}{white\PYZsq{}}\PY{p}{)}
-          points\PY{p}{(}s\PY{p}{[}\PY{l+m}{1}\PY{p}{,}\PY{p}{]}\PY{p}{,} s\PY{p}{[}\PY{l+m}{2}\PY{p}{,}\PY{p}{]}\PY{p}{)}
-          c1 \PY{o}{=} line\PY{p}{(}a\PY{o}{:}b\PY{p}{,} \PY{k+kp}{sapply}\PY{p}{(}a\PY{o}{:}b\PY{p}{,} d\PY{p}{)}\PY{p}{)}
-          c2 \PY{o}{=} line\PY{p}{(}a\PY{o}{:}b\PY{p}{,} \PY{k+kp}{sapply}\PY{p}{(}a\PY{o}{:}b\PY{p}{,} \PY{k+kr}{function}\PY{p}{(}x\PY{p}{)} \PY{p}{(}\PY{l+m}{140}\PY{l+m}{\PYZhy{}2}\PY{o}{*}x\PY{p}{)}\PY{p}{)}\PY{p}{)}
-          c3 \PY{o}{=} line\PY{p}{(}a\PY{o}{:}b\PY{p}{,} \PY{k+kp}{sapply}\PY{p}{(}a\PY{o}{:}b\PY{p}{,} \PY{k+kr}{function}\PY{p}{(}x\PY{p}{)} \PY{p}{(}\PY{l+m}{1}\PY{o}{/}\PY{l+m}{2}\PY{o}{*}\PY{p}{(}\PY{l+m}{140}\PY{o}{\PYZhy{}}x\PY{p}{)}\PY{p}{)}\PY{p}{)}\PY{p}{)}
-          c4 \PY{o}{=} line\PY{p}{(}a\PY{o}{:}b\PY{p}{,} \PY{k+kp}{sapply}\PY{p}{(}a\PY{o}{:}b\PY{p}{,} \PY{k+kr}{function}\PY{p}{(}x\PY{p}{)} \PY{p}{(}\PY{l+m}{90}\PY{o}{\PYZhy{}}x\PY{p}{)}\PY{p}{)}\PY{p}{)}
-          abline\PY{p}{(}c1\PY{p}{,} col\PY{o}{=}\PY{l+s}{\PYZsq{}}\PY{l+s}{red\PYZsq{}}\PY{p}{,} lwd\PY{o}{=}\PY{l+m}{3}\PY{p}{,} lty\PY{o}{=}\PY{l+m}{2}\PY{p}{)}
-          abline\PY{p}{(}c2\PY{p}{,} lwd\PY{o}{=}\PY{l+m}{2}\PY{p}{)}
-          abline\PY{p}{(}c3\PY{p}{,} lwd\PY{o}{=}\PY{l+m}{2}\PY{p}{)}
-          abline\PY{p}{(}c4\PY{p}{,} lwd\PY{o}{=}\PY{l+m}{2}\PY{p}{)}
-          abline\PY{p}{(}v\PY{o}{=}\PY{l+m}{130}\PY{o}{/}\PY{l+m}{2}\PY{p}{,} lwd\PY{o}{=}\PY{l+m}{2}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_12_0.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
-    \hypertarget{solution}{%
-\subsection{Solution}\label{solution}}
-
-    The solution is \(50\) kg of \(X\) and \(40\) kg of \(Y\) with a total
-profit of \(\$2300\).
-
-    \hypertarget{simplex-method}{%
-\section{Simplex method}\label{simplex-method}}
-
-    Now we are going to find the solution with the simplex method.
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}303}]:} d \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{1}\PY{p}{,}\PY{l+m}{0}\PY{p}{,}\PY{l+m}{0}\PY{p}{,}\PY{l+m}{0}\PY{p}{,}\PY{l+m}{0}\PY{p}{)}
-          x \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{\PYZhy{}30}\PY{p}{,} \PY{l+m}{2}\PY{p}{,}\PY{l+m}{1}\PY{p}{,}\PY{l+m}{2}\PY{p}{,}\PY{l+m}{1}\PY{p}{)}
-          y \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{\PYZhy{}20}\PY{p}{,}\PY{l+m}{1}\PY{p}{,}\PY{l+m}{2}\PY{p}{,}\PY{l+m}{0}\PY{p}{,}\PY{l+m}{1}\PY{p}{)}
-          s1 \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{0}\PY{p}{,}\PY{l+m}{1}\PY{p}{,}\PY{l+m}{0}\PY{p}{,}\PY{l+m}{0}\PY{p}{,}\PY{l+m}{0}\PY{p}{)}
-          s2 \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{0}\PY{p}{,}\PY{l+m}{0}\PY{p}{,}\PY{l+m}{1}\PY{p}{,}\PY{l+m}{0}\PY{p}{,}\PY{l+m}{0}\PY{p}{)}
-          s3 \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{0}\PY{p}{,}\PY{l+m}{0}\PY{p}{,}\PY{l+m}{0}\PY{p}{,}\PY{l+m}{1}\PY{p}{,}\PY{l+m}{0}\PY{p}{)}
-          s4 \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{0}\PY{p}{,}\PY{l+m}{0}\PY{p}{,}\PY{l+m}{0}\PY{p}{,}\PY{l+m}{0}\PY{p}{,}\PY{l+m}{1}\PY{p}{)}
-          RHS \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{0}\PY{p}{,}\PY{l+m}{140}\PY{p}{,}\PY{l+m}{140}\PY{p}{,}\PY{l+m}{130}\PY{p}{,}\PY{l+m}{90}\PY{p}{)}
-          M \PY{o}{=} \PY{k+kp}{cbind}\PY{p}{(}d\PY{p}{,}x\PY{p}{,}y\PY{p}{,}s1\PY{p}{,}s2\PY{p}{,}s3\PY{p}{,}s4\PY{p}{,}RHS\PY{p}{)}
-          \PY{k+kp}{rownames}\PY{p}{(}M\PY{p}{)} \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+s}{\PYZsq{}}\PY{l+s}{d\PYZsq{}}\PY{p}{,}\PY{l+s}{\PYZsq{}}\PY{l+s}{s1\PYZsq{}}\PY{p}{,}\PY{l+s}{\PYZsq{}}\PY{l+s}{s2\PYZsq{}}\PY{p}{,}\PY{l+s}{\PYZsq{}}\PY{l+s}{s3\PYZsq{}}\PY{p}{,}\PY{l+s}{\PYZsq{}}\PY{l+s}{s4\PYZsq{}}\PY{p}{)}
-          M
-\end{Verbatim}
-
-
-    \begin{tabular}{r|llllllll}
-  & d & x & y & s1 & s2 & s3 & s4 & RHS\\
+    \begin{tabular}{r|llllll}
+  & d & x & y & s1 & s2 & RHS\\
 \hline
-	d & 1   & -30 & -20 & 0   & 0   & 0   & 0   &   0\\
-	s1 & 0   &   2 &   1 & 1   & 0   & 0   & 0   & 140\\
-	s2 & 0   &   1 &   2 & 0   & 1   & 0   & 0   & 140\\
-	s3 & 0   &   2 &   0 & 0   & 0   & 1   & 0   & 130\\
-	s4 & 0   &   1 &   1 & 0   & 0   & 0   & 1   &  90\\
+	d & 1   & 0   &  0  &  1  & 1   &  36\\
+	x & 0   & 1   &  1  &  1  & 0   &  16\\
+	s2 & 0   & 0   & -1  & -2  & 1   & -12\\
 \end{tabular}
 
 
     
-    Solving for \(X\):
+    Vervolgens voor \(y\):
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}304}]:} M\PY{p}{[}\PY{l+m}{1}\PY{p}{,}\PY{p}{]} \PY{o}{=} M\PY{p}{[}\PY{l+m}{1}\PY{p}{,}\PY{p}{]} \PY{o}{+} \PY{l+m}{15}\PY{o}{*}M\PY{p}{[}\PY{l+m}{4}\PY{p}{,}\PY{p}{]}
-          M\PY{p}{[}\PY{l+m}{2}\PY{p}{,}\PY{p}{]} \PY{o}{=} M\PY{p}{[}\PY{l+m}{2}\PY{p}{,}\PY{p}{]} \PY{o}{\PYZhy{}} M\PY{p}{[}\PY{l+m}{4}\PY{p}{,}\PY{p}{]}
-          M\PY{p}{[}\PY{l+m}{3}\PY{p}{,}\PY{p}{]} \PY{o}{=} M\PY{p}{[}\PY{l+m}{3}\PY{p}{,}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{l+m}{1}\PY{o}{/}\PY{l+m}{2}\PY{o}{*}M\PY{p}{[}\PY{l+m}{4}\PY{p}{,}\PY{p}{]}
-          M\PY{p}{[}\PY{l+m}{5}\PY{p}{,}\PY{p}{]} \PY{o}{=} M\PY{p}{[}\PY{l+m}{5}\PY{p}{,}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{l+m}{1}\PY{o}{/}\PY{l+m}{2}\PY{o}{*}M\PY{p}{[}\PY{l+m}{4}\PY{p}{,}\PY{p}{]}
-          M\PY{p}{[}\PY{l+m}{4}\PY{p}{,}\PY{p}{]} \PY{o}{=} \PY{l+m}{1}\PY{o}{/}\PY{l+m}{2}\PY{o}{*}M\PY{p}{[}\PY{l+m}{4}\PY{p}{,}\PY{p}{]}
-          \PY{k+kp}{rownames}\PY{p}{(}M\PY{p}{)} \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+s}{\PYZsq{}}\PY{l+s}{d\PYZsq{}}\PY{p}{,}\PY{l+s}{\PYZsq{}}\PY{l+s}{s1\PYZsq{}}\PY{p}{,}\PY{l+s}{\PYZsq{}}\PY{l+s}{s2\PYZsq{}}\PY{p}{,}\PY{l+s}{\PYZsq{}}\PY{l+s}{x\PYZsq{}}\PY{p}{,}\PY{l+s}{\PYZsq{}}\PY{l+s}{s4\PYZsq{}}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}24}]:} M\PY{p}{[}\PY{l+m}{3}\PY{p}{,}\PY{p}{]} \PY{o}{=} \PY{l+m}{\PYZhy{}1}\PY{o}{*}M\PY{p}{[}\PY{l+m}{3}\PY{p}{,}\PY{p}{]}
+         M\PY{p}{[}\PY{l+m}{2}\PY{p}{,}\PY{p}{]} \PY{o}{=} M\PY{p}{[}\PY{l+m}{2}\PY{p}{,}\PY{p}{]} \PY{o}{\PYZhy{}} M\PY{p}{[}\PY{l+m}{3}\PY{p}{,}\PY{p}{]}
+         \PY{k+kp}{rownames}\PY{p}{(}M\PY{p}{)} \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+s}{\PYZsq{}}\PY{l+s}{d\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{x\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{y\PYZsq{}}\PY{p}{)}
+         M
 \end{Verbatim}
 
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}305}]:} M
-\end{Verbatim}
-
-
-    \begin{tabular}{r|llllllll}
-  & d & x & y & s1 & s2 & s3 & s4 & RHS\\
+    \begin{tabular}{r|llllll}
+  & d & x & y & s1 & s2 & RHS\\
 \hline
-	d & 1    & 0    & -20  & 0    & 0    & 15.0 & 0    & 1950\\
-	s1 & 0    & 0    &   1  & 1    & 0    & -1.0 & 0    &   10\\
-	s2 & 0    & 0    &   2  & 0    & 1    & -0.5 & 0    &   75\\
-	x & 0    & 1    &   0  & 0    & 0    &  0.5 & 0    &   65\\
-	s4 & 0    & 0    &   1  & 0    & 0    & -0.5 & 1    &   25\\
+	d & 1  & 0  & 0  &  1 &  1 & 36\\
+	x & 0  & 1  & 0  & -1 &  1 &  4\\
+	y & 0  & 0  & 1  &  2 & -1 & 12\\
 \end{tabular}
 
 
     
-    Solving for \(Y\):
+    \hypertarget{oplossing}{%
+\subsection{Oplossing}\label{oplossing}}
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}306}]:} M\PY{p}{[}\PY{l+m}{1}\PY{p}{,}\PY{p}{]} \PY{o}{=} M\PY{p}{[}\PY{l+m}{1}\PY{p}{,}\PY{p}{]} \PY{o}{+} \PY{l+m}{20}\PY{o}{*}M\PY{p}{[}\PY{l+m}{2}\PY{p}{,}\PY{p}{]}
-          M\PY{p}{[}\PY{l+m}{3}\PY{p}{,}\PY{p}{]} \PY{o}{=} M\PY{p}{[}\PY{l+m}{3}\PY{p}{,}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{l+m}{2}\PY{o}{*}M\PY{p}{[}\PY{l+m}{2}\PY{p}{,}\PY{p}{]}
-          M\PY{p}{[}\PY{l+m}{5}\PY{p}{,}\PY{p}{]} \PY{o}{=} M\PY{p}{[}\PY{l+m}{5}\PY{p}{,}\PY{p}{]} \PY{o}{\PYZhy{}} M\PY{p}{[}\PY{l+m}{2}\PY{p}{,}\PY{p}{]}
-          \PY{k+kp}{rownames}\PY{p}{(}M\PY{p}{)} \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+s}{\PYZsq{}}\PY{l+s}{d\PYZsq{}}\PY{p}{,}\PY{l+s}{\PYZsq{}}\PY{l+s}{y\PYZsq{}}\PY{p}{,}\PY{l+s}{\PYZsq{}}\PY{l+s}{s2\PYZsq{}}\PY{p}{,}\PY{l+s}{\PYZsq{}}\PY{l+s}{x\PYZsq{}}\PY{p}{,}\PY{l+s}{\PYZsq{}}\PY{l+s}{s4\PYZsq{}}\PY{p}{)}
-          M
-\end{Verbatim}
-
-
-    \begin{tabular}{r|llllllll}
-  & d & x & y & s1 & s2 & s3 & s4 & RHS\\
-\hline
-	d & 1    & 0    & 0    & 20   & 0    & -5.0 & 0    & 2150\\
-	y & 0    & 0    & 1    &  1   & 0    & -1.0 & 0    &   10\\
-	s2 & 0    & 0    & 0    & -2   & 1    &  1.5 & 0    &   55\\
-	x & 0    & 1    & 0    &  0   & 0    &  0.5 & 0    &   65\\
-	s4 & 0    & 0    & 0    & -1   & 0    &  0.5 & 1    &   15\\
-\end{tabular}
-
-
-    
-    Solving for \(s_3\):
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}307}]:} M\PY{p}{[}\PY{l+m}{1}\PY{p}{,}\PY{p}{]} \PY{o}{=} M\PY{p}{[}\PY{l+m}{1}\PY{p}{,}\PY{p}{]} \PY{o}{+} \PY{l+m}{10}\PY{o}{*}M\PY{p}{[}\PY{l+m}{5}\PY{p}{,}\PY{p}{]}
-          M\PY{p}{[}\PY{l+m}{2}\PY{p}{,}\PY{p}{]} \PY{o}{=} M\PY{p}{[}\PY{l+m}{2}\PY{p}{,}\PY{p}{]} \PY{o}{+} \PY{l+m}{2}\PY{o}{*}M\PY{p}{[}\PY{l+m}{5}\PY{p}{,}\PY{p}{]}
-          M\PY{p}{[}\PY{l+m}{3}\PY{p}{,}\PY{p}{]} \PY{o}{=} M\PY{p}{[}\PY{l+m}{3}\PY{p}{,}\PY{p}{]} \PY{o}{\PYZhy{}} \PY{l+m}{3}\PY{o}{*}M\PY{p}{[}\PY{l+m}{5}\PY{p}{,}\PY{p}{]}
-          M\PY{p}{[}\PY{l+m}{4}\PY{p}{,}\PY{p}{]} \PY{o}{=} M\PY{p}{[}\PY{l+m}{4}\PY{p}{,}\PY{p}{]} \PY{o}{\PYZhy{}} M\PY{p}{[}\PY{l+m}{5}\PY{p}{,}\PY{p}{]}
-          M\PY{p}{[}\PY{l+m}{5}\PY{p}{,}\PY{p}{]} \PY{o}{=} \PY{l+m}{2}\PY{o}{*}M\PY{p}{[}\PY{l+m}{5}\PY{p}{,}\PY{p}{]}
-          \PY{k+kp}{rownames}\PY{p}{(}M\PY{p}{)} \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+s}{\PYZsq{}}\PY{l+s}{d\PYZsq{}}\PY{p}{,}\PY{l+s}{\PYZsq{}}\PY{l+s}{y\PYZsq{}}\PY{p}{,}\PY{l+s}{\PYZsq{}}\PY{l+s}{s2\PYZsq{}}\PY{p}{,}\PY{l+s}{\PYZsq{}}\PY{l+s}{x\PYZsq{}}\PY{p}{,}\PY{l+s}{\PYZsq{}}\PY{l+s}{s3\PYZsq{}}\PY{p}{)}
-          M
-\end{Verbatim}
-
-
-    \begin{tabular}{r|llllllll}
-  & d & x & y & s1 & s2 & s3 & s4 & RHS\\
-\hline
-	d & 1    & 0    & 0    & 10   & 0    & 0    & 10   & 2300\\
-	y & 0    & 0    & 1    & -1   & 0    & 0    &  2   &   40\\
-	s2 & 0    & 0    & 0    &  1   & 1    & 0    & -3   &   10\\
-	x & 0    & 1    & 0    &  1   & 0    & 0    & -1   &   50\\
-	s3 & 0    & 0    & 0    & -2   & 0    & 1    &  2   &   30\\
-\end{tabular}
-
-
-    
-    \hypertarget{solution}{%
-\subsection{Solution}\label{solution}}
-
-The total profit is \(\$2300\). For maximum profit we need to produce
-\(50\) kg of \(X\), and \(40\) kg of \(Y\). With a remainder for
-\(s_2=10\) and \(s_3=30\).
+    De optimale oplossing is \((4,12)\) met een winst van \(€36\).
 
 
     % Add a bibliography block to the postdoc

@@ -290,17 +290,26 @@ document is followed from the book \emph{The Elements of Computing
 Systems, Noam Nisan and Shimon Shocken (2008)}.
 
 The book is followed from Boolean Logic (chapter 1) to Assembler
-(chapter 6). The construction of the Virtual Machine, and eventually an
-Operating System, is left out of scope. The main reason for this, is
-because Python does not allow an easy `screen' interface. The entire
-emulator will be written as a \texttt{REPL} application, which allows
-the user excessive control of the entire emulator. The cost of this,
-however, is that everything is done at a very low level.
+(chapter 6). There are a total of 13 chapters. The construction of the
+Virtual Machine, and eventually an Operating System, is left out of
+scope. The main reason for this is because Python does not allow an easy
+`screen' interface. The entire emulator will be written as a
+\texttt{REPL} application, which allows the user excessive control of
+the entire emulator. The cost of this, however, is that everything is
+done at a very low level.
 
 The goal is to create a computer that can run Assembly code, and that we
 have an assembler. I haven't followed the Assembly implementation in the
 book, instead, I used it as a baseline, and transformed it into my own
 preferences.
+
+Website's that can be useful for further understanding:
+
+\begin{itemize}
+\tightlist
+\item
+  http://fourier.eng.hmc.edu/e85\_old/lectures/digital\_logic/node6.html
+\end{itemize}
 
     \hypertarget{boolean-logic}{%
 \section{Boolean logic}\label{boolean-logic}}
@@ -356,28 +365,28 @@ value, or executes the function. Allowing functions gives us the option
 to easily chain multiple gates together with references.
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}21}]:} \PY{k}{def} \PY{n+nf}{boolf}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
-             \PY{k}{if} \PY{n}{callable}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{n}{x}\PY{p}{(}\PY{p}{)}
-             \PY{k}{if} \PY{n+nb}{type}\PY{p}{(}\PY{n}{x}\PY{p}{)} \PY{o+ow}{is} \PY{n+nb}{bool}\PY{p}{:} \PY{k}{return} \PY{n}{x}
-             \PY{k}{raise} \PY{n+ne}{ValueError}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Unsupported type }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{ for boolf()}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb}{type}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}1}]:} \PY{k}{def} \PY{n+nf}{boolf}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:}
+            \PY{k}{if} \PY{n}{callable}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{n}{x}\PY{p}{(}\PY{p}{)}
+            \PY{k}{if} \PY{n+nb}{type}\PY{p}{(}\PY{n}{x}\PY{p}{)} \PY{o+ow}{is} \PY{n+nb}{bool}\PY{p}{:} \PY{k}{return} \PY{n}{x}
+            \PY{k}{raise} \PY{n+ne}{ValueError}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Unsupported type }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{ for boolf()}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb}{type}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{p}{)}\PY{p}{)}
 \end{Verbatim}
 
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}17}]:} \PY{k}{class} \PY{n+nc}{And}\PY{p}{(}\PY{p}{)}\PY{p}{:}
-             \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{a}\PY{p}{,} \PY{n}{b}\PY{p}{)}\PY{p}{:} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a} \PY{o}{=} \PY{n}{a}\PY{p}{;} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b} \PY{o}{=} \PY{n}{b}
-             \PY{k}{def} \PY{n+nf}{out}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a}\PY{p}{)} \PY{o+ow}{and} \PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b}\PY{p}{)}
-             \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}repr\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)}\PY{p}{)}
-         
-         \PY{k}{class} \PY{n+nc}{Or}\PY{p}{(}\PY{p}{)}\PY{p}{:}
-             \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{a}\PY{p}{,} \PY{n}{b}\PY{p}{)}\PY{p}{:} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a} \PY{o}{=} \PY{n}{a}\PY{p}{;} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b} \PY{o}{=} \PY{n}{b}
-             \PY{k}{def} \PY{n+nf}{out}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a}\PY{p}{)} \PY{o+ow}{or} \PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b}\PY{p}{)}
-             \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}repr\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)}\PY{p}{)}
-             
-         \PY{k}{class} \PY{n+nc}{Not}\PY{p}{(}\PY{p}{)}\PY{p}{:}
-             \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{a}\PY{p}{)}\PY{p}{:} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a} \PY{o}{=} \PY{n}{a}
-             \PY{k}{def} \PY{n+nf}{out}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{o+ow}{not} \PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a}\PY{p}{)}
-             \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}repr\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}2}]:} \PY{k}{class} \PY{n+nc}{And}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+            \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{a}\PY{p}{,} \PY{n}{b}\PY{p}{)}\PY{p}{:} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a} \PY{o}{=} \PY{n}{a}\PY{p}{;} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b} \PY{o}{=} \PY{n}{b}
+            \PY{k}{def} \PY{n+nf}{out}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a}\PY{p}{)} \PY{o+ow}{and} \PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b}\PY{p}{)}
+            \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}repr\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+        
+        \PY{k}{class} \PY{n+nc}{Or}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+            \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{a}\PY{p}{,} \PY{n}{b}\PY{p}{)}\PY{p}{:} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a} \PY{o}{=} \PY{n}{a}\PY{p}{;} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b} \PY{o}{=} \PY{n}{b}
+            \PY{k}{def} \PY{n+nf}{out}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a}\PY{p}{)} \PY{o+ow}{or} \PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b}\PY{p}{)}
+            \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}repr\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+            
+        \PY{k}{class} \PY{n+nc}{Not}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+            \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{a}\PY{p}{)}\PY{p}{:} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a} \PY{o}{=} \PY{n}{a}
+            \PY{k}{def} \PY{n+nf}{out}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{o+ow}{not} \PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a}\PY{p}{)}
+            \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}repr\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)}\PY{p}{)}
 \end{Verbatim}
 
 
@@ -387,12 +396,12 @@ is a composite gate, we are only using primitive gates. If
 \((a,b,c)=(0,1,1)\), the resulting output should be \(0\).
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}49}]:} \PY{n}{a}\PY{o}{=}\PY{k+kc}{False}\PY{p}{;}\PY{n}{b}\PY{o}{=}\PY{n}{c}\PY{o}{=}\PY{k+kc}{True}
-         \PY{n}{G} \PY{o}{=} \PY{n}{Not}\PY{p}{(}\PY{n}{Or}\PY{p}{(}\PY{k}{lambda}\PY{p}{:} \PY{n}{a}\PY{p}{,} \PY{n}{And}\PY{p}{(}\PY{k}{lambda}\PY{p}{:} \PY{n}{b}\PY{p}{,} \PY{k}{lambda}\PY{p}{:} \PY{n}{c}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{)}
-         \PY{n+nb}{print}\PY{p}{(}\PY{n}{G}\PY{p}{)}
-         
-         \PY{n}{b}\PY{o}{=}\PY{k+kc}{False}
-         \PY{n+nb}{print}\PY{p}{(}\PY{n}{G}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}3}]:} \PY{n}{a}\PY{o}{=}\PY{k+kc}{False}\PY{p}{;}\PY{n}{b}\PY{o}{=}\PY{n}{c}\PY{o}{=}\PY{k+kc}{True}
+        \PY{n}{G} \PY{o}{=} \PY{n}{Not}\PY{p}{(}\PY{n}{Or}\PY{p}{(}\PY{k}{lambda}\PY{p}{:} \PY{n}{a}\PY{p}{,} \PY{n}{And}\PY{p}{(}\PY{k}{lambda}\PY{p}{:} \PY{n}{b}\PY{p}{,} \PY{k}{lambda}\PY{p}{:} \PY{n}{c}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{)}
+        \PY{n+nb}{print}\PY{p}{(}\PY{n}{G}\PY{p}{)}
+        
+        \PY{n}{b}\PY{o}{=}\PY{k+kc}{False}
+        \PY{n+nb}{print}\PY{p}{(}\PY{n}{G}\PY{p}{)}
 \end{Verbatim}
 
 
@@ -421,36 +430,36 @@ by interconnecting them, leading to the construction of \emph{composite
 gates}.
 
     \hypertarget{three-way-and-gate}{%
-\subsubsection{Three-way and gate}\label{three-way-and-gate}}
+\subsubsection{Three-way And gate}\label{three-way-and-gate}}
 
-    The first gate we can construct from two and gates, is a three-way and
+    The first gate we can construct from two And gates, is a three-way And
 gate. It can be defined in the following way:
 \(\text{And3W}(a,b,c)= \text{And}(\text{And}(a,b),c)\).
 
 \begin{figure}
 \centering
 \includegraphics{gates2.PNG}
-\caption{Three-way and gate diagram}
+\caption{Three-way And gate diagram}
 \end{figure}
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}19}]:} \PY{k}{class} \PY{n+nc}{And3W}\PY{p}{(}\PY{p}{)}\PY{p}{:}
-             \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{a}\PY{p}{,} \PY{n}{b}\PY{p}{,} \PY{n}{c}\PY{p}{)}\PY{p}{:} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a} \PY{o}{=} \PY{n}{a}\PY{p}{;} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b} \PY{o}{=} \PY{n}{b}\PY{p}{;} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{c} \PY{o}{=} \PY{n}{c}
-             \PY{k}{def} \PY{n+nf}{out}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:} 
-                 \PY{n}{and1} \PY{o}{=} \PY{n}{And}\PY{p}{(}\PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a}\PY{p}{)}\PY{p}{,} \PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b}\PY{p}{)}\PY{p}{)}
-                 \PY{n}{and2} \PY{o}{=} \PY{n}{And}\PY{p}{(}\PY{n}{and1}\PY{o}{.}\PY{n}{out}\PY{p}{,} \PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{c}\PY{p}{)}\PY{p}{)}
-                 \PY{k}{return} \PY{n}{and2}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)}
-             \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}repr\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}4}]:} \PY{k}{class} \PY{n+nc}{And3W}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+            \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{a}\PY{p}{,} \PY{n}{b}\PY{p}{,} \PY{n}{c}\PY{p}{)}\PY{p}{:} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a} \PY{o}{=} \PY{n}{a}\PY{p}{;} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b} \PY{o}{=} \PY{n}{b}\PY{p}{;} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{c} \PY{o}{=} \PY{n}{c}
+            \PY{k}{def} \PY{n+nf}{out}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:} 
+                \PY{n}{and1} \PY{o}{=} \PY{n}{And}\PY{p}{(}\PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a}\PY{p}{)}\PY{p}{,} \PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b}\PY{p}{)}\PY{p}{)}
+                \PY{n}{and2} \PY{o}{=} \PY{n}{And}\PY{p}{(}\PY{n}{and1}\PY{o}{.}\PY{n}{out}\PY{p}{,} \PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{c}\PY{p}{)}\PY{p}{)}
+                \PY{k}{return} \PY{n}{and2}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)}
+            \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}repr\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)}\PY{p}{)}
 \end{Verbatim}
 
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}20}]:} \PY{n}{And3W}\PY{p}{(}\PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{True}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}5}]:} \PY{n}{And3W}\PY{p}{(}\PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{True}\PY{p}{)}
 \end{Verbatim}
 
 
 \begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}20}]:} True
+{\color{outcolor}Out[{\color{outcolor}5}]:} True
 \end{Verbatim}
             
     \hypertarget{xor-gate}{%
@@ -464,48 +473,269 @@ gate. The gate \(\text{Xor}(a,b)\) is \(1\) exactly when \(a=1\) and
 This definition leads to the logic design shown in the figure below:
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}77}]:} \PY{k}{class} \PY{n+nc}{Xor}\PY{p}{(}\PY{p}{)}\PY{p}{:}
-             \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{a}\PY{p}{,} \PY{n}{b}\PY{p}{)}\PY{p}{:} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a} \PY{o}{=} \PY{n}{a}\PY{p}{;} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b} \PY{o}{=} \PY{n}{b}
-             \PY{k}{def} \PY{n+nf}{out}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{n}{Or}\PY{p}{(}\PY{n}{And}\PY{p}{(}\PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a}\PY{p}{)}\PY{p}{,} \PY{n}{Not}\PY{p}{(}\PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{,}\PYZbs{}
-                                      \PY{n}{And}\PY{p}{(}\PY{n}{Not}\PY{p}{(}\PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{,} \PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PYZbs{}
+{\color{incolor}In [{\color{incolor}6}]:} \PY{k}{class} \PY{n+nc}{Xor}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+            \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{a}\PY{p}{,} \PY{n}{b}\PY{p}{)}\PY{p}{:} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a} \PY{o}{=} \PY{n}{a}\PY{p}{;} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b} \PY{o}{=} \PY{n}{b}
+            \PY{k}{def} \PY{n+nf}{out}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{n}{Or}\PY{p}{(}\PY{n}{And}\PY{p}{(}\PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a}\PY{p}{)}\PY{p}{,} \PY{n}{Not}\PY{p}{(}\PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{,}\PYZbs{}
+                                     \PY{n}{And}\PY{p}{(}\PY{n}{Not}\PY{p}{(}\PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{,} \PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PYZbs{}
+                                  \PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)}
+            \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}repr\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}7}]:} \PY{n}{Xor}\PY{p}{(}\PY{k+kc}{False}\PY{p}{,} \PY{k+kc}{True}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)} \PY{o+ow}{and} \PY{n}{Xor}\PY{p}{(}\PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)} \PYZbs{}
+            \PY{o+ow}{and} \PY{o+ow}{not} \PY{n}{Xor}\PY{p}{(}\PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{True}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)} \PY{o+ow}{and} \PY{o+ow}{not} \PY{n}{Xor}\PY{p}{(}\PY{k+kc}{False}\PY{p}{,} \PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}7}]:} True
+\end{Verbatim}
+            
+    \hypertarget{basic-logic-gates}{%
+\subsection{Basic Logic Gates}\label{basic-logic-gates}}
+
+In this section we will define all the basic logical gates that are used
+as the building blocks to create more advanced circuits.
+
+\hypertarget{not}{%
+\subsubsection{Not}\label{not}}
+
+A not gate has a single input, and inverts that input as output. It is
+defined as \(\text{Not}(a)=\lnot a\). The following truth table applies
+for a Not gate:
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+in & out\tabularnewline
+\midrule
+\endhead
+0 & 1\tabularnewline
+1 & 0\tabularnewline
+\bottomrule
+\end{longtable}
+
+The gate has already been implemented earlier in \emph{Primitive gates}.
+
+\hypertarget{and}{%
+\subsubsection{And}\label{and}}
+
+An And gate has two inputs \(a, b\), and only outputs a \(1\) if exacty
+\(a=b=1\). It is defined as \(\text{And}(a,b)=a \land b\). The following
+truth table applies for an And gate:
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+a & b & out\tabularnewline
+\midrule
+\endhead
+0 & 0 & 0\tabularnewline
+0 & 1 & 0\tabularnewline
+1 & 0 & 0\tabularnewline
+1 & 1 & 1\tabularnewline
+\bottomrule
+\end{longtable}
+
+The gate has already been implemented earlier in \emph{Primitive gates}.
+
+\hypertarget{or}{%
+\subsubsection{Or}\label{or}}
+
+An Or gate has two inputs \(a, b\), and only outputs a \(0\) if exacty
+\(a=b=0\), otherwise it will output \(1\). It is defined as
+\(\text{Or}(a,b)=a \lor b\). The following truth table applies for an Or
+gate:
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+a & b & out\tabularnewline
+\midrule
+\endhead
+0 & 0 & 0\tabularnewline
+0 & 1 & 1\tabularnewline
+1 & 0 & 1\tabularnewline
+1 & 1 & 1\tabularnewline
+\bottomrule
+\end{longtable}
+
+The gate has already been implemented earlier in \emph{Primitive gates}.
+
+\hypertarget{xor}{%
+\subsubsection{Xor}\label{xor}}
+
+An Xor gate has two inputs \(a,b\), its output is \(1\) exactly when
+\(a=1\) and \(b=0\), or \(a=0\) and \(b=1\). Otherwise, the output is
+\(0\). It is defined as
+\(\text{Xor(a,b)}=\text{Or}(\text{And}(a,\text{Not}(b)), \text{And}(\text{Not}(a),b))\).
+The following thruth table applies for a Xor gate:
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+a & b & out\tabularnewline
+\midrule
+\endhead
+0 & 0 & 0\tabularnewline
+0 & 1 & 1\tabularnewline
+1 & 0 & 1\tabularnewline
+1 & 1 & 0\tabularnewline
+\bottomrule
+\end{longtable}
+
+\hypertarget{nand}{%
+\subsubsection{Nand}\label{nand}}
+
+A Nand gate has two input \(a,b\) and its output is the inverse of an
+And gate. It's value is always \(1\), except when \(a=b=1\) for which
+the output is \(0\). It is defined as
+\(\text{Nand}(a,b)=\text{Not}(\text{And}(a,b))\). The following truth
+table applies for a Nand gate:
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+a & b & out\tabularnewline
+\midrule
+\endhead
+0 & 0 & 1\tabularnewline
+0 & 1 & 1\tabularnewline
+1 & 0 & 1\tabularnewline
+1 & 1 & 0\tabularnewline
+\bottomrule
+\end{longtable}
+
+In Python we can implement the gate in the following way:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}8}]:} \PY{k}{class} \PY{n+nc}{Nand}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+            \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,}\PY{n}{a}\PY{p}{,}\PY{n}{b}\PY{p}{)}\PY{p}{:} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a}\PY{o}{=}\PY{n}{a}\PY{p}{;} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b}\PY{o}{=}\PY{n}{b}
+            \PY{k}{def} \PY{n+nf}{out}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{n}{Not}\PY{p}{(}\PY{n}{And}\PY{p}{(}\PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a}\PY{p}{)}\PY{p}{,} \PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)}
+            \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}repr\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}12}]:} \PY{n}{Nand}\PY{p}{(}\PY{k+kc}{False}\PY{p}{,} \PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)} \PY{o+ow}{and} \PY{n}{Nand}\PY{p}{(}\PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)}\PYZbs{}
+             \PY{o+ow}{and} \PY{n}{Nand}\PY{p}{(}\PY{k+kc}{False}\PY{p}{,} \PY{k+kc}{True}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)} \PY{o+ow}{and} \PY{o+ow}{not} \PY{n}{Nand}\PY{p}{(}\PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{True}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}12}]:} True
+\end{Verbatim}
+            
+    \hypertarget{multiplexor}{%
+\subsubsection{Multiplexor}\label{multiplexor}}
+
+    A multiplexor is a three-input gate that uses one of the inputs, called
+\emph{selection bit}, to select and output one of the other two inputs,
+called \emph{data bits}. It is defined as
+\(\text{Mux}(a,b,sel)=\text{Or}(\text{And}(a, \text{Not}(sel), \text{And}(b,sel))\).
+The following truth table applies for a multiplexor:
+
+\begin{longtable}[]{@{}llll@{}}
+\toprule
+a & b & sel & out\tabularnewline
+\midrule
+\endhead
+0 & 0 & 0 & 0\tabularnewline
+0 & 1 & 0 & 0\tabularnewline
+1 & 0 & 0 & 1\tabularnewline
+1 & 1 & 0 & 1\tabularnewline
+0 & 0 & 1 & 0\tabularnewline
+0 & 1 & 1 & 1\tabularnewline
+1 & 0 & 1 & 0\tabularnewline
+1 & 1 & 1 & 1\tabularnewline
+\bottomrule
+\end{longtable}
+
+Which can also be expressed in a more simple form, such as:
+
+\begin{longtable}[]{@{}ll@{}}
+\toprule
+sel & out\tabularnewline
+\midrule
+\endhead
+0 & a\tabularnewline
+1 & b\tabularnewline
+\bottomrule
+\end{longtable}
+
+Using the definition, we can implement it in the following way:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}13}]:} \PY{k}{class} \PY{n+nc}{Mux}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+             \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,}\PY{n}{a}\PY{p}{,}\PY{n}{b}\PY{p}{,}\PY{n}{sel}\PY{p}{)}\PY{p}{:} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a}\PY{o}{=}\PY{n}{a}\PY{p}{;} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b}\PY{o}{=}\PY{n}{b}\PY{p}{;} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{sel}\PY{o}{=}\PY{n}{sel}
+             \PY{k}{def} \PY{n+nf}{out}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{n}{Or}\PY{p}{(}\PY{n}{And}\PY{p}{(}\PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a}\PY{p}{)}\PY{p}{,} \PY{n}{Not}\PY{p}{(}\PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{sel}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{,}\PYZbs{}
+                                      \PY{n}{And}\PY{p}{(}\PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b}\PY{p}{)}\PY{p}{,} \PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{sel}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{out}
                                    \PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)}
              \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}repr\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)}\PY{p}{)}
 \end{Verbatim}
 
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}86}]:} \PY{n}{Xor}\PY{p}{(}\PY{k+kc}{False}\PY{p}{,} \PY{k+kc}{True}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)} \PY{o+ow}{and} \PY{n}{Xor}\PY{p}{(}\PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)} \PYZbs{}
-             \PY{o+ow}{and} \PY{o+ow}{not} \PY{n}{Xor}\PY{p}{(}\PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{True}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)} \PY{o+ow}{and} \PY{o+ow}{not} \PY{n}{Xor}\PY{p}{(}\PY{k+kc}{False}\PY{p}{,} \PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}17}]:} \PY{n}{Mux}\PY{p}{(}\PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{False}\PY{p}{,} \PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)} \PY{o+ow}{and} \PY{n}{Mux}\PY{p}{(}\PY{k+kc}{False}\PY{p}{,} \PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{True}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)}\PYZbs{}
+             \PY{o+ow}{and} \PY{o+ow}{not} \PY{n}{Mux}\PY{p}{(}\PY{k+kc}{False}\PY{p}{,} \PY{k+kc}{False}\PY{p}{,} \PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)}
 \end{Verbatim}
 
 
 \begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}86}]:} True
+{\color{outcolor}Out[{\color{outcolor}17}]:} True
 \end{Verbatim}
             
-    \hypertarget{basic-logic-gates}{%
-\subsection{Basic Logic Gates}\label{basic-logic-gates}}
-
-    \hypertarget{not}{%
-\subsubsection{Not}\label{not}}
-
-    \hypertarget{and}{%
-\subsubsection{And}\label{and}}
-
-    \hypertarget{or}{%
-\subsubsection{Or}\label{or}}
-
-    \hypertarget{xor}{%
-\subsubsection{Xor}\label{xor}}
-
-    \hypertarget{multiplexor}{%
-\subsubsection{Multiplexor}\label{multiplexor}}
-
     \hypertarget{demultiplexor}{%
 \subsubsection{Demultiplexor}\label{demultiplexor}}
 
+    A demultiplexor performs the opposite function of a multiplexor: It
+takes a single input and channels it to one of two possible outputs
+according to a selector bit that specifies which output to choose. It is
+defined for each output bit as:
+
+\[ \text{DMux}(in,sel) = \begin{cases}\begin{aligned} \text{And}(in,\text{Not}(sel)) \quad &\text{output bit } a \\ \text{And}(in,sel) \quad &\text{output bit } b \end{aligned}\end{cases} \]
+
+It can be represented with the following table:
+
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+sel & a & b\tabularnewline
+\midrule
+\endhead
+0 & in & 0\tabularnewline
+1 & 0 & in\tabularnewline
+\bottomrule
+\end{longtable}
+
+Using the definition, it can be implement in Python in the following
+way. Notice that \(z=in\) because \texttt{in} is a reserved keyword in
+Python.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}18}]:} \PY{k}{class} \PY{n+nc}{DMux}\PY{p}{(}\PY{p}{)}\PY{p}{:}
+             \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}init\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{,} \PY{n}{z}\PY{p}{,} \PY{n}{sel}\PY{p}{)}\PY{p}{:} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{z}\PY{o}{=}\PY{n}{z}\PY{p}{;} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{sel}\PY{o}{=}\PY{n}{sel}\PY{p}{;}
+             \PY{k}{def} \PY{n+nf}{a}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{n}{And}\PY{p}{(}\PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{z}\PY{p}{)}\PY{p}{,} \PY{n}{Not}\PY{p}{(}\PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{sel}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)}
+             \PY{k}{def} \PY{n+nf}{b}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{n}{And}\PY{p}{(}\PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{z}\PY{p}{)}\PY{p}{,} \PY{n}{boolf}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{sel}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{out}\PY{p}{(}\PY{p}{)}
+             \PY{k}{def} \PY{n+nf}{\PYZus{}\PYZus{}repr\PYZus{}\PYZus{}}\PY{p}{(}\PY{n+nb+bp}{self}\PY{p}{)}\PY{p}{:} \PY{k}{return} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{a: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{, b: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{a}\PY{p}{(}\PY{p}{)}\PY{p}{,} \PY{n+nb+bp}{self}\PY{o}{.}\PY{n}{b}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}19}]:} \PY{n}{DMux}\PY{p}{(}\PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{False}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}19}]:} a: True, b: False
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}20}]:} \PY{n}{DMux}\PY{p}{(}\PY{k+kc}{True}\PY{p}{,} \PY{k+kc}{True}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}20}]:} a: False, b: True
+\end{Verbatim}
+            
     \hypertarget{multi-bit-versions-of-basic-gates}{%
-\subsection{Multi-bit Versions of Basic
+\subsection{Multi-Bit Versions of Basic
 gates}\label{multi-bit-versions-of-basic-gates}}
 
     \hypertarget{not16}{%

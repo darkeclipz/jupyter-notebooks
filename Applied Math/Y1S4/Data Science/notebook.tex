@@ -141,7 +141,7 @@
     \def\gt{>}
     \def\lt{<}
     % Document parameters
-    \title{Oefententamen R}
+    \title{R - Week 2 (exercises)}
     
     
     
@@ -280,255 +280,198 @@
     
 
     
-    \hypertarget{opgave-1}{%
-\section{Opgave 1}\label{opgave-1}}
+    \hypertarget{r---week-2-exercises}{%
+\section{R - Week 2 (exercises)}\label{r---week-2-exercises}}
 
-    Importeer de dataset Exam Anxiety van ref{[}1{]} H4.
+    \hypertarget{r-code-on-solving-equations-with-inverse-matrix}{%
+\subsection{R-code on solving equations with inverse
+matrix}\label{r-code-on-solving-equations-with-inverse-matrix}}
+
+    Solve the following system of equations:
+
+    \begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \(2x+y+2z=3\)
+\item
+  \(x-3z=-5\)
+\item
+  \(2y+5z=4\)
+\end{enumerate}
+
+    \[ \begin{bmatrix} 2 & 1 & 2 \\ 1 & 6 & -3 \\ 0 & 2 & 5 \end{bmatrix} \cdot \begin{bmatrix} x \\ y \\ z \end{bmatrix} = \begin{bmatrix} 3 & -5 & 4 \end{bmatrix} \]
+
+    \$ A \vec{x} = \vec{b}\$
+
+\(A^{-1}\cdot A \vec{x} = A^{-1} \vec{b}\)
+
+\(I \vec{x} = A^{-1} \vec{b}\)
+
+    Define matrix \(A\):
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}82}]:} file \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{C:\PYZbs{}\PYZbs{}Users\PYZbs{}\PYZbs{}Isomorphism\PYZbs{}\PYZbs{}Downloads\PYZbs{}\PYZbs{}Exam Anxiety.dat\PYZdq{}}
-         exam \PY{o}{=} read.table\PY{p}{(}\PY{k+kp}{file}\PY{p}{,} header\PY{o}{=}\PY{k+kc}{TRUE}\PY{p}{)}
-         \PY{k+kp}{head}\PY{p}{(}exam\PY{p}{)}
+{\color{incolor}In [{\color{incolor}2}]:} A \PY{o}{=} \PY{k+kt}{matrix}\PY{p}{(}\PY{k+kt}{c}\PY{p}{(}\PY{l+m}{2}\PY{p}{,}\PY{l+m}{1}\PY{p}{,}\PY{l+m}{2}\PY{p}{,}\PY{l+m}{1}\PY{p}{,}\PY{l+m}{6}\PY{p}{,}\PY{l+m}{\PYZhy{}3}\PY{p}{,}\PY{l+m}{0}\PY{p}{,}\PY{l+m}{2}\PY{p}{,}\PY{l+m}{5}\PY{p}{)}\PY{p}{,} nrow\PY{o}{=}\PY{l+m}{3}\PY{p}{)}
+        A
 \end{Verbatim}
 
 
-    \begin{tabular}{r|lllll}
- Code & Revise & Exam & Anxiety & Gender\\
-\hline
-	 1      &  4     & 40     & 86.298 & Male  \\
-	 2      & 11     & 65     & 88.716 & Female\\
-	 3      & 27     & 80     & 70.178 & Male  \\
-	 4      & 53     & 80     & 61.312 & Male  \\
-	 5      &  4     & 40     & 89.522 & Male  \\
-	 6      & 22     & 70     & 60.506 & Female\\
+    \begin{tabular}{lll}
+	 2  &  1 & 0 \\
+	 1  &  6 & 2 \\
+	 2  & -3 & 5 \\
 \end{tabular}
 
 
     
-    \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
-
-    \textbf{1A:} Maak een scatterplot van Exam als functie van Anxiety.
+    The inverse \(A^{-1}\) is:
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}152}]:} plot\PY{p}{(}exam\PY{o}{\PYZdl{}}Anxiety\PY{p}{,} exam\PY{o}{\PYZdl{}}Exam\PY{p}{,} main\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{Anxiety vs. Exam\PYZdq{}}\PY{p}{,} xlab\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{Anxiety\PYZdq{}}
-               \PY{p}{,} ylab\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{Exam\PYZdq{}}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}3}]:} \PY{k+kp}{solve}\PY{p}{(}A\PY{p}{)}
 \end{Verbatim}
 
 
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_5_0.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
-    \textbf{1B:} Bereken de gemiddelde waarde en standaardafwijking van de
-variabele Exam.
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}98}]:} x \PY{o}{=} \PY{k+kp}{mean}\PY{p}{(}exam\PY{o}{\PYZdl{}}Exam\PY{p}{,} na.rm\PY{o}{=}\PY{k+kc}{TRUE}\PY{p}{)}
-         s \PY{o}{=} sd\PY{p}{(}exam\PY{o}{\PYZdl{}}Exam\PY{p}{,} na.rm\PY{o}{=}\PY{k+kc}{TRUE}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}151}]:} \PY{k+kp}{paste}\PY{p}{(}\PY{l+s}{\PYZdq{}}\PY{l+s}{Het gemiddelde is\PYZdq{}}\PY{p}{,} \PY{k+kp}{round}\PY{p}{(}x\PY{p}{,}\PY{l+m}{3}\PY{p}{)}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{en de standaardafwijking is\PYZdq{}}
-                \PY{p}{,} \PY{k+kp}{round}\PY{p}{(}s\PY{p}{,}\PY{l+m}{3}\PY{p}{)}\PY{p}{,} \PY{l+s}{\PYZdq{}}\PY{l+s}{.\PYZdq{}}\PY{p}{)}
-\end{Verbatim}
-
-
-    'Het gemiddelde is 56.573 en de standaardafwijking is 25.941 .'
-
-    
-    \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
-
-    \textbf{1C}: Controleer de standaardafwijking met een zelf
-geprogrammeerde berekening.
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}105}]:} stdev \PY{o}{\PYZlt{}\PYZhy{}} \PY{k+kr}{function}\PY{p}{(}L\PY{p}{)} \PY{k+kp}{sqrt}\PY{p}{(} \PY{k+kp}{sum}\PY{p}{(}\PY{p}{(}L\PY{o}{\PYZhy{}}\PY{k+kp}{mean}\PY{p}{(}L\PY{p}{)}\PY{p}{)}\PY{o}{\PYZca{}}\PY{l+m}{2}\PY{p}{)} \PY{o}{/} \PY{p}{(}\PY{k+kp}{length}\PY{p}{(}L\PY{p}{)} \PY{o}{\PYZhy{}} \PY{l+m}{1}\PY{p}{)} \PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}106}]:} stdev\PY{p}{(}exam\PY{o}{\PYZdl{}}Exam\PY{p}{)}
-\end{Verbatim}
-
-
-    25.9405814037326
-
-    
-    \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
-
-    \textbf{1D}: Maak een boxplot van zowel Anxiety als Exam in een plot.
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}115}]:} boxplot\PY{p}{(}exam\PY{o}{\PYZdl{}}Exam\PY{p}{,} exam\PY{o}{\PYZdl{}}Anxiety\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_15_0.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
-    \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
-
-    \textbf{1E}: Bereken de afstand van het eerste tot het derde kwartiel
-van Anxiety.
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}134}]:} q \PY{o}{=} quantile\PY{p}{(}exam\PY{o}{\PYZdl{}}Anxiety\PY{p}{,} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{.25}\PY{p}{,} \PY{l+m}{.75}\PY{p}{)}\PY{p}{,} na.rm\PY{o}{=}\PY{k+kc}{TRUE}\PY{p}{)}
-          \PY{k+kp}{q}
-\end{Verbatim}
-
-
-    \begin{description*}
-\item[25\textbackslash{}\%] 69.775
-\item[75\textbackslash{}\%] 84.686
-\end{description*}
+    \begin{tabular}{lll}
+	  0.50704225 & -0.07042254 &  0.02816901\\
+	 -0.01408451 &  0.14084507 & -0.05633803\\
+	 -0.21126761 &  0.11267606 &  0.15492958\\
+\end{tabular}
 
 
     
-    De afstand van het eerste tot het derde kwartiel is:
+    Define vector \(\vec{b}\):
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}133}]:} \PY{k+kp}{q}\PY{p}{[}\PY{l+m}{2}\PY{p}{]}\PY{o}{\PYZhy{}}\PY{k+kp}{q}\PY{p}{[}\PY{l+m}{1}\PY{p}{]}
+{\color{incolor}In [{\color{incolor}4}]:} b \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{3}\PY{p}{,} \PY{l+m}{\PYZhy{}5}\PY{p}{,} \PY{l+m}{4}\PY{p}{)}
 \end{Verbatim}
 
 
-    \textbf{75\textbackslash{}\%:} 14.911
-
-    
-    Ter controle:
+    Solve the system with R functions \texttt{solve(A,b)}:
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}136}]:} \PY{l+m}{84.686} \PY{o}{\PYZhy{}} \PY{l+m}{69.775}
-\end{Verbatim}
-
-
-    14.911
-
-    
-    \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
-
-    \textbf{1F}: Zet de data op volgorde en bepaal het dertiende getal.
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}143}]:} \PY{k+kp}{sort}\PY{p}{(}exam\PY{o}{\PYZdl{}}Exam\PY{p}{)}\PY{p}{[}\PY{l+m}{13}\PY{p}{]}
-\end{Verbatim}
-
-
-    20
-
-    
-    Ter controle:
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}142}]:} \PY{k+kp}{head}\PY{p}{(}\PY{k+kp}{sort}\PY{p}{(}exam\PY{o}{\PYZdl{}}Exam\PY{p}{)}\PY{p}{,} \PY{l+m}{15}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}5}]:} \PY{k+kp}{solve}\PY{p}{(}A\PY{p}{,}b\PY{p}{)}
 \end{Verbatim}
 
 
     \begin{enumerate*}
-\item 2
-\item 5
-\item 5
-\item 7
-\item 10
-\item 10
-\item 10
-\item 10
-\item 15
-\item 20
-\item 20
-\item 20
-\item 20
-\item 20
-\item 20
+\item 1.98591549295775
+\item -0.971830985915493
+\item -0.577464788732394
 \end{enumerate*}
 
 
     
-    \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
-
-    \textbf{1G}: Maak een histogram van de variabele Exam met als titel
-``TW1 histogram van Exam data''.
+    Solve the system with \(\vec{x}=A^{-1}\vec{b}\):
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}144}]:} hist\PY{p}{(}exam\PY{o}{\PYZdl{}}Exam\PY{p}{,} main\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{TW1 histogram van Exam data\PYZdq{}}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}6}]:} \PY{k+kp}{solve}\PY{p}{(}A\PY{p}{)} \PY{o}{\PYZpc{}*\PYZpc{}} b
 \end{Verbatim}
 
 
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_30_0.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
-    \hypertarget{opgave-2}{%
-\section{Opgave 2}\label{opgave-2}}
-
-    Importeer de dataset \texttt{cars} die behoort tot de standaard datasets
-in R.
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}150}]:} \PY{k+kp}{head}\PY{p}{(}cars\PY{p}{)} \PY{c+c1}{\PYZsh{} Dit importeert het niet, maar laat de eerste }
-                     \PY{c+c1}{\PYZsh{} records in de dataset zien.}
-\end{Verbatim}
-
-
-    \begin{tabular}{r|ll}
- speed & dist\\
-\hline
-	 4  &  2\\
-	 4  & 10\\
-	 7  &  4\\
-	 7  & 22\\
-	 8  & 16\\
-	 9  & 10\\
+    \begin{tabular}{l}
+	  1.9859155\\
+	 -0.9718310\\
+	 -0.5774648\\
 \end{tabular}
 
 
     
-    \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+    \hypertarget{r-code-on-least-square-method}{%
+\subsection{R-code on least square
+method}\label{r-code-on-least-square-method}}
 
-    \textbf{2A:} Plot de stopweg als functie van de snelheid.
+    \(y=ax+b\)
 
-Met behulp van \texttt{help(cars)} kan je de eenheden vinden voor de
-snelheid en remweg.
+    \(A\cdot \vec{x} = \vec{b}\)
+
+\(A^T\cdot A \vec{x} = A^T \vec{b}\)
+
+\((A^T A)^{-1}A^T A \vec{x} = A^T \vec{b}\)
+
+\((A^T A)^{-1} ...\)
+
+    Define
+\(\vec{x}=\begin{bmatrix}12 & 2 & 3 & 5 & 10 & 9 & 8 \end{bmatrix}\):
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}149}]:} plot\PY{p}{(}cars\PY{o}{\PYZdl{}}speed\PY{p}{,} cars\PY{o}{\PYZdl{}}dist\PY{p}{,} main\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{Snelheid vs. remweg\PYZdq{}}\PY{p}{,} xlab\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{Snelheid (mph)\PYZdq{}}
-               \PY{p}{,} ylab\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{Remweg (feet)\PYZdq{}}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}7}]:} x \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{12}\PY{p}{,} \PY{l+m}{2}\PY{p}{,} \PY{l+m}{3}\PY{p}{,} \PY{l+m}{5}\PY{p}{,} \PY{l+m}{10}\PY{p}{,} \PY{l+m}{9}\PY{p}{,} \PY{l+m}{8}\PY{p}{)}
 \end{Verbatim}
 
 
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_36_0.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
-    \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
-
-    \textbf{2B:} Bepaal of er een verband bestaat tussen de snelheid en de
-remweg.
-
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}56}]:} r \PY{o}{=} cor\PY{p}{(}cars\PY{o}{\PYZdl{}}speed\PY{p}{,} cars\PY{o}{\PYZdl{}}dist\PY{p}{)}
-         r
+{\color{incolor}In [{\color{incolor}8}]:} x
 \end{Verbatim}
 
 
-    0.80689490068921
+    \begin{enumerate*}
+\item 12
+\item 2
+\item 3
+\item 5
+\item 10
+\item 9
+\item 8
+\end{enumerate*}
+
 
     
-    Er is een zeer sterk positief verband tussen de variabelen
-\texttt{speed} en \texttt{dist}.
-
-    \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
-
-    \textbf{2C}: Plot de regressielijn in het rood in het scatterplot.
+    Define
+\(\vec{y} = \begin{bmatrix}125 & 30 & 43 & 62 & 108 & 102 & 90 \end{bmatrix}\):
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}57}]:} lreg \PY{o}{=} lm\PY{p}{(}cars\PY{o}{\PYZdl{}}dist\PY{o}{\PYZti{}}cars\PY{o}{\PYZdl{}}speed\PY{p}{)}
-         lreg
+{\color{incolor}In [{\color{incolor}29}]:} y \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{125}\PY{p}{,} \PY{l+m}{30}\PY{p}{,} \PY{l+m}{43}\PY{p}{,} \PY{l+m}{62}\PY{p}{,} \PY{l+m}{108}\PY{p}{,} \PY{l+m}{102}\PY{p}{,} \PY{l+m}{90}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}10}]:} y
+\end{Verbatim}
+
+
+    \begin{enumerate*}
+\item 125
+\item 30
+\item 43
+\item 62
+\item 108
+\item 102
+\item 90
+\end{enumerate*}
+
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}11}]:} \PY{k+kp}{length}\PY{p}{(}x\PY{p}{)}\PY{o}{==}\PY{k+kp}{length}\PY{p}{(}y\PY{p}{)}
+\end{Verbatim}
+
+
+    TRUE
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}12}]:} A \PY{o}{=} \PY{k+kt}{matrix}\PY{p}{(}\PY{k+kp}{union}\PY{p}{(}x\PY{p}{,}y\PY{p}{)}\PY{p}{,} nrow\PY{o}{=}\PY{k+kp}{length}\PY{p}{(}x\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}13}]:} A
+\end{Verbatim}
+
+
+    \begin{tabular}{ll}
+	 12  & 125\\
+	  2  &  30\\
+	  3  &  43\\
+	  5  &  62\\
+	 10  & 108\\
+	  9  & 102\\
+	  8  &  90\\
+\end{tabular}
+
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}14}]:} lm\PY{p}{(}y\PY{o}{\PYZti{}}x\PY{p}{)}
 \end{Verbatim}
 
 
@@ -536,146 +479,437 @@ remweg.
     \begin{verbatim}
 
 Call:
-lm(formula = cars$dist ~ cars$speed)
+lm(formula = y ~ x)
 
 Coefficients:
-(Intercept)   cars$speed  
-    -17.579        3.932  
+(Intercept)            x  
+     13.583        9.488  
 
     \end{verbatim}
 
     
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}148}]:} plot\PY{p}{(}cars\PY{o}{\PYZdl{}}speed\PY{p}{,} cars\PY{o}{\PYZdl{}}dist\PY{p}{,} main\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{Snelheid vs. remweg\PYZdq{}}\PY{p}{,} xlab\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{Snelheid (mph)\PYZdq{}}
-               \PY{p}{,} ylab\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{Remweg (feet)\PYZdq{}}\PY{p}{)}
-          
-          abline\PY{p}{(}lreg\PY{p}{,} col\PY{o}{=}\PY{l+s}{\PYZdq{}}\PY{l+s}{red\PYZdq{}}\PY{p}{)}
+{\color{incolor}In [{\color{incolor}15}]:} fit \PY{o}{\PYZlt{}\PYZhy{}} \PY{k+kr}{function}\PY{p}{(}x\PY{p}{)} \PY{l+m}{9.488}\PY{o}{*}x\PY{l+m}{+13.583}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}16}]:} fit\PY{p}{(}\PY{l+m}{5}\PY{p}{)}
+\end{Verbatim}
+
+
+    61.023
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}17}]:} plot\PY{p}{(}x\PY{p}{,}\PY{k+kp}{sapply}\PY{p}{(}x\PY{p}{,} fit\PY{p}{)}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{l\PYZsq{}}\PY{p}{,} col\PY{o}{=}\PY{l+s}{\PYZsq{}}\PY{l+s}{blue\PYZsq{}}\PY{p}{)}
+         points\PY{p}{(}x\PY{p}{,}y\PY{p}{)}
 \end{Verbatim}
 
 
     \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_44_0.png}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_31_0.png}
     \end{center}
     { \hspace*{\fill} \\}
     
-    \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
-
-    \textbf{2D:} Hoe groot is de correlatie tussen de snelheid en de remweg?
-
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}72}]:} r \PY{c+c1}{\PYZsh{} Berekend in 2B met: cor(cars\PYZdl{}speed, cars\PYZdl{}dist)}
-\end{Verbatim}
-
-
-    0.80689490068921
-
-    
-    Er is een zeer sterk positief verband tussen de variabelen
-\texttt{speed} en \texttt{dist}.
-
-    \hypertarget{opgave-3}{%
-\section{Opgave 3}\label{opgave-3}}
-
-    \textbf{3A}: Los het onderstaande stelsel van vergelijkingen op m.b.v.
-matrixrekening.
-
-    \[ \begin{aligned}\begin{cases}  x-y-z &= 2 \\ 3x-3y+2z &= 19 \\ 2x-y+z &= 9 \end{cases}\end{aligned} \]
-
-    Eerst zetten we dit om naar een matrix:
-
-    \[ A \cdot \vec{x} = \vec{b} \implies \begin{bmatrix} 1 & -1 & -1 \\ 3 & -3 & 2 \\ 2 & -1 & 1 \end{bmatrix} \cdot \vec{x} = \begin{bmatrix}2\\19\\9\end{bmatrix} \]
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}66}]:} x \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{1}\PY{p}{,}\PY{l+m}{3}\PY{p}{,}\PY{l+m}{2}\PY{p}{)}
-         y \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{\PYZhy{}1}\PY{p}{,}\PY{l+m}{\PYZhy{}3}\PY{p}{,}\PY{l+m}{\PYZhy{}1}\PY{p}{)}
-         z \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{\PYZhy{}1}\PY{p}{,} \PY{l+m}{2}\PY{p}{,} \PY{l+m}{1}\PY{p}{)}
-         A \PY{o}{=} \PY{k+kp}{cbind}\PY{p}{(}x\PY{p}{,}y\PY{p}{,}z\PY{p}{)}
-         A
-\end{Verbatim}
-
-
-    \begin{tabular}{lll}
- x & y & z\\
-\hline
-	 1  & -1 & -1\\
-	 3  & -3 &  2\\
-	 2  & -1 &  1\\
-\end{tabular}
-
-
-    
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}67}]:} b \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{2}\PY{p}{,}\PY{l+m}{19}\PY{p}{,}\PY{l+m}{9}\PY{p}{)}
-         b
+{\color{incolor}In [{\color{incolor}60}]:} x
 \end{Verbatim}
 
 
     \begin{enumerate*}
+\item 12
 \item 2
-\item 19
+\item 3
+\item 5
+\item 10
 \item 9
+\item 8
 \end{enumerate*}
 
 
     
-    Een stelsel van vergelijkingen kunnen we oplossing met de inverse van
-\(A\).
-
-\[ \begin{aligned} A \cdot \vec{x} &= \vec{b} \\ A^{-1}\cdot A \cdot \vec{x} &= A^{-1} \cdot \vec{b} \\ I \cdot \vec{x} &= A^{-1}\cdot\vec{b} \end{aligned} \]
-
-De oplossing is dus te vinden met \(\vec{x} = A^{-1} \cdot \vec{b}\).
-Eerst bepalen we de inverse van \(A\):
-
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}68}]:} Ainv \PY{o}{=} \PY{k+kp}{solve}\PY{p}{(}A\PY{p}{)}
-         Ainv
+{\color{incolor}In [{\color{incolor}61}]:} y
 \end{Verbatim}
 
 
-    \begin{tabular}{r|lll}
-	x &  0.2 & -0.4 & 1   \\
-	y & -0.2 & -0.6 & 1   \\
-	z & -0.6 &  0.2 & 0   \\
+    \begin{enumerate*}
+\item 125
+\item 30
+\item 43
+\item 62
+\item 108
+\item 102
+\item 90
+\end{enumerate*}
+
+
+    
+    \(y=ax+b\)
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}62}]:} X \PY{o}{=} \PY{k+kt}{matrix}\PY{p}{(}\PY{k+kt}{c}\PY{p}{(}y\PY{p}{,} \PY{k+kp}{rep}\PY{p}{(}\PY{l+m}{1}\PY{p}{,} \PY{k+kp}{length}\PY{p}{(}y\PY{p}{)}\PY{p}{)}\PY{p}{)}\PY{p}{,} ncol\PY{o}{=}\PY{l+m}{2}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}63}]:} X
+\end{Verbatim}
+
+
+    \begin{tabular}{ll}
+	 125 & 1  \\
+	  30 & 1  \\
+	  43 & 1  \\
+	  62 & 1  \\
+	 108 & 1  \\
+	 102 & 1  \\
+	  90 & 1  \\
 \end{tabular}
 
 
     
-    En vervolgens het toepassen van matrixvermenigvuldiging (\texttt{\%*\%})
-om de oplossing te vinden:
-
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}70}]:} Ainv \PY{o}{\PYZpc{}*\PYZpc{}} b
+{\color{incolor}In [{\color{incolor}64}]:} b \PY{o}{=} \PY{k+kt}{matrix}\PY{p}{(}y\PY{p}{)}
 \end{Verbatim}
 
 
-    \begin{tabular}{r|l}
-	x &  1.8\\
-	y & -2.8\\
-	z &  2.6\\
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}65}]:} b
+\end{Verbatim}
+
+
+    \begin{tabular}{l}
+	 125\\
+	  30\\
+	  43\\
+	  62\\
+	 108\\
+	 102\\
+	  90\\
 \end{tabular}
 
 
     
-    \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+    Dit is de vorm \(A\cdot\vec{x} = \vec{b}\). Wat we op willen lossen met
+\(A^{-1}A\vec{x}=A^{-1}\vec{b}\), maar dit werkt niet omdat \(A\) geen
+vierkante matrix is en daardoor geen inverse kan bepalen voor \(A\).
 
-    \textbf{3B:} Controleer je oplossing.
-
-Dit kan ook in een keer met \texttt{solve(A,b)} en dient tevens als
-controle:
+Door gebruik te maken van de getransponeerde \(A^T\) kunnen we een
+vierkante matrix krijgen. Dus matrix-vermenigvuldigen van
+\(A\vec{x}=\vec{b}\) met \(A^T\) geeft
+\(A^T\cdot A\vec{x} = A^T\cdot\vec{b}\).
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}43}]:} \PY{k+kp}{solve}\PY{p}{(}A\PY{p}{,}b\PY{p}{)}
+{\color{incolor}In [{\color{incolor}66}]:} \PY{k+kp}{t}\PY{p}{(}A\PY{p}{)} \PY{o}{\PYZpc{}*\PYZpc{}} A
 \end{Verbatim}
 
 
-    \begin{description*}
-\item[x] 1.8
-\item[y] -2.8
-\item[z] 2.6
-\end{description*}
+    \begin{tabular}{ll}
+	  427  &  4717\\
+	 4717  & 52386\\
+\end{tabular}
 
 
     
+    Wat inderdaad een vierkant matrix geeft. Vervolgens is deze op te lossen
+door de inverse te bepalen. De hele formule wordt dan:
+
+\[ (A^T \cdot A)^{-1}\cdot(A^T \cdot A)\cdot\vec{x} = (A^T \cdot A)^{-1} \cdot A^T \cdot \vec{b} \]
+
+Laat \(B = (A^T \cdot A)^{-1}\) zijn. Substitueren en vereenvoudigen
+geeft:
+
+\[ I\cdot\vec{x} = B \cdot A^T \cdot \vec{b} \]
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}67}]:} B \PY{o}{=} \PY{k+kp}{solve}\PY{p}{(}\PY{k+kp}{t}\PY{p}{(}A\PY{p}{)} \PY{o}{\PYZpc{}*\PYZpc{}} A\PY{p}{)}
+         B
+\end{Verbatim}
+
+
+    \begin{tabular}{ll}
+	  0.44120843  & -0.039727793\\
+	 -0.03972779  &  0.003596304\\
+\end{tabular}
+
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}74}]:} B \PY{o}{\PYZpc{}*\PYZpc{}} \PY{k+kp}{t}\PY{p}{(}A\PY{p}{)} \PY{o}{\PYZpc{}*\PYZpc{}} b
+\end{Verbatim}
+
+
+    \begin{tabular}{l}
+	 -4.13003e-13\\
+	  1.00000e+00\\
+\end{tabular}
+
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}69}]:} lm\PY{p}{(}y\PY{o}{\PYZti{}}x\PY{p}{)}
+\end{Verbatim}
+
+
+    
+    \begin{verbatim}
+
+Call:
+lm(formula = y ~ x)
+
+Coefficients:
+(Intercept)            x  
+     13.583        9.488  
+
+    \end{verbatim}
+
+    
+    \textbf{Versimpeld voorbeeld lreg}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}118}]:} A \PY{o}{=} \PY{k+kt}{matrix}\PY{p}{(}\PY{k+kt}{c}\PY{p}{(}\PY{l+m}{\PYZhy{}1}\PY{p}{,}\PY{l+m}{0}\PY{p}{,}\PY{l+m}{2}\PY{p}{,}\PY{l+m}{3}\PY{p}{,}\PY{l+m}{1}\PY{p}{,}\PY{l+m}{1}\PY{p}{,}\PY{l+m}{1}\PY{p}{,}\PY{l+m}{1}\PY{p}{)}\PY{p}{,}ncol\PY{o}{=}\PY{l+m}{2}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}119}]:} A
+\end{Verbatim}
+
+
+    \begin{tabular}{ll}
+	 -1 & 1 \\
+	  0 & 1 \\
+	  2 & 1 \\
+	  3 & 1 \\
+\end{tabular}
+
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}120}]:} b \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{\PYZhy{}1}\PY{p}{,}\PY{l+m}{2}\PY{p}{,}\PY{l+m}{1}\PY{p}{,}\PY{l+m}{2}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}121}]:} b
+\end{Verbatim}
+
+
+    \begin{enumerate*}
+\item -1
+\item 2
+\item 1
+\item 2
+\end{enumerate*}
+
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}127}]:} x \PY{o}{=} A\PY{p}{[}\PY{l+m}{0}\PY{o}{:}\PY{l+m}{4}\PY{p}{]}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}128}]:} \PY{k+kp}{solve}\PY{p}{(}\PY{k+kp}{t}\PY{p}{(}A\PY{p}{)} \PY{o}{\PYZpc{}*\PYZpc{}} A\PY{p}{)} \PY{o}{\PYZpc{}*\PYZpc{}} \PY{k+kp}{t}\PY{p}{(}A\PY{p}{)} \PY{o}{\PYZpc{}*\PYZpc{}} b
+\end{Verbatim}
+
+
+    \begin{tabular}{l}
+	 0.5\\
+	 0.5\\
+\end{tabular}
+
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}129}]:} lm\PY{p}{(}b\PY{o}{\PYZti{}}x\PY{p}{)}
+\end{Verbatim}
+
+
+    
+    \begin{verbatim}
+
+Call:
+lm(formula = b ~ x)
+
+Coefficients:
+(Intercept)            x  
+        0.5          0.5  
+
+    \end{verbatim}
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}130}]:} fit \PY{o}{\PYZlt{}\PYZhy{}} \PY{k+kr}{function}\PY{p}{(}x\PY{p}{)} \PY{l+m}{0.5}\PY{o}{*}x\PY{l+m}{+0.5}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}131}]:} plot\PY{p}{(}\PY{l+m}{\PYZhy{}5}\PY{o}{:}\PY{l+m}{5}\PY{p}{,} \PY{k+kp}{sapply}\PY{p}{(}\PY{l+m}{\PYZhy{}5}\PY{o}{:}\PY{l+m}{5}\PY{p}{,} fit\PY{p}{)}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{l\PYZsq{}}\PY{p}{)}
+          points\PY{p}{(}x\PY{p}{,}b\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_54_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}267}]:} lreg \PY{o}{\PYZlt{}\PYZhy{}} \PY{k+kr}{function}\PY{p}{(}x\PY{p}{,} y\PY{p}{)} \PY{p}{\PYZob{}}
+              A \PY{o}{=} \PY{k+kp}{cbind}\PY{p}{(}x\PY{p}{,} \PY{k+kp}{rep}\PY{p}{(}\PY{l+m}{1}\PY{p}{,} \PY{k+kp}{length}\PY{p}{(}x\PY{p}{)}\PY{p}{)}\PY{p}{)}
+              s \PY{o}{=} \PY{k+kp}{solve}\PY{p}{(}\PY{k+kp}{t}\PY{p}{(}A\PY{p}{)} \PY{o}{\PYZpc{}*\PYZpc{}} A\PY{p}{)} \PY{o}{\PYZpc{}*\PYZpc{}} \PY{k+kp}{t}\PY{p}{(}A\PY{p}{)} \PY{o}{\PYZpc{}*\PYZpc{}} y
+              \PY{k+kr}{function}\PY{p}{(}x\PY{p}{)} s\PY{p}{[}\PY{l+m}{1}\PY{p}{]} \PY{o}{*} x \PY{o}{+} s\PY{p}{[}\PY{l+m}{2}\PY{p}{]} \PY{c+c1}{\PYZsh{} Return f(x)=ax+b}
+          \PY{p}{\PYZcb{}}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}268}]:} x \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{12}\PY{p}{,}\PY{l+m}{2}\PY{p}{,}\PY{l+m}{3}\PY{p}{,}\PY{l+m}{5}\PY{p}{,}\PY{l+m}{10}\PY{p}{,}\PY{l+m}{9}\PY{p}{,}\PY{l+m}{8}\PY{p}{)}
+          y \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{125}\PY{p}{,}\PY{l+m}{30}\PY{p}{,}\PY{l+m}{43}\PY{p}{,}\PY{l+m}{62}\PY{p}{,}\PY{l+m}{108}\PY{p}{,}\PY{l+m}{102}\PY{p}{,}\PY{l+m}{90}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}269}]:} fit \PY{o}{\PYZlt{}\PYZhy{}} lreg\PY{p}{(}x\PY{p}{,} y\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}270}]:} plot\PY{p}{(}\PY{l+m}{0}\PY{o}{:}\PY{l+m}{15}\PY{p}{,} \PY{k+kp}{sapply}\PY{p}{(}\PY{l+m}{0}\PY{o}{:}\PY{l+m}{15}\PY{p}{,} fit\PY{p}{)}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{l\PYZsq{}}\PY{p}{)}
+          points\PY{p}{(}x\PY{p}{,}y\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_58_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    With other functionality:
+
+    \hypertarget{least-squares-regression-model}{%
+\subsubsection{Least squares regression
+model}\label{least-squares-regression-model}}
+
+    Find the best fitting line \(y=ax+b\) for the following data points:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}311}]:} x \PY{o}{\PYZlt{}\PYZhy{}} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{12}\PY{p}{,}\PY{l+m}{2}\PY{p}{,}\PY{l+m}{3}\PY{p}{,}\PY{l+m}{5}\PY{p}{,}\PY{l+m}{10}\PY{p}{,}\PY{l+m}{9}\PY{p}{,}\PY{l+m}{8}\PY{p}{)}
+          b \PY{o}{\PYZlt{}\PYZhy{}} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{125}\PY{p}{,}\PY{l+m}{30}\PY{p}{,}\PY{l+m}{43}\PY{p}{,}\PY{l+m}{62}\PY{p}{,}\PY{l+m}{108}\PY{p}{,}\PY{l+m}{102}\PY{p}{,}\PY{l+m}{90}\PY{p}{)}
+\end{Verbatim}
+
+
+    We can do this by solving the equation \(A\vec{x}=\vec{b}\).
+Constructing the equation with the matrices for our data points yields:
+
+\[ \begin{bmatrix} 12 & 1 \\ 2 & 1 \\ 3 & 1 \\ 5 & 1 \\ 10 & 1 \\ 9 & 1 \\ 8 & 1 \end{bmatrix} \cdot \begin{bmatrix}a \\ b \end{bmatrix} = \begin{bmatrix} 125 \\ 30 \\ 43 \\ 62 \\ 108 \\ 102 \\ 90 \end{bmatrix} \]
+
+    First we will construct our matrix \(A\):
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}312}]:} ones \PY{o}{\PYZlt{}\PYZhy{}} \PY{k+kp}{rep}\PY{p}{(}\PY{l+m}{1}\PY{p}{,} \PY{k+kp}{length}\PY{p}{(}x\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}297}]:} A \PY{o}{\PYZlt{}\PYZhy{}} \PY{k+kp}{cbind}\PY{p}{(}x\PY{p}{,} ones\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}313}]:} A
+\end{Verbatim}
+
+
+    \begin{tabular}{ll}
+ x & ones\\
+\hline
+	 12 & 1 \\
+	  2 & 1 \\
+	  3 & 1 \\
+	  5 & 1 \\
+	 10 & 1 \\
+	  9 & 1 \\
+	  8 & 1 \\
+\end{tabular}
+
+
+    
+    If we want to solve the equation \(A\vec{x}=\vec{b}\) we can multiply
+both sides \(A^{-1}\) to get:
+
+\[ \begin{align} A\vec{x}&=\vec{b} \\ (A^{-1}\cdot A)\vec{x}&=A^{-1}\vec{b} \\ I\vec{x}&=A^{-1}\vec{b} \end{align} \]
+
+    However, we need to calculate the inverse of \(A\), but \(A\) is not a
+square matrix. To solve this problem we multiply \(A\) with \(A^T\) to
+get a square matrix.
+
+    \[ \begin{align} A\vec{x}&=\vec{b} \\ (A^T \cdot A) \cdot \vec{x} &= A^T \cdot \vec{b} \\ (A^T \cdot A)^{-1} \cdot (A^T \cdot A) \cdot \vec{x} &= (A^T \cdot A)^{-1} \cdot A^T \cdot \vec{b} \\ I \cdot \vec{x} &= (A^T \cdot A)^{-1} \cdot A^T \cdot \vec{b} \end{align} \]
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}298}]:} S \PY{o}{=} \PY{k+kp}{solve}\PY{p}{(}\PY{k+kp}{t}\PY{p}{(}A\PY{p}{)} \PY{o}{\PYZpc{}*\PYZpc{}} A\PY{p}{)} \PY{o}{\PYZpc{}*\PYZpc{}} \PY{k+kp}{t}\PY{p}{(}A\PY{p}{)} \PY{o}{\PYZpc{}*\PYZpc{}} b
+\end{Verbatim}
+
+
+    The resulting matrix \(S\) will have our coefficients \(a\) and \(b\) to
+construct the line:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}308}]:} lsm \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}S\PY{p}{[}\PY{l+m}{2}\PY{p}{]}\PY{p}{,} S\PY{p}{[}\PY{l+m}{1}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}310}]:} lsm
+\end{Verbatim}
+
+
+    \begin{enumerate*}
+\item 13.5833333333333
+\item 9.48809523809525
+\end{enumerate*}
+
+
+    
+    If we verify the coefficients with built-in R functionality for
+least-squares regression, we can see that our solution is correct.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}301}]:} lm\PY{p}{(}b\PY{o}{\PYZti{}}x\PY{p}{)}
+\end{Verbatim}
+
+
+    
+    \begin{verbatim}
+
+Call:
+lm(formula = b ~ x)
+
+Coefficients:
+(Intercept)            x  
+     13.583        9.488  
+
+    \end{verbatim}
+
+    
+    Plotting our values yields:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}309}]:} plot\PY{p}{(}x\PY{p}{,} b\PY{p}{)}
+          abline\PY{p}{(}lsm\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_78_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    Tada.
+
 
     % Add a bibliography block to the postdoc
     

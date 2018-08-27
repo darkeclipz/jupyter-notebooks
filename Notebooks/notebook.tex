@@ -141,7 +141,7 @@
     \def\gt{>}
     \def\lt{<}
     % Document parameters
-    \title{Approximate integration}
+    \title{Genetic Algorithms}
     
     
     
@@ -280,277 +280,162 @@
     
 
     
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}28}]:} \PY{o}{\PYZpc{}}\PY{k}{pylab} inline
-         \PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
-         \PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
-         \PY{k+kn}{import} \PY{n+nn}{sympy} \PY{k}{as} \PY{n+nn}{sp}
-\end{Verbatim}
+    \hypertarget{definitions}{%
+\section{Definitions}\label{definitions}}
 
+A genetic algorithm is essentially an improved brute-forced method to
+find the optimal, or most \emph{fit}, set of \emph{variables} within a
+set of allowed variables and their \emph{domains}. We will first lay out
+the terminology that comes with genetic algorithms.
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-Populating the interactive namespace from numpy and matplotlib
+    \hypertarget{genotype}{%
+\subsection{Genotype}\label{genotype}}
 
-    \end{Verbatim}
+A genotype, is a variable, which in term is a changable entry in the
+DNA, which has a limited set of allowed values, which are called it's
+\emph{domain}.
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}37}]:} \PY{n}{font} \PY{o}{=} \PY{p}{\PYZob{}}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{size}\PY{l+s+s1}{\PYZsq{}}   \PY{p}{:} \PY{l+m+mi}{14}\PY{p}{\PYZcb{}}
-         \PY{n}{matplotlib}\PY{o}{.}\PY{n}{rc}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{font}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{o}{*}\PY{o}{*}\PY{n}{font}\PY{p}{)}
-         \PY{n}{sp}\PY{o}{.}\PY{n}{init\PYZus{}printing}\PY{p}{(}\PY{p}{)}
-\end{Verbatim}
+For example, say we have a domain of all the letters, which we call
+\(G = \{A,B,C,D,\ldots,Z\}\). The genotype will hold a value
+\(g \in \mathbb{Z}\) such that the value corresponds to an entry in
+\(G\). More concrete, if \(g=2\) then the corresponding element in \(G\)
+is \(B\).
 
+    \hypertarget{dna}{%
+\subsection{DNA}\label{dna}}
 
-    \hypertarget{approximate-integration-methods}{%
-\section{Approximate integration
-methods}\label{approximate-integration-methods}}
+The DNA of the sample holds all the values of the genotypes. This is
+defined as the set \(D = \{ g_0, g_1, g_2, \ldots g_{n-1}, g_n\}\) where
+\(g\) is a genotype.
 
-    Recall that the definite integral is defined as a limit of Riemann sums,
-so any Riemann sum could be used as an approximation to the integral: If
-we divide \([a,b]\) into \(n\) subintervals of equal length
-\(\Delta x = (b-a)/n\), then we have
+    \hypertarget{population}{%
+\subsection{Population}\label{population}}
 
-\[ \int_a^b f(x)\ dx \approx \sum\limits_{i=1}^n f(x_i^*) \Delta x\]
+The algorithm starts with a population of \(N\) elements, where the
+\emph{DNA} of the sample is defined with uniform probability at the
+start.
 
-where \(x_i^*\) is any point in the \(i\)th subinterval
-\([x_{i-1}, x_i]\).
+If for example \(N=1000\), we create a set
+\(P=\{d_1,d_2,d_3,\ldots,d_{1000}\}\), where \(d\) is defined as DNA.
+All the genotypes in each DNA will point to a random value in domain of
+the genotype.
 
-    \hypertarget{left-endpoint-approximation}{%
-\subsection{Left endpoint
-approximation}\label{left-endpoint-approximation}}
+    \hypertarget{fitness}{%
+\subsection{Fitness}\label{fitness}}
 
-If \(x_i^*\) is chosen to be the left-endpoint of the interval, then
+A certain configuration of DNA should be measured for \emph{fitness},
+which means how good this DNA scores. This is used to fill the mating
+pool, and ensures survival of the fittest.
 
-\[ \tag{1} \int_a^b f(x)\ dx \approx L_n = \sum\limits_{i=1}^n f(x_{i-1}^*) \Delta x\]
+\hypertarget{fitness-function}{%
+\subsubsection{Fitness function}\label{fitness-function}}
 
-    This is the implementation of equation \((1)\).
+For our example, where each genotype in the DNA represents a letter, we
+want to match a certain sentence. Therefore we can define our fitness
+function as:
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}3}]:} \PY{k}{def} \PY{n+nf}{L}\PY{p}{(}\PY{n}{f}\PY{p}{,} \PY{n}{a}\PY{p}{,} \PY{n}{b}\PY{p}{,} \PY{n}{n}\PY{p}{)}\PY{p}{:}
-            \PY{n}{dx} \PY{o}{=} \PY{p}{(}\PY{n}{b} \PY{o}{\PYZhy{}} \PY{n}{a}\PY{p}{)} \PY{o}{/} \PY{n}{n}
-            \PY{n}{X} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{n}{a}\PY{p}{,} \PY{n}{b} \PY{o}{\PYZhy{}} \PY{n}{dx}\PY{p}{,} \PY{n}{n}\PY{p}{)}
-            \PY{k}{return} \PY{n+nb}{sum}\PY{p}{(}\PY{p}{[}\PY{n}{f}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{o}{*}\PY{n}{dx} \PY{k}{for} \PY{n}{x} \PY{o+ow}{in} \PY{n}{X}\PY{p}{]}\PY{p}{)}
-\end{Verbatim}
+\[ f(\text{correct words}) = \text{correct words}\]
 
+which will be an integer value between \([0, \text{sentence length}]\).
 
-    \hypertarget{right-endpoint-approximation}{%
-\subsection{Right endpoint
-approximation}\label{right-endpoint-approximation}}
+\hypertarget{fitness-curve}{%
+\subsubsection{Fitness curve}\label{fitness-curve}}
 
-If we choose \(x_i^*\) to be the right endpoint, then \(x_i^*=x_i\) and
-we have
+Instead of using a linear function, we can also apply a curve to the
+fitness function. Here is a list of basic functions which can be used to
+create a curve:
 
-\[ \tag{2} \int_a^b f(x)\ dx \approx R_n = \sum\limits_{i=1}^n f(x_{i}^*) \Delta x\]
-
-The approximations \(L_n\) and \(R_n\) are called the \textbf{left
-endpoint approximation} and \textbf{right endpoint approximation}
-respectively. Next is the implementation of equation \((2)\).
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}4}]:} \PY{k}{def} \PY{n+nf}{R}\PY{p}{(}\PY{n}{f}\PY{p}{,} \PY{n}{a}\PY{p}{,} \PY{n}{b}\PY{p}{,} \PY{n}{n}\PY{p}{)}\PY{p}{:}
-            \PY{n}{dx} \PY{o}{=} \PY{p}{(}\PY{n}{b} \PY{o}{\PYZhy{}} \PY{n}{a}\PY{p}{)} \PY{o}{/} \PY{n}{n}
-            \PY{n}{X} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{n}{a}\PY{p}{,} \PY{n}{b} \PY{o}{\PYZhy{}} \PY{n}{dx}\PY{p}{,} \PY{n}{n}\PY{p}{)} \PY{o}{+} \PY{n}{dx}
-            \PY{k}{return} \PY{n+nb}{sum}\PY{p}{(}\PY{p}{[}\PY{n}{f}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{o}{*}\PY{n}{dx} \PY{k}{for} \PY{n}{x} \PY{o+ow}{in} \PY{n}{X}\PY{p}{]}\PY{p}{)}
-\end{Verbatim}
-
-
-    \hypertarget{midpoint-rule}{%
-\subsection{Midpoint rule}\label{midpoint-rule}}
-
-    Let's look at the midpoint approximation \(M_n\), which appears to be
-better than either \(L_n\) or \(R_n\).
-
-    \[ \tag{3} \int_a^b f(x)\ dx \approx M_n = \Delta x[f(\bar{x}_1), f(\bar{x}_2), \ldots, f(\bar{x}_n)] \]
-where \[\Delta x = \frac{b-a}{n}\] and
-\[\bar{x}_i = \frac{1}{2}(x_{i-1} + x_i) \] is the midpoint of
-\([x_{i-1}, x_i]\). Equation \((3)\) also has an implementation.
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}5}]:} \PY{k}{def} \PY{n+nf}{M}\PY{p}{(}\PY{n}{f}\PY{p}{,} \PY{n}{a}\PY{p}{,} \PY{n}{b}\PY{p}{,} \PY{n}{n}\PY{p}{)}\PY{p}{:}
-            \PY{n}{dx} \PY{o}{=} \PY{p}{(}\PY{n}{b} \PY{o}{\PYZhy{}} \PY{n}{a}\PY{p}{)} \PY{o}{/} \PY{n}{n}
-            \PY{n}{X} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{n}{a}\PY{p}{,} \PY{n}{b} \PY{o}{\PYZhy{}} \PY{n}{dx}\PY{p}{,} \PY{n}{n}\PY{p}{)} \PY{o}{+} \PY{n}{dx} \PY{o}{/} \PY{l+m+mi}{2}
-            \PY{k}{return} \PY{n+nb}{sum}\PY{p}{(}\PY{p}{[}\PY{n}{f}\PY{p}{(}\PY{n}{x}\PY{p}{)}\PY{o}{*}\PY{n}{dx} \PY{k}{for} \PY{n}{x} \PY{o+ow}{in} \PY{n}{X}\PY{p}{]}\PY{p}{)}
-\end{Verbatim}
-
-
-    \hypertarget{trapezoidal-rule}{%
-\subsection{Trapezoidal rule}\label{trapezoidal-rule}}
-
-    Another approximation, called the Trapezoidal Rule, results from
-averaging the appromations in equations 1 and 2.
-
-\[ \int_a^b f(x)\ dx \approx \dfrac{1}{2}\left[ \sum\limits_{i=1}^n f(x_{i-1})\Delta x + \sum\limits_{i=1}^n f(x_{i})\Delta x \right] = \dfrac{\Delta x}{2} \sum\limits_{i=1}^n \left( f(x_{i-1})+f(x_{i})\right) \]
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}19}]:} \PY{k}{def} \PY{n+nf}{T}\PY{p}{(}\PY{n}{f}\PY{p}{,} \PY{n}{a}\PY{p}{,} \PY{n}{b}\PY{p}{,} \PY{n}{n}\PY{p}{)}\PY{p}{:}
-             \PY{n}{dx} \PY{o}{=} \PY{p}{(}\PY{n}{b} \PY{o}{\PYZhy{}} \PY{n}{a}\PY{p}{)} \PY{o}{/} \PY{n}{n}
-             \PY{n}{X} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{linspace}\PY{p}{(}\PY{n}{a}\PY{p}{,} \PY{n}{b} \PY{o}{\PYZhy{}} \PY{n}{dx}\PY{p}{,} \PY{n}{n}\PY{p}{)}
-             \PY{k}{return} \PY{n+nb}{sum}\PY{p}{(} \PY{p}{[}\PY{n}{f}\PY{p}{(}\PY{n}{x}\PY{p}{)} \PY{o}{+} \PY{n}{f}\PY{p}{(}\PY{n}{x}\PY{o}{+}\PY{n}{dx}\PY{p}{)} \PY{k}{for} \PY{n}{x} \PY{o+ow}{in} \PY{n}{X}\PY{p}{]} \PY{p}{)} \PY{o}{*} \PY{n}{dx} \PY{o}{/} \PY{l+m+mi}{2}
-\end{Verbatim}
-
-
-    It can also be defined as:
-
-\[ \tag{4} \int_a^b f(x)\ dx \approx T_n = \dfrac{\Delta x}{2} \left[ f(x_0) + 2f(x_1) + 2f(x_2) + \ldots + 2f(x_{n-1}) + f(x_n)\right]\]
-
-where \(\Delta x = (b-a)/n\) and \(x_i=a+i\Delta x\).
-
-    \hypertarget{approximations}{%
-\section{Approximations}\label{approximations}}
-
-    Suppose we have the following integral:
-
-\[\tag{Example 1}\int^2_1 \dfrac{1}{x}\ dx = \begin{bmatrix} \ln\ |\ x\ | \end{bmatrix}^2_1 = \ln 2 - \ln 1 = \ln 2 \approx 0.693147.\]
-
-It is an easy integral, because we want to check the error between the
-approximations methods and the exact value. Estimating the integral with
-each of the methods gives:
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}41}]:} \PY{n}{f}\PY{o}{=}\PY{k}{lambda} \PY{n}{x}\PY{p}{:} \PY{l+m+mi}{1}\PY{o}{/}\PY{n}{x}
-         \PY{n}{a}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{;} \PY{n}{b}\PY{o}{=}\PY{l+m+mi}{2}
-         \PY{n}{N}\PY{o}{=}\PY{p}{[}\PY{p}{]}\PY{p}{;} \PY{n}{Ln}\PY{o}{=}\PY{p}{[}\PY{p}{]}\PY{p}{;} \PY{n}{Rn}\PY{o}{=}\PY{p}{[}\PY{p}{]}\PY{p}{;} \PY{n}{Mn}\PY{o}{=}\PY{p}{[}\PY{p}{]}\PY{p}{;} \PY{n}{Tn}\PY{o}{=}\PY{p}{[}\PY{p}{]}\PY{p}{;}
-         
-         \PY{k}{for} \PY{n}{n} \PY{o+ow}{in} \PY{p}{[}\PY{l+m+mi}{5}\PY{p}{,} \PY{l+m+mi}{10}\PY{p}{,} \PY{l+m+mi}{15}\PY{p}{,} \PY{l+m+mi}{20}\PY{p}{,} \PY{l+m+mi}{25}\PY{p}{]}\PY{p}{:}
-             \PY{n}{N}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{n}\PY{p}{)}
-             \PY{n}{Ln}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{L}\PY{p}{(}\PY{n}{f}\PY{p}{,} \PY{n}{a}\PY{p}{,} \PY{n}{b}\PY{p}{,} \PY{n}{n}\PY{p}{)}\PY{p}{)}
-             \PY{n}{Rn}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{R}\PY{p}{(}\PY{n}{f}\PY{p}{,} \PY{n}{a}\PY{p}{,} \PY{n}{b}\PY{p}{,} \PY{n}{n}\PY{p}{)}\PY{p}{)}
-             \PY{n}{Mn}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{M}\PY{p}{(}\PY{n}{f}\PY{p}{,} \PY{n}{a}\PY{p}{,} \PY{n}{b}\PY{p}{,} \PY{n}{n}\PY{p}{)}\PY{p}{)}
-             \PY{n}{Tn}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{T}\PY{p}{(}\PY{n}{f}\PY{p}{,} \PY{n}{a}\PY{p}{,} \PY{n}{b}\PY{p}{,} \PY{n}{n}\PY{p}{)}\PY{p}{)}
-\end{Verbatim}
-
-
-    Now we add everything to a datatable and calculate the error between the
-exact value of the integral and each method.
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}42}]:} \PY{n}{df}\PY{o}{=}\PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{p}{)}
-         \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{N}
-         \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{ln 2}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{p}{[}\PY{n}{math}\PY{o}{.}\PY{n}{log}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{)}\PY{p}{]} \PY{o}{*} \PY{n+nb}{len}\PY{p}{(}\PY{n}{N}\PY{p}{)}
-         \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Ln}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{Ln}
-         \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Rn}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{Rn}
-         \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Mn}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{Mn}
-         \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Tn}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{Tn}
-         \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{L\PYZus{}error}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{math}\PY{o}{.}\PY{n}{log}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Ln}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} 
-         \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{R\PYZus{}error}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{math}\PY{o}{.}\PY{n}{log}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Rn}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
-         \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{M\PYZus{}error}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{math}\PY{o}{.}\PY{n}{log}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Mn}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
-         \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{T\PYZus{}error}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]} \PY{o}{=} \PY{n}{math}\PY{o}{.}\PY{n}{log}\PY{p}{(}\PY{l+m+mi}{2}\PY{p}{)} \PY{o}{\PYZhy{}} \PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Tn}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
-         \PY{n}{df}
-\end{Verbatim}
-
-
-\begin{Verbatim}[commandchars=\\\{\}]
-{\color{outcolor}Out[{\color{outcolor}42}]:}     n      ln 2        Ln        Rn        Mn        Tn   L\_error   R\_error  \textbackslash{}
-         0   5  0.693147  0.745635  0.645635  0.691908  0.695635 -0.052488  0.047512   
-         1  10  0.693147  0.718771  0.668771  0.692835  0.693771 -0.025624  0.024376   
-         2  15  0.693147  0.710091  0.676758  0.693008  0.693425 -0.016944  0.016389   
-         3  20  0.693147  0.705803  0.680803  0.693069  0.693303 -0.012656  0.012344   
-         4  25  0.693147  0.703247  0.683247  0.693097  0.693247 -0.010100  0.009900   
-         
-             M\_error   T\_error  
-         0  0.001239 -0.002488  
-         1  0.000312 -0.000624  
-         2  0.000139 -0.000278  
-         3  0.000078 -0.000156  
-         4  0.000050 -0.000100  
-\end{Verbatim}
-            
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}43}]:} \PY{n}{f}\PY{p}{,} \PY{p}{(}\PY{p}{(}\PY{n}{ax1}\PY{p}{,} \PY{n}{ax2}\PY{p}{,} \PY{n}{ax3}\PY{p}{,} \PY{n}{ax4}\PY{p}{)}\PY{p}{)} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{subplots}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{4}\PY{p}{,} \PY{n}{sharex}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{col}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{sharey}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{row}\PY{l+s+s1}{\PYZsq{}}
-                                                  \PY{p}{,} \PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{14}\PY{p}{,}\PY{l+m+mi}{6}\PY{p}{)}\PY{p}{)}
-         \PY{n}{cols} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{L\PYZus{}error}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{R\PYZus{}error}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{M\PYZus{}error}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{T\PYZus{}error}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
-         \PY{n}{titles} \PY{o}{=} \PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Left endpoint}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Right endpoint}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Midpoint}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Trapezoidal}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}
-         \PY{n}{axes} \PY{o}{=} \PY{p}{[}\PY{n}{ax1}\PY{p}{,} \PY{n}{ax2}\PY{p}{,} \PY{n}{ax3}\PY{p}{,} \PY{n}{ax4}\PY{p}{]}
-         
-         \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{cols}\PY{p}{)}\PY{p}{)}\PY{p}{:}
-             \PY{n}{ax} \PY{o}{=} \PY{n}{axes}\PY{p}{[}\PY{n}{i}\PY{p}{]}
-             \PY{n}{ax}\PY{o}{.}\PY{n}{bar}\PY{p}{(}\PY{n}{df}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{n}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{df}\PY{p}{[}\PY{n}{cols}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{]}\PY{p}{,} \PY{n}{width}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,} \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.33}\PY{p}{,} \PY{n}{fc}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{b}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-             \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{n}{titles}\PY{p}{[}\PY{n}{i}\PY{p}{]}\PY{p}{)}
-             \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}ylabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Error}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-             \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}xlabel}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{\PYZdl{}n\PYZdl{} approximations}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-             \PY{n}{ax}\PY{o}{.}\PY{n}{axhline}\PY{p}{(}\PY{l+m+mi}{0}\PY{p}{,} \PY{n}{c}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{black}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{lw}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{,} \PY{n}{ls}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dashed}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-             \PY{n}{ax}\PY{o}{.}\PY{n}{grid}\PY{p}{(}\PY{n}{ls}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{dashed}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,} \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.5}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{center}
-    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_22_0.png}
-    \end{center}
-    { \hspace*{\fill} \\}
-    
-    We can make several observations from these tables:
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
+\begin{itemize}
 \tightlist
 \item
-  In all methods we get more accurate approximations when we increase
-  the value of \(n\). However, very large numbers of \(n\) result in so
-  many arithmetic operations that we have to beware of accumulated
-  round-off error.
+  Linear (yes, not a curve): \(x\).
 \item
-  The errors in the left and right endpoint approximations are opposite
-  in sign and appear to decrease by a factor of about 2 when we double
-  the value of \(n\).
+  Power: \(a^x\).
 \item
-  The Trapezoidal and Midpoint Rules are much more accurate that the
-  endpoint approximations.
+  Exponential: \(e^x\).
 \item
-  The errors in the Trapezoidal and Midpoint Rules are opposite in sign
-  and appear to decrease by a factor of about 4 when we double the value
-  of \(n\).
+  Square-root: \(\sqrt{x}\).
 \item
-  The size of error in the Midpoint Rule is about half the size of the
-  error in the Trapezoidal Rule.
-\end{enumerate}
+  Logarithmic: \(\ln x\).
+\end{itemize}
 
-    \hypertarget{error-bounds}{%
-\section{Error bounds}\label{error-bounds}}
+    \hypertarget{mating-pool}{%
+\subsection{Mating pool}\label{mating-pool}}
 
-    Suppose \(|\ f''(x)\ | \leq K\) for \(a \leq x \leq b\). If \(E_t\) and
-\(E_m\) are the errors in the Trapezoidal and Midpoint Rules, then
-\[\tag{5} |\ E_t\ | \leq \dfrac{K(b-a)^3}{12n^2} \quad \text{and} \quad |\ E_m\ | \leq \dfrac{K(b-a)^3}{24n^2}.\]
-Let's apply this error estimate to the Trapezoidal Rule approximation in
-Example 1 equation. First we find \(f''(x)\):
+Based on the fitness, calculated with \(f\), of each DNA, we want to
+create a mating pool. This can be done in two ways: a
+\emph{probabilistic} method or a \emph{rank} based method.
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}44}]:} \PY{n}{x} \PY{o}{=} \PY{n}{sp}\PY{o}{.}\PY{n}{symbols}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{x}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
-         \PY{n}{f} \PY{o}{=} \PY{l+m+mi}{1}\PY{o}{/}\PY{n}{x}
-         \PY{n}{sp}\PY{o}{.}\PY{n}{diff}\PY{p}{(}\PY{n}{sp}\PY{o}{.}\PY{n}{diff}\PY{p}{(}\PY{n}{f}\PY{p}{)}\PY{p}{)}
-\end{Verbatim}
+\hypertarget{probabilistic-method}{%
+\subsubsection{Probabilistic method}\label{probabilistic-method}}
 
-\texttt{\color{outcolor}Out[{\color{outcolor}44}]:}
-    
-    $$\frac{2}{x^{3}}$$
+With this method, we normalize the fitness for each DNA, expressed as
+\(f_{norm}\):
 
-    
+\[ f_{norm} = \dfrac{ f(d) }{\sum\limits_{g\in D} f(d)} \]
 
-    Because \(1 \leq x \leq 2\), we have \(1/x \leq 1\), so
+As an example when there are only \(4\) samples in the population. First
+we calculate \(\sum_{g\in D} f(d)\), which in this case, is \(26\).
 
-\[ |\ f''(x)\ | = \left|\dfrac{2}{x^3}\right| \leq \dfrac{2}{1^3}=2 \]
+\begin{longtable}[]{@{}lll@{}}
+\toprule
+Sample & Fitness score & Fitness score (normalized)\tabularnewline
+\midrule
+\endhead
+1 & 12 & \$\dfrac{12}{26} \approx  \$ 0.462\tabularnewline
+2 & 7 & \$\dfrac{7}{26} \approx  \$ 0.269\tabularnewline
+3 & 5 & \$\dfrac{5}{26} \approx  \$ 0.192\tabularnewline
+4 & 2 & \$\dfrac{2}{26} \approx  \$ 0.077\tabularnewline
+\bottomrule
+\end{longtable}
 
-    Therefore, taking \(K=2,a=1,b=2\), and \(n=5\) in the error estimate
-equation 5, we see that
+\hypertarget{rank-method}{%
+\subsubsection{Rank method}\label{rank-method}}
 
-\[ |\ E_r |\ \leq \dfrac{2(2-1)^3}{12(5)^2}=\dfrac{1}{150}\approx0.006667 \]
+In some cases, where \(f_{norm}\) ends up to be \(0.98\) (\(98\%\)),
+sorting them by rank can fix the issue of overselecting. Simply sort all
+the elements descending by rank (ascending on fitness score), and divide
+the rank by \(\dfrac{n(n+1)}{2}\) where \(n\) is the number of ranks.
 
-    \textbf{Guaranteed error} How large should we take \(n\) in order to
-guarantee that the Trapezoidal and Midpoint Rule approximations for
-\(\int_1^2(1/x)\ dx\) are accurate to within \(0.0001\)?
+As an example, we have a population where one DNA scores very high.
+First we find the sum of rank numbers, there are \(4\) samples, so we
+find:
 
-    We saw in the preceding calculation that \(|\ f(x)\ | \leq 2\) for
-\(1\leq x\leq 2\), so we take \(K=2, a=1\), and \(b=2\) in equation 5.
-Accuracy to within \(0.0001\) means that the size of the error should be
-less than \(0.0001\). Therefore we choose \(n\) so that
-\[ \dfrac{2(1)^3}{12n^2}\leq0.0001.\]
+\[ \dfrac{n(n+1)}{2} = \dfrac{4\cdot 5}{2} = 10 = 1+2+3+4\]
 
-Solving the inequality for \(n\), we get
-\[ n \gt \dfrac{1}{\sqrt{0.0006}}\approx 40.8 \] Thus \(n=41\) will
-ensure the desired accuracy.
+Then we sort them by rank, and normalize the rank score:
 
-    \hypertarget{simpons-rule}{%
-\section{Simpon's rule}\label{simpons-rule}}
+\begin{longtable}[]{@{}lllll@{}}
+\toprule
+Sample & Fitness score & Fitness score (normalized) & Rank & Rank
+(normalized)\tabularnewline
+\midrule
+\endhead
+1 & 20 & \(\dfrac{20}{24} \approx 0.833\) & 4 &
+\(\dfrac{4}{10} = 0.4\)\tabularnewline
+2 & 3 & \(\dfrac{3}{24} = 0.125\) & 3 &
+\(\dfrac{3}{10}=0.3\)\tabularnewline
+3 & 2 & \(\dfrac{2}{24} \approx 0.083\) & 2 &
+\(\dfrac{2}{10}=0.2\)\tabularnewline
+4 & 1 & \(\dfrac{1}{24} \approx 0.042\) & 1 &
+\(\dfrac{1}{10}=0.1\)\tabularnewline
+\bottomrule
+\end{longtable}
 
-    \ldots{}
+    \hypertarget{crossover}{%
+\subsection{Crossover}\label{crossover}}
+
+    \hypertarget{mutation}{%
+\subsection{Mutation}\label{mutation}}
+
+    \hypertarget{algorithm}{%
+\section{Algorithm}\label{algorithm}}
+
+    \hypertarget{implementation}{%
+\section{Implementation}\label{implementation}}
+
+    \hypertarget{analysis}{%
+\section{Analysis}\label{analysis}}
 
 
     % Add a bibliography block to the postdoc

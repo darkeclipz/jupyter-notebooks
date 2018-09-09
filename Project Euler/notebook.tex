@@ -141,7 +141,7 @@
     \def\gt{>}
     \def\lt{<}
     % Document parameters
-    \title{23 - Non-abundant sums}
+    \title{24 - Lexicographic permutations}
     
     
     
@@ -280,316 +280,130 @@
     
 
     
-    \hypertarget{problem}{%
-\section{Problem}\label{problem}}
+    A permutation is an ordered arrangement of objects. For example, 3124 is
+one possible permutation of the digits 1, 2, 3 and 4. If all of the
+permutations are listed numerically or alphabetically, we call it
+lexicographic order. The lexicographic permutations of 0, 1 and 2 are:
 
-    A perfect number is a number for which the sum of its proper divisors is
-exactly equal to the number. For example, the sum of the proper divisors
-of 28 would be 1 + 2 + 4 + 7 + 14 = 28, which means that 28 is a perfect
-number.
+012 021 102 120 201 210
 
-A number n is called deficient if the sum of its proper divisors is less
-than n and it is called abundant if this sum exceeds n.
-
-As 12 is the smallest abundant number, 1 + 2 + 3 + 4 + 6 = 16, the
-smallest number that can be written as the sum of two abundant numbers
-is 24. By mathematical analysis, it can be shown that all integers
-greater than 28123 can be written as the sum of two abundant numbers.
-However, this upper limit cannot be reduced any further by analysis even
-though it is known that the greatest number that cannot be expressed as
-the sum of two abundant numbers is less than this limit.
-
-Find the sum of all the positive integers which cannot be written as the
-sum of two abundant numbers.
+What is the millionth lexicographic permutation of the digits 0, 1, 2,
+3, 4, 5, 6, 7, 8 and 9?
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}1}]:} limit \PY{o}{=} \PY{l+m}{28123}
+{\color{incolor}In [{\color{incolor}2}]:} \PY{k+kn}{import} \PY{n+nn}{math}
 \end{Verbatim}
 
 
-    \hypertarget{divisors}{%
-\section{Divisors}\label{divisors}}
+    I figured that \((1,x_2,x_3,x_4,x_5,x_6,x_7,x_8,x_9,x_{10})\) has
+\(1*9! = 326.880\) permutations. The index can be related to the
+permutation set in the following way:
 
-    We need a function \texttt{divisors(number)} that returns all the
-divisors for that number in a list.
+\[ \text{index} = 9!\cdot x_1 + 8!\cdot x_2 + \ldots + 0! \cdot x_n\]
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}107}]:} divisors \PY{o}{\PYZlt{}\PYZhy{}} \PY{k+kr}{function}\PY{p}{(}x\PY{p}{)} \PY{p}{\PYZob{}}
-              \PY{k+kr}{if}\PY{p}{(}x\PY{o}{==}\PY{l+m}{1}\PY{p}{)} \PY{k+kr}{return} \PY{p}{(}\PY{l+m}{1}\PY{p}{)}
-              result \PY{o}{=} \PY{k+kt}{vector}\PY{p}{(}\PY{l+s}{\PYZsq{}}\PY{l+s}{list\PYZsq{}}\PY{p}{)}
-              \PY{k+kr}{for}\PY{p}{(}i \PY{k+kr}{in} \PY{l+m}{1}\PY{o}{:}x\PY{p}{)} \PY{p}{\PYZob{}}
-                  \PY{k+kr}{if}\PY{p}{(}x\PY{o}{\PYZpc{}\PYZpc{}}i\PY{o}{==}\PY{l+m}{0}\PY{p}{)} \PY{p}{\PYZob{}}
-                      result \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}result\PY{p}{,} i\PY{p}{)}
-                  \PY{p}{\PYZcb{}}
-              \PY{p}{\PYZcb{}}
-              result
-          \PY{p}{\PYZcb{}}
-\end{Verbatim}
+where \(x_1, x_2,\ldots x_n\) are indices. First we define the set of
+permutations as \(S = \{0,1,2,3,4,5,6,7,8,9\}\).
 
+We want to find maximum value of \(x_1\) such that
+\(9!\cdot x_1 \leq 1.000.000\) where \(x_1\) is an integer. This gives:
 
-    We can verify that it works:
+\[ x_1 = \left\lfloor\frac{1.000.000}{9!}\right\rfloor = 2 \implies S_{3}=2\]
 
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}108}]:} divisors\PY{p}{(}\PY{l+m}{12}\PY{p}{)}
-\end{Verbatim}
+This gives us the element that we have to select from \(S\), namely
+\(S_{n+1}\). This gives \(S_{3}=2\). Now we remove \(2\) and store it in
+\(R\). In \(S\) we are left with \(\{0,1,3,4,5,6,7,8,9\}\). The
+remainder for the next iteration is found with
+\(1.000.000 - 9!\cdot x_1\) which is \(274.240\). In the next iteration
+we find \(x_2\):
 
+\[ x_2 = \left\lfloor\frac{274.240}{8!}\right\rfloor = 6 \implies S_{7}=7\]
 
-    \begin{enumerate}
-\item 1
-\item 2
-\item 3
-\item 4
-\item 6
-\item 12
-\end{enumerate}
-
-
-    
-    We should implement a highly optimized algorithm to do this. With the
-current algorithm it is not possible to solve this problem in sufficient
-time. We also need the algorithm for later problems.
-
-    \hypertarget{proper-divisors}{%
-\section{Proper divisors}\label{proper-divisors}}
-
-    The proper divisors are the divisors excluding the number itself.
+Which gives \(S_7=7\). We repeat this proces until the remainder is
+\(0\). The resulting permutation is found by adding our found
+\(x_1, x_2, \ldots, x_{n-1}\), which are in \(R\), and what is left in
+\(S\).
 
     \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}109}]:} proper.divisors \PY{o}{\PYZlt{}\PYZhy{}} \PY{k+kr}{function}\PY{p}{(}x\PY{p}{)} \PY{p}{\PYZob{}}
-              result \PY{o}{=} divisors\PY{p}{(}x\PY{p}{)}
-              \PY{k+kr}{return} \PY{p}{(}result\PY{p}{[}\PY{l+m}{1}\PY{o}{:}\PY{k+kp}{length}\PY{p}{(}result\PY{p}{)}\PY{l+m}{\PYZhy{}1}\PY{p}{]}\PY{p}{)}
-          \PY{p}{\PYZcb{}}
-\end{Verbatim}
-
-
-    The last divisor is removed from the list.
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}110}]:} proper.divisors\PY{p}{(}\PY{l+m}{12}\PY{p}{)}
-\end{Verbatim}
-
-
-    \begin{enumerate}
-\item 1
-\item 2
-\item 3
-\item 4
-\item 6
-\end{enumerate}
-
-
-    
-    \hypertarget{perfect-number}{%
-\section{Perfect number}\label{perfect-number}}
-
-    A perfect number is where the sum of the proper divisors is equal to the
-number itself.
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}111}]:} is.perfect.number \PY{o}{\PYZlt{}\PYZhy{}} \PY{k+kr}{function}\PY{p}{(}x\PY{p}{)} \PY{p}{\PYZob{}}
-              \PY{p}{(}\PY{k+kp}{Reduce}\PY{p}{(}\PY{l+s}{\PYZsq{}}\PY{l+s}{+\PYZsq{}}\PY{p}{,} proper.divisors\PY{p}{(}x\PY{p}{)}\PY{p}{)}\PY{o}{==}x\PY{p}{)}
-          \PY{p}{\PYZcb{}}
-\end{Verbatim}
-
-
-    If we test it with a non perfect number.
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}112}]:} is.perfect.number\PY{p}{(}\PY{l+m}{12}\PY{p}{)}
-\end{Verbatim}
-
-
-    FALSE
-
-    
-    And with a perfect number.
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}113}]:} is.perfect.number\PY{p}{(}\PY{l+m}{28}\PY{p}{)}
-\end{Verbatim}
-
-
-    TRUE
-
-    
-    \hypertarget{abundant-number}{%
-\section{Abundant number}\label{abundant-number}}
-
-    An abundant number is where the sum of the proper divisors is larger
-than the number itself.
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}114}]:} is.abundant.number \PY{o}{\PYZlt{}\PYZhy{}} \PY{k+kr}{function}\PY{p}{(}x\PY{p}{)} \PY{p}{\PYZob{}}
-              \PY{p}{(}\PY{k+kp}{Reduce}\PY{p}{(}\PY{l+s}{\PYZsq{}}\PY{l+s}{+\PYZsq{}}\PY{p}{,} proper.divisors\PY{p}{(}x\PY{p}{)}\PY{p}{)}\PY{o}{\PYZgt{}}x\PY{p}{)}
-          \PY{p}{\PYZcb{}}
-\end{Verbatim}
-
-
-    In the example \(12\) should be an abundant number.
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}115}]:} is.abundant.number\PY{p}{(}\PY{l+m}{12}\PY{p}{)}
-\end{Verbatim}
-
-
-    TRUE
-
-    
-    \hypertarget{finding-all-abundant-numbers}{%
-\subsection{Finding all abundant
-numbers}\label{finding-all-abundant-numbers}}
-
-    We want to find all the abundant numbers between \([2, 28123]\).
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}88}]:} numbers \PY{o}{=} \PY{l+m}{2}\PY{o}{:}\PY{p}{(}limit\PY{o}{/}\PY{l+m}{4}\PY{p}{)}
-         abundant \PY{o}{=} \PY{k+kp}{lapply}\PY{p}{(}numbers\PY{p}{,} is.abundant.number\PY{p}{)}
-         abundant\PYZus{}numbers \PY{o}{=} numbers\PY{p}{[}abundant\PY{o}{==}\PY{k+kc}{TRUE}\PY{p}{]}
-         \PY{k+kp}{print}\PY{p}{(}\PY{k+kp}{paste}\PY{p}{(}\PY{l+s}{\PYZsq{}}\PY{l+s}{There are\PYZsq{}}\PY{p}{,} \PY{k+kp}{length}\PY{p}{(}abundant\PYZus{}numbers\PY{p}{)}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{abundant numbers between 2 and\PYZsq{}}\PY{p}{,} limit\PY{p}{)}\PY{p}{)}
-         abundant\PYZus{}numbers\PY{p}{[}\PY{l+m}{1}\PY{o}{:}\PY{l+m}{100}\PY{p}{]}
+{\color{incolor}In [{\color{incolor}29}]:} \PY{k}{def} \PY{n+nf}{find\PYZus{}permutation\PYZus{}at\PYZus{}index}\PY{p}{(}\PY{n}{S}\PY{p}{,} \PY{n}{index}\PY{p}{)}\PY{p}{:}
+             \PY{n}{R} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+             \PY{n}{remainder} \PY{o}{=} \PY{n}{index}
+             \PY{k}{while} \PY{n}{remainder} \PY{o}{\PYZgt{}} \PY{l+m+mi}{0}\PY{p}{:}
+                 \PY{n}{n} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n}{S}\PY{p}{)}\PY{o}{\PYZhy{}}\PY{l+m+mi}{1}
+                 \PY{n}{index} \PY{o}{=} \PY{n}{remainder} \PY{o}{/}\PY{o}{/} \PY{n}{math}\PY{o}{.}\PY{n}{factorial}\PY{p}{(}\PY{n}{n}\PY{p}{)}
+                 \PY{n}{remainder} \PY{o}{\PYZhy{}}\PY{o}{=} \PY{n}{index} \PY{o}{*} \PY{n}{math}\PY{o}{.}\PY{n}{factorial}\PY{p}{(}\PY{n}{n}\PY{p}{)}
+                 \PY{n}{R}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{S}\PY{p}{[}\PY{n}{index}\PY{p}{]}\PY{p}{)}
+                 \PY{k}{del} \PY{n}{S}\PY{p}{[}\PY{n}{index}\PY{p}{]}
+             \PY{k}{return} \PY{n}{R} \PY{o}{+} \PY{n}{S}
 \end{Verbatim}
 
 
     \begin{Verbatim}[commandchars=\\\{\}]
-[1] "There are 1749 abundant numbers between 2 and 28123"
+{\color{incolor}In [{\color{incolor}33}]:} \PY{o}{\PYZpc{}\PYZpc{}}\PY{k}{time}
+         find\PYZus{}permutation\PYZus{}at\PYZus{}index([0,1,2,3,4,5,6,7,8,9], 999999)
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Wall time: 0 ns
 
     \end{Verbatim}
 
-    \begin{enumerate*}
-\item 12
-\item 18
-\item 20
-\item 24
-\item 30
-\item 36
-\item 40
-\item 42
-\item 48
-\item 54
-\item 56
-\item 60
-\item 66
-\item 70
-\item 72
-\item 78
-\item 80
-\item 84
-\item 88
-\item 90
-\item 96
-\item 100
-\item 102
-\item 104
-\item 108
-\item 112
-\item 114
-\item 120
-\item 126
-\item 132
-\item 138
-\item 140
-\item 144
-\item 150
-\item 156
-\item 160
-\item 162
-\item 168
-\item 174
-\item 176
-\item 180
-\item 186
-\item 192
-\item 196
-\item 198
-\item 200
-\item 204
-\item 208
-\item 210
-\item 216
-\item 220
-\item 222
-\item 224
-\item 228
-\item 234
-\item 240
-\item 246
-\item 252
-\item 258
-\item 260
-\item 264
-\item 270
-\item 272
-\item 276
-\item 280
-\item 282
-\item 288
-\item 294
-\item 300
-\item 304
-\item 306
-\item 308
-\item 312
-\item 318
-\item 320
-\item 324
-\item 330
-\item 336
-\item 340
-\item 342
-\item 348
-\item 350
-\item 352
-\item 354
-\item 360
-\item 364
-\item 366
-\item 368
-\item 372
-\item 378
-\item 380
-\item 384
-\item 390
-\item 392
-\item 396
-\item 400
-\item 402
-\item 408
-\item 414
-\item 416
-\end{enumerate*}
-
-
-    
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}92}]:} \PY{k+kp}{print}\PY{p}{(}\PY{k+kp}{paste}\PY{p}{(}\PY{l+s}{\PYZsq{}}\PY{l+s}{(\PYZsh{} of abundant numbers)\PYZca{}2:\PYZsq{}}\PY{p}{,} \PY{k+kp}{length}\PY{p}{(}abundant\PYZus{}numbers\PY{p}{)}\PY{o}{\PYZca{}}\PY{l+m}{2}\PY{p}{)}\PY{p}{)}
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}33}]:} [2, 7, 8, 3, 9, 1, 5, 4, 6, 0]
 \end{Verbatim}
-
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-[1] "(\# of abundant numbers)\^{}2: 3059001"
-
-    \end{Verbatim}
-
-    \hypertarget{sum-of-two-abundant-numbers}{%
-\section{Sum of two abundant
-numbers}\label{sum-of-two-abundant-numbers}}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}78}]:} is.sum.of.two.abundant.numbers \PY{o}{\PYZlt{}\PYZhy{}} \PY{k+kr}{function}\PY{p}{(}x\PY{p}{)} \PY{p}{\PYZob{}}
-             
-         \PY{p}{\PYZcb{}}
-\end{Verbatim}
-
-
-    \hypertarget{finding-the-solution}{%
-\section{Finding the solution}\label{finding-the-solution}}
-
-    \begin{Verbatim}[commandchars=\\\{\}]
-{\color{incolor}In [{\color{incolor}4}]:} \PY{k+kr}{for} \PY{p}{(}i \PY{k+kr}{in} \PY{l+m}{1}\PY{o}{:}limit\PY{p}{)} \PY{p}{\PYZob{}}
             
-        \PY{p}{\PYZcb{}}
+    This algorithm works for any arbitrary permutation set. We can also use
+it, for example, on letters:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}44}]:} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{math}\PY{o}{.}\PY{n}{factorial}\PY{p}{(}\PY{l+m+mi}{4}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+             \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{i: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{ = }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{i}\PY{p}{,} \PY{n}{find\PYZus{}permutation\PYZus{}at\PYZus{}index}\PY{p}{(}\PY{p}{[}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{A}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{B}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{C}\PY{l+s+s1}{\PYZsq{}}\PY{p}{,}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{D}\PY{l+s+s1}{\PYZsq{}}\PY{p}{]}\PY{p}{,} \PY{n}{i}\PY{p}{)}\PY{p}{)}\PY{p}{)}
 \end{Verbatim}
 
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+i: 0 = ['A', 'B', 'C', 'D']
+i: 1 = ['A', 'B', 'D', 'C']
+i: 2 = ['A', 'C', 'B', 'D']
+i: 3 = ['A', 'C', 'D', 'B']
+i: 4 = ['A', 'D', 'B', 'C']
+i: 5 = ['A', 'D', 'C', 'B']
+i: 6 = ['B', 'A', 'C', 'D']
+i: 7 = ['B', 'A', 'D', 'C']
+i: 8 = ['B', 'C', 'A', 'D']
+i: 9 = ['B', 'C', 'D', 'A']
+i: 10 = ['B', 'D', 'A', 'C']
+i: 11 = ['B', 'D', 'C', 'A']
+i: 12 = ['C', 'A', 'B', 'D']
+i: 13 = ['C', 'A', 'D', 'B']
+i: 14 = ['C', 'B', 'A', 'D']
+i: 15 = ['C', 'B', 'D', 'A']
+i: 16 = ['C', 'D', 'A', 'B']
+i: 17 = ['C', 'D', 'B', 'A']
+i: 18 = ['D', 'A', 'B', 'C']
+i: 19 = ['D', 'A', 'C', 'B']
+i: 20 = ['D', 'B', 'A', 'C']
+i: 21 = ['D', 'B', 'C', 'A']
+i: 22 = ['D', 'C', 'A', 'B']
+i: 23 = ['D', 'C', 'B', 'A']
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}30}]:} \PY{k}{for} \PY{n}{i} \PY{o+ow}{in} \PY{n+nb}{range}\PY{p}{(}\PY{n}{math}\PY{o}{.}\PY{n}{factorial}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+             \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{i: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{ = }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{\PYZsq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n}{i}\PY{p}{,} \PY{n}{find\PYZus{}permutation\PYZus{}at\PYZus{}index}\PY{p}{(}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{,}\PY{l+m+mi}{1}\PY{p}{,}\PY{l+m+mi}{2}\PY{p}{]}\PY{p}{,} \PY{n}{i}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+i: 0 = [0, 1, 2]
+i: 1 = [0, 2, 1]
+i: 2 = [1, 0, 2]
+i: 3 = [1, 2, 0]
+i: 4 = [2, 0, 1]
+i: 5 = [2, 1, 0]
+
+    \end{Verbatim}
 
 
     % Add a bibliography block to the postdoc

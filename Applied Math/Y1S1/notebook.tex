@@ -1,0 +1,960 @@
+
+% Default to the notebook output style
+
+    
+
+
+% Inherit from the specified cell style.
+
+
+
+
+    
+\documentclass[11pt]{article}
+
+    
+    
+    \usepackage[T1]{fontenc}
+    % Nicer default font (+ math font) than Computer Modern for most use cases
+    \usepackage{mathpazo}
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % We will generate all images so they have a width \maxwidth. This means
+    % that they will get their normal width if they fit onto the page, but
+    % are scaled down if they would overflow the margins.
+    \makeatletter
+    \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
+    \else\Gin@nat@width\fi}
+    \makeatother
+    \let\Oldincludegraphics\includegraphics
+    % Set max figure width to be 80% of text width, for now hardcoded.
+    \renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=.8\maxwidth]{#1}}
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionLabelFormat{nolabel}{}
+    \captionsetup{labelformat=nolabel}
+
+    \usepackage{adjustbox} % Used to constrain images to a maximum size 
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range 
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    
+
+    
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatability definitions
+    \def\gt{>}
+    \def\lt{<}
+    % Document parameters
+    \title{Matrixrekening}
+    
+    
+    
+
+    % Pygments definitions
+    
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % Exact colors from NB
+    \definecolor{incolor}{rgb}{0.0, 0.0, 0.5}
+    \definecolor{outcolor}{rgb}{0.545, 0.0, 0.0}
+
+
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+    \begin{document}
+    
+    
+    \maketitle
+    
+    
+
+    
+    \hypertarget{matrixrekening}{%
+\section{Matrixrekening}\label{matrixrekening}}
+
+    \hypertarget{week-1}{%
+\subsection{Week 1}\label{week-1}}
+
+    \hypertarget{matrix-definitie}{%
+\paragraph{Matrix definitie}\label{matrix-definitie}}
+
+    Een matrix wordt aangeduidt met:
+
+    \(A = \begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix} \qquad B = \begin{pmatrix} -3 & \frac{2}{5} & \frac{1}{2} \\ 0 & -10 & 2 \end{pmatrix} \qquad C = \begin{pmatrix} 2 \\ -1 \\ 8 \end{pmatrix} \qquad D = \begin{pmatrix}1 & 3 & 4 \end{pmatrix}\)
+
+    De afmeting van de matrix zijn als volgt:
+
+\begin{itemize}
+\tightlist
+\item
+  \(A = 2 \times 2\)
+\item
+  \(B = 2 \times 3\)
+\item
+  \(C = 1 \times 3\)
+\end{itemize}
+
+Hier tellen we eerst de \emph{rijen} en daarna de \emph{kolommen}. Als
+het aantal rijen en kolommen gelijk is dan spreken we van een
+\emph{vierkante} matrix. Als een matrix \(1\) rij (of kolom) heeft zoals
+matrix \(C\) dan spreken we van een \emph{vector}. \(C\) is een
+\emph{kolomvector}. Indien er maar \(1\) rij zoals in \(D\) is dan
+spreken we van een \emph{rijvector}.
+
+De verschillende \emph{elementen} in de matrix worden op de volgende
+manier benoemd:
+
+    \(A = \begin{pmatrix} a_{11} & a_{12} & \ldots & a_{1n} \\ a_{21} & \ddots && \vdots \\ \vdots && \ddots & \vdots \\ a_{m1} & a_{m2} & \ldots & a_{mn} \end{pmatrix}\)
+
+    Met deze methode kunnen we de elementen in de onderstaande
+\(3 \times 2\) matrix op de volgende manier noteren:
+
+\(L=\begin{pmatrix} 7 & 1 \\ 8 & 0 \\ 3 & -4 \end{pmatrix}\)
+
+\begin{itemize}
+\tightlist
+\item
+  \(l_{11} = 7\)
+\item
+  \(l_{12} = 1\)
+\item
+  \(l_{21} = 8\)
+\item
+  \(l_{22} = 0\)
+\item
+  \(l_{31} = 3\)
+\item
+  \(l_{32} = -4\)
+\end{itemize}
+
+    \hypertarget{vierkante-matrices}{%
+\paragraph{Vierkante matrices}\label{vierkante-matrices}}
+
+    Zoals al eerder is genoemd, is een \(n \times n\) matrix een
+\emph{vierkante} matrix. De hoofddiagonaal in een vierkante matrix is
+hieronder aangegeven:
+
+\(\begin{pmatrix} \color{red}{1} & 2 & 3 \\ 4 & \color{red}{5} & 6 \\ 7 & 8 & \color{red}{9} \end{pmatrix}\)
+
+De hoofddiagonaal bestaat uit de elementen
+\(a_{11}, a_{22}, a_{33}, \ldots, a_{nn}\).
+
+    \hypertarget{nul-matrix}{%
+\paragraph{Nul-matrix}\label{nul-matrix}}
+
+    Een matrix waarvan alle elementen de waarde \(0\) bevatten wordt de
+\emph{nulmatrix} genoemd. De afmetingen maken hierbij niet uit.
+
+\(\begin{pmatrix}0 & 0 & 0 & 0 \\ 0 & 0 & 0 & 0\end{pmatrix}\)
+
+    \hypertarget{symmetrische-matrix}{%
+\paragraph{Symmetrische matrix}\label{symmetrische-matrix}}
+
+    Als een matrix symmetrisch is over de hoofddiagonaal dan wordt er
+gesproken van een \emph{symmetrische matrix}.
+
+\(\begin{pmatrix}1 & 3 & \frac{2}{3} \\ 3 & 5 & 9 \\ \frac{2}{3} & 9 & 9 \end{pmatrix}\)
+
+Hiervoor geldt dat \(a_{ij} = a_{ji}\). En vinden we de eigenschap
+\(a_{ij} = a_{ji} \forall i,j\).
+
+    \hypertarget{transponeren}{%
+\paragraph{Transponeren}\label{transponeren}}
+
+    Als we de matrix \(A\) \emph{transponeren} krijgen we een
+getransponeerde matrix, aangeduidt met \(A^T\):
+
+\(A = \begin{pmatrix} 1 & 2 & 3 \\ 4 & 5 & 6 \end{pmatrix} \qquad A^T = \begin{pmatrix} 1 & 4 \\ 2 & 5 \\ 3 & 6 \end{pmatrix}\).
+
+Hierbij geldt dat \(m \times n \rightarrow n \times m\) en
+\(a_{ij} \rightarrow a_{ji}\).
+
+    \hypertarget{section}{%
+\paragraph{\texorpdfstring{(\(+\), \(-\))}{(+, -)}}\label{section}}
+
+    Om matrices bij elkaar op te tellen \textbf{moeten} deze dezelfde
+afmetingen hebben, indien dit niet zo is dan is deze \emph{niet
+gedefinieerd}.
+
+\(A=\begin{pmatrix} 1 & 3 & 7 \\ 2 & 8 & 6 \end{pmatrix} \qquad B=\begin{pmatrix} 4 & 3 & 1 \\ 9 & 2 & 5 \end{pmatrix} \qquad A+B=\begin{pmatrix} 5 & 6 & 8 \\ 11 & 10 & 11 \end{pmatrix}\)
+
+    \hypertarget{times-div}{%
+\paragraph{\texorpdfstring{(\(\times\),
+\(\div\))}{(\textbackslash{}times, \textbackslash{}div)}}\label{times-div}}
+
+    Een matrix kunnen we vermenigvuldigen met een getal. Dit wordt een
+\emph{scalaire} matrix vermenigvuldigen genoemd. Het getal \(2\) is een
+\emph{scalar}.
+
+\$A =
+
+\begin{pmatrix} 1 & 2 \\ 3 & 4 \end{pmatrix}
+
+\qquad 2 \cdot A =
+
+\begin{pmatrix} 2 & 4 \\ 6 & 8 \end{pmatrix}
+
+\$
+
+    Om matrices met elkaar te vermenigvuldigen kunnen we dit doen a.d.h.v.
+de volgende definitie:
+
+Als \(A\) een \(m \times n\) matrix en \(B\) een \(n \times q\) matrix
+is, dan is het product \(C=A\cdot B\) de \(m\times q\) matrix waarvan de
+elementen zijn
+
+\(\begin{align}c_{ij} = a_{i1}b_{1j} + a_{i2}b_{2j} + \ldots + a_{in}b_{nj} = \sum\limits_{k=1}^n a_{ik}b_{kj}\end{align}\).
+
+Een voorbeeld hiervan is:
+
+\(\begin{pmatrix} 2 & 4 & 6 \\ 3 & 2 & 1 \end{pmatrix} \cdot \begin{pmatrix} 2 \\ 4 \\ 6 \end{pmatrix} = \begin{pmatrix} 2\cdot2+4\cdot4+6\cdot6 \\ 3\cdot2+2\cdot4+1\cdot6 \end{pmatrix} = \begin{pmatrix} 56 \\ 20\end{pmatrix}\)
+
+Van een \(2\times3\) matrix kan alleen een product worden genomen met
+een \(3\times n\) matrix en het resultaat heeft de afmeting
+\(2\times n\).
+
+Dit kan uiteraard ook met andere operaties worden gecombineerd zoals
+bijvoorbeeld:
+
+\(A^T \cdot A = \begin{pmatrix} 2 & 7 & 8 \end{pmatrix} \cdot \begin{pmatrix} 2 \\ 7 \\ 8 \end{pmatrix} = 127\)
+
+In een meer gegeneraliseerde vorm kunnen we beter zien dat het benaderen
+van elementen volgt dat \(a_{\text{rij},\text{kolom}}\), ofterwel
+\(a_{y,x}\):
+
+\(A = \begin{pmatrix} a_{11} & a_{12} & a_{13} \\ a_{21} & a_{22} & a_{23} \\ a_{31} & a_{32} & a_{33} \end{pmatrix} \qquad B = \begin{pmatrix} b_{11} & b_{12} & b_{13} \\ b_{21} & b_{22} & b_{23} \\ b_{31} & b_{32} & b_{33} \end{pmatrix}\)
+
+En bij een matrixvermenigvuldiging wordt het volgende algoritme gevolgd:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Voor elke kolom \(j\) in \(B\).
+\item
+  Voor elke rij \(i\) in \(A\).
+\item
+  Voor elk element \(k\) in rij \(i\).
+\item
+  \(C_{ij} = k_1 \cdot B_{ij} + k_2 \cdot B_{ij} + \ldots + k_n \cdot B_{ij}\).
+\end{enumerate}
+
+Hieruit volgt dat:
+
+\(A \cdot B = \begin{pmatrix} a_{11}b_{11} + a_{12}b_{21} + a_{13}b_{31} & a_{11}b_{12} + a_{12}b_{22} + a_{13}b_{32} & a_{11}b_{13} + a_{12}b_{23} + a_{13}b_{33} \\ a_{21}b_{11} + a_{22}b_{21} + a_{23}b_{31} & a_{11}b_{12} + a_{12}b_{22} + a_{13}b_{32} & a_{11}b_{13} + a_{12}b_{23} + a_{13}b_{33}\\ a_{31}b_{11} + a_{32}b_{21} + a_{33}b_{31} & a_{11}b_{12} + a_{12}b_{22} + a_{13}b_{32} & a_{11}b_{13} + a_{12}b_{23} + a_{13}b_{33} \end{pmatrix}\)
+
+    \hypertarget{eenheidsmatrix-identity}{%
+\paragraph{Eenheidsmatrix (identity)}\label{eenheidsmatrix-identity}}
+
+    Een eenheidsmatrix is altijd een vierkante matrix waarvan alle elementen
+\(0\) zijn behalve de elementen van de hoofddiagonaal, deze zijn \(1\).
+
+\(E = \begin{pmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 1 \end{pmatrix}\)
+
+De eeheidsmatrix wordt aangeduidt met \(A^E\) (eenheid) of \(A^I\)
+(identity).
+
+Wanneer er een matrixvermenigvuldiging wordt gedaan met de
+eenheidsmatrix dan komt er altijd de oorspronkelijk matrix uit. De
+volgorde waarin dit gebeurd maakt niet uit \(A\cdot E = E \cdot A = A\).
+
+    \hypertarget{machtsverheffen}{%
+\paragraph{Machtsverheffen}\label{machtsverheffen}}
+
+    Machtsverheffen kan alleen met een vierkante matrix en hierbij gelden de
+regels \(n \geq 0\), \(n \in \mathbb{N}\). Ga na waarom je niet kunt
+machtsverheffen op een matrix die niet vierkant is.
+
+\begin{itemize}
+\tightlist
+\item
+  \(A^0 = E\) (identiteitsmatrix)
+\item
+  \(A^1 = A\)
+\item
+  \(A^2 = A\cdot A\)
+\item
+  \(A^n = A \cdot A \cdot \ldots\)
+\end{itemize}
+
+Een macht van een matrix kan geen gebroken exponenten hebben.
+
+    \hypertarget{commutativiteit}{%
+\paragraph{Commutativiteit}\label{commutativiteit}}
+
+    Bij matrixvermenigvuldigen geldt de commutatieve eigenschap
+\(a \cdot b = b \cdot a\) niet!
+
+    \hypertarget{associativeit-en-distributiviteit}{%
+\paragraph{Associativeit en
+distributiviteit}\label{associativeit-en-distributiviteit}}
+
+    Bij matrixvermenigvuldigen gelden de associatieve
+\(a \cdot b \cdot c = (a \cdot b) \cdot c = a \cdot (b \cdot c)\) en
+distributieve \(a \cdot (b + c) = a\cdot b + a \cdot c\) eigenschappen
+wel.
+
+    \hypertarget{nulvector}{%
+\paragraph{Nulvector}\label{nulvector}}
+
+    Een vector in bijvoorbeeld \(\mathbb{R}^3\) waarvan alle elementen \(0\)
+zijn:
+
+\(\begin{pmatrix} 0 \\ 0 \\ 0\end{pmatrix}\)
+
+Deze vector geeft de oorsprong van het coordinatensysteem aan.
+
+    \hypertarget{eenheidsvectoren}{%
+\paragraph{Eenheidsvectoren}\label{eenheidsvectoren}}
+
+    Dit zijn de vectoren die de basis vormen van het coordinatensysteem
+waarin je werkt, voor \(\mathbb{R}^2\) zijn dit de vectoren:
+
+\(\begin{pmatrix} 1 \\ 0\end{pmatrix} \qquad \begin{pmatrix} 0 \\ 1\end{pmatrix}\)
+
+    \hypertarget{lineaire-combinatie-van-eenheidsvectoren}{%
+\paragraph{Lineaire combinatie van
+eenheidsvectoren}\label{lineaire-combinatie-van-eenheidsvectoren}}
+
+    Elke vector in \(\mathbb{R}^2\) kan worden geschreven als een
+\emph{lineaire combinatie} van eenheidsvectoren, bijvoorbeeld:
+
+\(\begin{pmatrix} 3 \\ 4\end{pmatrix} = 3\cdot \begin{pmatrix} 1 \\ 0 \end{pmatrix} + 4 \cdot \begin{pmatrix} 0 \\ 1\end{pmatrix}\)
+
+En voor \(\mathbb{R}^3\):
+
+\(\begin{pmatrix} 2 \\ -1 \\ 6 \end{pmatrix} = 2 \cdot \begin{pmatrix} 1 \\ 0 \\ 0 \end{pmatrix} - \begin{pmatrix} 0 \\ 1 \\ 0\end{pmatrix} + 6 \cdot \begin{pmatrix} 0 \\ 0 \\ 1\end{pmatrix}\)
+
+    \hypertarget{week-2}{%
+\subsection{Week 2}\label{week-2}}
+
+    \hypertarget{e-graads-vergelijking}{%
+\paragraph{1e-graads vergelijking}\label{e-graads-vergelijking}}
+
+    Dit wordt ook wel een \emph{lineaire vergelijking} genoemd en dit is in
+de vorm van \(5x+7y=11\). Een voorbeeld een vergelijking die niet
+lineair is zijn \(5x^2 + y = 8\).
+
+    \hypertarget{equivalent-iff}{%
+\paragraph{\texorpdfstring{Equivalent
+\((\iff)\)}{Equivalent (\textbackslash{}iff)}}\label{equivalent-iff}}
+
+    Als stelsels equivalent (gelijkwaardig) wil dat zeggen dat ze dezelfde
+oplossing(en) hebben.
+
+Twee stelsels zijn equivalent als:
+
+\begin{itemize}
+\tightlist
+\item
+  beide precies \(1\), en dezelfde, oplossing hebben
+\item
+  beide geen oplossing hebben
+\item
+  beide oneindig veel, en dezelfde, oplossingen hebben
+\end{itemize}
+
+    \hypertarget{standaard-vorm}{%
+\paragraph{Standaard vorm}\label{standaard-vorm}}
+
+    In alle vergelijkingen staan de variabelen aan de linker kant (op
+volgorde \(x,y,z\)) en alle constanten staan aan de rechterkant van het
+\(=\) teken.
+
+    \hypertarget{elementaire-bewerkingen-elementairy-row-operations}{%
+\paragraph{Elementaire bewerkingen (elementairy row
+operations)}\label{elementaire-bewerkingen-elementairy-row-operations}}
+
+    Op lineaire stelsels kunnen de volgende drie elementaire bewerkingen
+worden uitgevoerd:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Een vergelijking met een getal vermenigvuldigen (\(x\not=0\)). (Scale)
+\item
+  Een vergelijking bij een andere vergelijking optellen of aftrekken.
+  (Pivot)
+\item
+  De volgorde van de vergelijking verwisselen. (Swap)
+\end{enumerate}
+
+Omdat dit al snel wat onoverzichtelijk wordt kan het handig zijn om met
+de volgende notatie aan te geven welke stappen er zijn uitgevoerd:
+
+\begin{itemize}
+\tightlist
+\item
+  \(R_1 - 3R_2 \rightarrow R_1\), hiermee zeggen we dat we \(3\) maar
+  rij \(2\) van rij \(1\) aftrekken en deze plaatsen op rij \(1\).
+\item
+  \(R_1 \iff R_2\), hiermee zeggen we dat wij de rijen \(1\) en \(2\)
+  met elkaar verwisselen.
+\end{itemize}
+
+Met deze elementaire bewerkingen kun je stelsels van lineaire
+vergelijkingen oplossen.
+
+    \hypertarget{vegen}{%
+\paragraph{Vegen}\label{vegen}}
+
+    Vegen betekend achtereen volgend elimineren.
+
+    \hypertarget{pivot}{%
+\paragraph{Pivot}\label{pivot}}
+
+    De pivot is de variabele waarmee geveegd wordt. Als notaties digitaal
+zijn dan kan het helpen om de pivot dikgedrukt te maken.
+
+    \hypertarget{stelsels-vergelijkingen-als-een-matrixvergelijking}{%
+\paragraph{Stelsels vergelijkingen als een
+matrixvergelijking}\label{stelsels-vergelijkingen-als-een-matrixvergelijking}}
+
+    In plaats van \(x\) schrijven we \(x_1\), \(y\) wordt \(x_2\), en \(z\)
+wordt \(x_3\).
+
+Het stelsel:
+
+\(\begin{cases}\begin{align}x_1 & -x_2 & +2x_3 &= 16 \\ -2x_1 & +4x_2 & +x_3 &= 5 \\ 3x_1 & -5x_2 & +3x_3 &= 25\end{align}\end{cases}\)
+
+kunnen we schrijven als \(A \cdot X = B\), waarin:
+
+\(A=\begin{pmatrix}1 & -2 & 2 \\ -2 & 4 & 1 \\ 3 & -5 & 3\end{pmatrix}, X = \begin{pmatrix}x_1\\x_2\\x_3\end{pmatrix}, B=\begin{pmatrix}16\\5\\25\end{pmatrix}\)
+
+De matrix \(A\) bevat de coefficienten van \(x_1, x_2, x_3\) en heet
+daarom de \emph{coefficient matrix}.
+
+We plakken daarvoor \(B\) als een kolom aan \(A\), gescheiden door een
+vertical lijn.
+
+Dit is de \emph{aangevulde coefficient matrix} (augmented matrix).
+Hiermee kunnen we de uitwerking van het stelsel verkorten. De pivot
+elementen zijn dikgedrukt.
+
+    \hypertarget{eenduidig-oplosbaar}{%
+\paragraph{Eenduidig oplosbaar}\label{eenduidig-oplosbaar}}
+
+    Stelsel heeft precies \(1\) oplossing.
+
+    \hypertarget{strijdig-stelsel}{%
+\paragraph{Strijdig stelsel}\label{strijdig-stelsel}}
+
+    Als ergens bijvoorbeeld de vergelijking \(0=1\) of \(4=2\)
+(ongelijkheid) optreedt.
+
+    \hypertarget{afhankelijk-stelsel}{%
+\paragraph{Afhankelijk stelsel}\label{afhankelijk-stelsel}}
+
+    Heeft oneindig veel oplossingen.
+
+    \hypertarget{algemene-oplossing}{%
+\paragraph{Algemene oplossing}\label{algemene-oplossing}}
+
+    Dit is de verzameling van alle oplossingen. Elke afzonderlijke oplossing
+is een \emph{particuliere oplossing}.
+
+    \hypertarget{oplossingsmogelijkheden}{%
+\paragraph{Oplossingsmogelijkheden}\label{oplossingsmogelijkheden}}
+
+    \begin{itemize}
+\tightlist
+\item
+  Eenduidig oplosbaar stelsel heeft \(1\) oplossing.
+\item
+  Strijdig stelsel heeft geen oplossing.
+\item
+  Afhandkelijk stelsen heeft oneindig veel oplossingen.
+\end{itemize}
+
+Voor het aantal oplossingen geldt dat (\(\text{#vgl}=\) aantal
+vergelijkingen, \(\text{#var}=\) aantal variabelen):
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \(\text{#vgl}=\text{#var} \rightarrow 0\) oplossingen in speciale
+  gevallen oneindig veel.
+\item
+  \(\text{#vgl}>\text{#var} \rightarrow\) in het algemeen geen oplossing
+  (in speciale gevallen \(1\) of oneindig).
+\item
+  \(\text{#vgl}<\text{#var} \rightarrow\) oneindig veel oplossingen (in
+  speciale gevallen onoplosbaar).
+\end{enumerate}
+
+    \hypertarget{overige}{%
+\paragraph{Overige}\label{overige}}
+
+    In het dictaar wordt er gebruik gemaakt van de letters \(t,u,v\). Echter
+in andere boeken wordt er gebruik gemaakt van
+\(\alpha, \beta, \gamma, \lambda, \mu\) (alpha, beta, gamma, lambda,
+mu).
+
+    \hypertarget{week-3}{%
+\subsection{Week 3}\label{week-3}}
+
+    \hypertarget{aangevulde-coefficient-matrix}{%
+\paragraph{(aangevulde) coefficient
+matrix}\label{aangevulde-coefficient-matrix}}
+
+    Een coefficient matrix is in de vorm van \(A \times \vec{x} = \vec{b}\).
+
+\(A=\begin{pmatrix}1 & -1 & 2 \\ -2 & 4 & 1 \\ 3 & 5 & 3\end{pmatrix}\)
+
+Hierbij is de aangevulde coefficient matrix in de vorm van
+\(\begin{pmatrix}A|\vec{b}\end{pmatrix}\).
+
+    \hypertarget{bovendriehoeksmatrix}{%
+\paragraph{Bovendriehoeksmatrix}\label{bovendriehoeksmatrix}}
+
+    Een bovendriehoeksmatrix (upper-triangular form) heeft alle elementen
+linksonder de hoofddiagonaal op \(0\).
+
+    \hypertarget{strijdigafhankelijk}{%
+\paragraph{Strijdig/afhankelijk}\label{strijdigafhankelijk}}
+
+    Een \emph{strijdig} stelsel heeft geen oplossing. Een \emph{afhankelijk}
+stelsel heeft oneindig veel oplossingen.
+
+    \hypertarget{eenduidig}{%
+\paragraph{Eenduidig}\label{eenduidig}}
+
+    Een \emph{eenduidig} stelsel heeft \(1\) oplossing.
+
+    \hypertarget{equivalent}{%
+\paragraph{Equivalent}\label{equivalent}}
+
+    Een stelsel is \emph{equivalent} als ze beide dezelfde algemene
+oplossing hebben.
+
+\begin{itemize}
+\tightlist
+\item
+  Geen oplossing
+\item
+  1 en dezelfde oplossing
+\item
+  oneindig veel, en dezelfde, oplossingen
+\end{itemize}
+
+    \hypertarget{algemene-oplossingen}{%
+\paragraph{Algemene oplossing(en)}\label{algemene-oplossingen}}
+
+    Dit zijn alle oplossing(en) van een stelsel. Hierbij wordt een enkele
+oplossing een \emph{particuliere} oplossing genoemd.
+
+    \hypertarget{algemene-oplossing-bij-afhankelijke-stelsels}{%
+\paragraph{Algemene oplossing (bij afhankelijke
+stelsels)}\label{algemene-oplossing-bij-afhankelijke-stelsels}}
+
+    Om aan te geven wat alle oplossingen zijn van een afhankelijk stelsel
+kunnen we de volgende notatie gebruiken. (Niet vergeten als je \(t\)
+aangeeft in het stelsel dat je erbij vermeldt dat deze een willekeurige
+waarde kan bevatten.)
+
+\(\begin{pmatrix}x_1 \\ x_2 \\ x_3 \end{pmatrix} = \begin{pmatrix} \frac{1}{4}-\frac{9}{4}t \\ \frac{5}{8}+\frac{7}{8}t \\ t \end{pmatrix} = \begin{pmatrix}\frac{1}{4}\\\frac{5}{8}\\0\end{pmatrix}+t\begin{pmatrix}\frac{1}{4}\\\frac{7}{8}\\1\end{pmatrix}\)
+
+Nu kunnen we op een gemakkelijke manier \(t\) vervangen met een getal en
+uitrekenen welke oplossing er is.
+
+    \hypertarget{week-4}{%
+\subsection{Week 4}\label{week-4}}
+
+    \hypertarget{determinanten}{%
+\subsubsection{Determinanten}\label{determinanten}}
+
+    \textbf{Definitie}
+
+De \emph{determinant} is een hulpmiddel om vast te stellen of een
+stelsel van lineaire vergelijking precies 1, geen, of oneindig veel
+oplossingen heeft.
+
+Voor elke \emph{vierkante matrix} (\(N \times N\)) kunnen we \(\det(A)\)
+berekenen.
+
+\textbf{\(2 \times 2\) matrix}
+
+In het geval van een \(2 \times 2\) matrix,
+\(A=\begin{pmatrix}a&b\\c&d\end{pmatrix}\), dan is \(\det(A) = ad-bc\).
+
+\textbf{Voorbeeld:}
+
+Om de determinant van \(A=\begin{pmatrix}1&5\\2&7\end{pmatrix}\) te
+berekenen krijgen we \(1 \cdot 7 - 5 \cdot 2 = -3\).
+
+\textbf{\(3 \times 3\) matrix}
+
+Om de determinant van een \(3 \times 3\) matrix te berekenen kunnen we
+de onderdeterminanten berekenen door af te wikkelen via een rij of
+kolom.
+
+Voor matrix
+\(A = \begin{pmatrix}a_1&b_1&c_1\\a_2&b_2&c_2\\a_3&b_3&c_3 \end{pmatrix}\)
+wordt dit op de volgende manier berekend:
+
+\(\det(A) = a_1(b_2c_3-c_2b_3) - a_2(b_1c_3 - b_3c_1) + a_3(b_1c_2-b_2c_1)\)
+
+\textbf{Determinant \(N\times N\) matrix}
+
+Bij het bereken van de determinant wordt het onderstaande patroon
+gevolgd:
+
+\(\begin{pmatrix}+&-&+&-&\cdots\\-&+&-&+&\cdots\\+&-&+&-&\cdots\\-&+&-&+&\ldots\\\cdots& \vdots &\vdots&\vdots&\ddots\end{pmatrix}\)
+
+\textbf{Eigenschappen van determinanten en veegprocedure}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Bij het verwisselen van twee rijen of kolommen in een determinant
+  veranderd deze van teken.
+\item
+  Als je een determinant spiegeld over de hoofddiagonaal blijft deze
+  gelijk.
+\item
+  Als je alle getallen in een rij (of kolom) met een willekeurig getal
+  \(k\) vermenigvuldigd, dan wordt de waarde van de determinant met
+  \(k\) vermenigvuldigd.
+\item
+  Als je in een determinant \(k\) maal een rij (of kolom) optelt of
+  aftrekt van een andere rij (of kolom), dan blijft de determinant
+  gelijk.
+\end{enumerate}
+
+Het is mogelijk om de veegprocedure op determinant toe te passen om in
+een rij/kolom meer nullen te krijgen. Hiervoor worden de bovenstaande
+regels gebruikt. Dit is handig omdat het afwikkelen van de
+rijen/kolommen hierdoor aanzienlijk wordt vereenvoudigd.
+
+    \hypertarget{week-5}{%
+\subsection{Week 5}\label{week-5}}
+
+    \hypertarget{inverses}{%
+\subsubsection{Inverses}\label{inverses}}
+
+    Voor een matrix kan een inverse worden bepaald als:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  De matrix is vierkant (\(N \times N\))
+\item
+  \(\det(A) \not=0\)
+\end{enumerate}
+
+Een belangrijke eigenschap van de inverse is dat zodra deze met de
+oorspronkelijke matrix wordt vermenigvuldigd we de identiteitsmatrix
+krijgen. Ofterwel \(A \times A^{-1} = E = A^{-1} \times A = E\). Deze
+operatie is \textbf{wel} commutatief, in tegenstelling tot
+matrixvermenigvuldigen wat niet commutatief is.
+
+Als een matrix een inverse heeft dan is de matrix \emph{inverteerbaar
+(regulier)}. Als een matrix geen inverse heeft dan is de matrix
+\emph{singulier}.
+
+\textbf{Voorbeeld}
+
+Stel we hebben \(A=\begin{pmatrix}1&2\\1&3\end{pmatrix}\). Om de inverse
+te vinden zoeken we naar
+\(A \times A^{-1} = \begin{pmatrix}1&0\\0&1\end{pmatrix}\).
+
+Ofterwel,
+\(\begin{pmatrix}1&2\\1&3\end{pmatrix} \cdot \begin{pmatrix}a&b\\c&d\end{pmatrix} = \begin{pmatrix}1&0\\0&1\end{pmatrix}\)
+
+Dit is gemakkelijk op te lossen met vegen. Hiervoor gebruiken we een
+aangevulde coefficientmatrix met links \(A\) en rechts de
+identiteitsmatrix \(E\). Vervolgens vegen we zodat de coefficientmatrix
+alleen maar \(1\) heeft op de hoofddiagonaal. De rechterkant is nu
+\(A^{-1}\). Dit is ook weer te controleren door \(A \times A^{-1} = E\).
+
+    \textbf{Eigenschappen}
+
+    \begin{itemize}
+\tightlist
+\item
+  Een matrix heeft een inverse als \(\det(A)\not=0\).
+\item
+  Elke inverse is uniek.
+\item
+  Als \(A\) inverteerbaar is dan is \(A^{-1}\) ook inverteerbaar.
+\item
+  Als een matrix een inverse heeft dan is stelsel \(Ax=b\) eenduidig
+  oplosbaar.
+\end{itemize}
+
+    \textbf{Stelsels oplossen met \(A^{-1}\)}
+
+Stel we hebben een vergelijking \(Ax=b\), dan geldt \(x = A^{-1}b\).
+
+Bewijs:
+
+\(\begin{align} Ax &= b \\ A^{-1}(Ax)&=A^{-1}b \quad &(\text{Add} \quad A^{-1}) \\ (A^{-1}A)x&=A^{-1}b \quad &(\text{By associativity}) \\ Ex &= A^{-1}b \quad &( A^{-1}A=E )\\ x &= A^{-1}b \quad &(Ex=x) \end{align}\)
+
+    \hypertarget{week-6}{%
+\subsection{Week 6}\label{week-6}}
+
+    \hypertarget{definitie-eigenvector-eigenwaarde}{%
+\paragraph{Definitie eigenvector \&
+eigenwaarde}\label{definitie-eigenvector-eigenwaarde}}
+
+Een eigenvector van een \(n \times n\) matrix is een vector \(x\),
+waarvan tenminste 1 element niet gelijk is aan 0 zodaning dat
+\(A\cdot x=k \cdot x\) voor een reëel getal \(k\). Dit getal \(k\) heet
+een eingewaarde van \(A\) als er een niet-triviale oplossing \(x\)
+bestaat van \(A \cdot x = k \cdot x\).
+
+    \hypertarget{eigenvector}{%
+\paragraph{Eigenvector}\label{eigenvector}}
+
+Gegeven is matrix \(A=\begin{pmatrix}1&6\\5&2\end{pmatrix}\) en de
+vector \(p=\begin{pmatrix}6\\-5\end{pmatrix}\). Is \(p\) een eigenvector
+van \(A\)?
+
+Om te zien of \(p\) een eigenvector is van \(A\) vermenigvuldigen we
+\(A \cdot p\) en kijken we of we een getal \(k\) kunnen vinden voor
+\(A \cdot p\).
+
+\(A\cdot p = \begin{pmatrix}1&6\\5&2\end{pmatrix}\cdot\begin{pmatrix}6\\-5\end{pmatrix}=\begin{pmatrix}-24\\20\end{pmatrix}=-4\cdot\begin{pmatrix}6\\-5\end{pmatrix}=-4\cdot p\).
+
+Ja, \(p\) is een eigenvector van \(A\) met eigenwaarde \(-4\).
+
+    \hypertarget{eigenwaarde}{%
+\paragraph{Eigenwaarde}\label{eigenwaarde}}
+
+    Gegeven is matrix \(A=\begin{pmatrix}-2&2\\2&1\end{pmatrix}\) is het
+getal \(2\) een eigenwaarde van \(A\)?
+
+Om te zien of \(2\) een eigenwaarde is van \(A\) vullen we de formule
+\(A \cdot x = 2 \cdot x\).
+
+\(\begin{align} \begin{pmatrix}-2&2\\2&1\end{pmatrix}\begin{pmatrix}x_1\\x_2\end{pmatrix}&=2\cdot \begin{pmatrix}x_1\\x_2\end{pmatrix} \\ \begin{pmatrix}-2&2\\2&1\end{pmatrix}\begin{pmatrix}x_1\\x_2\end{pmatrix}-2\cdot \begin{pmatrix}x_1\\x_2\end{pmatrix}&=\begin{pmatrix}0\\0\end{pmatrix} \\ \begin{pmatrix}-2&2\\2&1\end{pmatrix}\begin{pmatrix}x_1\\x_2\end{pmatrix}-2\cdot \begin{pmatrix}1&0\\0&1\end{pmatrix}\begin{pmatrix}x_1\\x_2\end{pmatrix}&=\begin{pmatrix}0\\0\end{pmatrix} \\ \begin{pmatrix}-2&2\\2&1\end{pmatrix}\begin{pmatrix}x_1\\x_2\end{pmatrix}- \begin{pmatrix}2&0\\0&2\end{pmatrix}\begin{pmatrix}x_1\\x_2\end{pmatrix}&=\begin{pmatrix}0\\0\end{pmatrix} \\ \begin{pmatrix}-4&2\\2&-1\end{pmatrix}\begin{pmatrix}x_1\\x_2\end{pmatrix}&=\begin{pmatrix}0\\0\end{pmatrix} \end{align}\)
+
+Beide vergelijkingen in het volgende stelsel
+\(\begin{cases}\begin{align}-4x_1+2x_2&=0\\2x_1-x_2&=0\end{align}\end{cases}\)
+zijn equivalent, dus \(2x_1-x_2=0 \iff 2x_1=x_2\). Nu is het makkelijk
+te zien dat \(\begin{pmatrix}1\\2\end{pmatrix}\) een eigenvector is van
+\(A\). Ofterwel, \(2\) is een eigenwaarde van de vorm
+\(t\cdot\begin{pmatrix}1\\2\end{pmatrix}\) voor \(t\) ongelijk aan
+\(0\).
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+    \end{document}

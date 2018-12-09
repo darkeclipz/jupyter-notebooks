@@ -1,0 +1,38 @@
+\contentsline {section}{\numberline {1}Definitions of functions with two variables}{3}{section.1}
+\contentsline {section}{\numberline {2}\texttt {matplotlib} surface plot}{3}{section.2}
+\contentsline {section}{\numberline {3}Surface graphs of basic functions}{4}{section.3}
+\contentsline {subsection}{\numberline {3.1}Linear: \(x+y\)}{4}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Linear: \(x-y\)}{5}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}Power: \(xy\)}{6}{subsection.3.3}
+\contentsline {subsection}{\numberline {3.4}Power: \(x^2+y^2\)}{7}{subsection.3.4}
+\contentsline {subsection}{\numberline {3.5}Power: \(x^2-y^2\)}{8}{subsection.3.5}
+\contentsline {subsection}{\numberline {3.6}Power: \(x^2y^2\)}{9}{subsection.3.6}
+\contentsline {subsection}{\numberline {3.7}Reciprocal: \(\genfrac {}{}{}0{x}{y}\)}{10}{subsection.3.7}
+\contentsline {subsection}{\numberline {3.8}Root: \(\sqrt {x+y}\)}{11}{subsection.3.8}
+\contentsline {subsection}{\numberline {3.9}Root: \(\sqrt {x-y}\)}{12}{subsection.3.9}
+\contentsline {subsection}{\numberline {3.10}Root: \(\sqrt {xy}\)}{13}{subsection.3.10}
+\contentsline {subsection}{\numberline {3.11}Root: \(\sqrt {x^2+y^2}\)}{14}{subsection.3.11}
+\contentsline {subsection}{\numberline {3.12}Absolute: \(|\ x+y\ |\)}{15}{subsection.3.12}
+\contentsline {subsection}{\numberline {3.13}Absolute: \(|\ x-y\ |\)}{16}{subsection.3.13}
+\contentsline {subsection}{\numberline {3.14}Absolute: \(|\ xy\ |\)}{17}{subsection.3.14}
+\contentsline {subsection}{\numberline {3.15}Trigonometric: \(\qopname \relax o{cos}(x)+\qopname \relax o{sin}(y)\)}{18}{subsection.3.15}
+\contentsline {subsection}{\numberline {3.16}Trigonometric: \(\qopname \relax o{sin}(x+y)\)}{19}{subsection.3.16}
+\contentsline {subsection}{\numberline {3.17}Trigonometric: \(\qopname \relax o{sin}(xy)\)}{20}{subsection.3.17}
+\contentsline {subsection}{\numberline {3.18}Exponential: \(x^y\)}{21}{subsection.3.18}
+\contentsline {subsection}{\numberline {3.19}Exponential: \(e^{x+y}\)}{22}{subsection.3.19}
+\contentsline {subsection}{\numberline {3.20}Exponential: \(e^{xy}\)}{23}{subsection.3.20}
+\contentsline {subsection}{\numberline {3.21}Logarithmic: \(\qopname \relax o{ln}(x+y)\)}{24}{subsection.3.21}
+\contentsline {subsection}{\numberline {3.22}Algebraic: \(e^x\qopname \relax o{sin}y\)}{25}{subsection.3.22}
+\contentsline {section}{\numberline {4}Surfaces of algebraic equations}{26}{section.4}
+\contentsline {subsection}{\numberline {4.1}Example: \(f(x,y) = 2x^3 - 3xy + 2y\)}{26}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}Example: \(f(x,y)=\qopname \relax o{sin}(x)+\qopname \relax o{cos}(y)\)}{27}{subsection.4.2}
+\contentsline {subsection}{\numberline {4.3}Example: \(f(x,y)=x^2+y^2\)}{28}{subsection.4.3}
+\contentsline {subsection}{\numberline {4.4}Example: \(f(x,y)=x^2y^3-y^3\)}{29}{subsection.4.4}
+\contentsline {subsection}{\numberline {4.5}Example \(f(x,y)=\qopname \relax o{ln}\sqrt {x^2+y^2}\)}{30}{subsection.4.5}
+\contentsline {subsection}{\numberline {4.6}Example \(f(x,y)=\qopname \relax o{sin}x \qopname \relax o{cosh}y + \qopname \relax o{cos}x \qopname \relax o{sinh}y\)}{31}{subsection.4.6}
+\contentsline {subsection}{\numberline {4.7}Example: \(f(x,y)=e^{-x}\qopname \relax o{cos}y - e^{-y} \qopname \relax o{cos}x\)}{32}{subsection.4.7}
+\contentsline {section}{\numberline {5}Surfaces of partial derivatives}{33}{section.5}
+\contentsline {subsection}{\numberline {5.1}Example: surface area of a human}{33}{subsection.5.1}
+\contentsline {subsection}{\numberline {5.2}Example: wind-chill index}{37}{subsection.5.2}
+\contentsline {subsection}{\numberline {5.3}Example: idk}{38}{subsection.5.3}
+\contentsline {subsection}{\numberline {5.4}Example \(f(x,y)=x^5y^5\)}{40}{subsection.5.4}

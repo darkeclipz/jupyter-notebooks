@@ -1,0 +1,38 @@
+\BOOKMARK [1][-]{section.1}{Definitions of functions with two variables}{}% 1
+\BOOKMARK [1][-]{section.2}{matplotlib Surface Plot}{}% 2
+\BOOKMARK [1][-]{section.3}{Surface graphs of basic functions}{}% 3
+\BOOKMARK [2][-]{subsection.3.1}{Linear: x+y}{section.3}% 4
+\BOOKMARK [2][-]{subsection.3.2}{Linear: x-y}{section.3}% 5
+\BOOKMARK [2][-]{subsection.3.3}{Power: xy}{section.3}% 6
+\BOOKMARK [2][-]{subsection.3.4}{Power: x\1362+y\1362}{section.3}% 7
+\BOOKMARK [2][-]{subsection.3.5}{Power: x\1362-y\1362}{section.3}% 8
+\BOOKMARK [2][-]{subsection.3.6}{Power: x\1362y\1362}{section.3}% 9
+\BOOKMARK [2][-]{subsection.3.7}{Reciprocal: \134dfrac\173x\175\173y\175}{section.3}% 10
+\BOOKMARK [2][-]{subsection.3.8}{Root: \134sqrt\173x+y\175}{section.3}% 11
+\BOOKMARK [2][-]{subsection.3.9}{Root: \134sqrt\173x-y\175}{section.3}% 12
+\BOOKMARK [2][-]{subsection.3.10}{Root: \134sqrt\173xy\175}{section.3}% 13
+\BOOKMARK [2][-]{subsection.3.11}{Root: \134sqrt\173x\1362+y\1362\175}{section.3}% 14
+\BOOKMARK [2][-]{subsection.3.12}{Absolute: |\134 x+y\134 |}{section.3}% 15
+\BOOKMARK [2][-]{subsection.3.13}{Absolute: |\134 x-y\134 |}{section.3}% 16
+\BOOKMARK [2][-]{subsection.3.14}{Absolute: |\134 xy\134 |}{section.3}% 17
+\BOOKMARK [2][-]{subsection.3.15}{Trigonometric: \134cos\(x\)+\134sin\(y\)}{section.3}% 18
+\BOOKMARK [2][-]{subsection.3.16}{Trigonometric: \134sin\(x+y\)}{section.3}% 19
+\BOOKMARK [2][-]{subsection.3.17}{Trigonometric: \134sin\(xy\)}{section.3}% 20
+\BOOKMARK [2][-]{subsection.3.18}{Exponential: x\136y}{section.3}% 21
+\BOOKMARK [2][-]{subsection.3.19}{Exponential: e\136\173x+y\175}{section.3}% 22
+\BOOKMARK [2][-]{subsection.3.20}{Exponential: e\136\173xy\175}{section.3}% 23
+\BOOKMARK [2][-]{subsection.3.21}{Logarithmic: \134ln\(x+y\)}{section.3}% 24
+\BOOKMARK [2][-]{subsection.3.22}{Algebraic: e\136x\134sin y}{section.3}% 25
+\BOOKMARK [1][-]{section.4}{Surfaces of algebraic equations}{}% 26
+\BOOKMARK [2][-]{subsection.4.1}{Example: f\(x,y\) = 2x\1363 - 3xy + 2y}{section.4}% 27
+\BOOKMARK [2][-]{subsection.4.2}{Example: f\(x,y\)=\134sin\(x\)+\134cos\(y\)}{section.4}% 28
+\BOOKMARK [2][-]{subsection.4.3}{Example: f\(x,y\)=x\1362+y\1362}{section.4}% 29
+\BOOKMARK [2][-]{subsection.4.4}{Example: f\(x,y\)=x\1362y\1363-y\1363}{section.4}% 30
+\BOOKMARK [2][-]{subsection.4.5}{Example f\(x,y\)=\134ln\134sqrt\173x\1362+y\1362\175}{section.4}% 31
+\BOOKMARK [2][-]{subsection.4.6}{Example f\(x,y\)=\134sin x \134cosh y + \134cos x \134sinh y}{section.4}% 32
+\BOOKMARK [2][-]{subsection.4.7}{Example: f\(x,y\)=e\136\173-x\175\134cos y - e\136\173-y\175 \134cos x}{section.4}% 33
+\BOOKMARK [1][-]{section.5}{Surfaces of partial derivatives}{}% 34
+\BOOKMARK [2][-]{subsection.5.1}{Example: surface area of a human}{section.5}% 35
+\BOOKMARK [2][-]{subsection.5.2}{Example: wind-chill index}{section.5}% 36
+\BOOKMARK [2][-]{subsection.5.3}{Example: idk}{section.5}% 37
+\BOOKMARK [2][-]{subsection.5.4}{Example f\(x,y\)=x\1365y\1365}{section.5}% 38

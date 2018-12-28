@@ -1,0 +1,87 @@
+<!DOCTYPE <!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Gravitational Attraction</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body { margin: 0; padding: 0; }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <script src="draw.js"></script>
+    <script src="vec2.js"></script>
+    <script>
+
+        let draw = new Draw('canvas');
+        draw.font("Arial", 20);
+        draw.width(2);
+        
+        let frameTimestamp = +new Date();
+
+
+        let L = 200; // side length of the square tile
+        let s1 = 5; // velocity of square 1 (pixel/sec)
+        let s2 = 7; // velocity of square 2 (pixel/sec)
+        let t = 0;
+        let speed = 20;
+
+        let animator = function(t, range) {
+            return (-Math.cos(t) / 2 + 0.5) * range
+        }
+
+        let anim = function() {
+
+            // Main animation setup
+            let newTimestamp = +new Date();
+            let dt = (newTimestamp - frameTimestamp) / 1000;
+            frameTimestamp = newTimestamp;
+
+            t += speed * dt; // increment time
+            T = animator(t/100, 180);
+
+            let u = new Vec2(s1 / Math.sqrt(2)).scale(T), v = new Vec2(s2 / Math.sqrt(2)).scale(T);
+
+            requestAnimationFrame(anim);
+            draw.clear();
+
+
+            draw.color("white");
+            draw.fill();
+            draw.point(u);
+            draw.point(v);
+
+            draw.color("rgba(255,255,0,.5)")
+            draw.rect(new Vec2(v.x-L/2,v.y+L/2), new Vec2(L));
+
+            draw.color("rgba(255,0,0,.5)")
+            draw.rect(new Vec2(u.x-L/2,u.y+L/2), new Vec2(L));
+
+            draw.point(new Vec2(100,100));
+
+            draw.stroke();
+            draw.rect(0, 0, 100, 100);
+
+            draw.fill();
+            draw.color('white');
+            draw.font("Arial", 20);
+            draw.text(new Vec2(10), "t=" + t);
+
+            draw.line(u,v);
+            draw.font("Arial", 12);
+            draw.text(u.mid(v).add(new Vec2(25,0)), Math.round(u.dist(v)))
+
+        }
+
+        draw.canvas.addEventListener("mousemove", function(e) {
+            mouse = new Vec2(e.clientX, e.clientY);
+        });
+
+        anim();
+
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+\contentsline {section}{\numberline {1}Schatten van de variantie}{3}{section.1}
+\contentsline {section}{\numberline {2}Chikwadraatverdeling}{3}{section.2}
+\contentsline {section}{\numberline {3}Betrouwbaarheidsinterval voor \(\sigma ^2\)}{4}{section.3}
+\contentsline {section}{\numberline {4}Toets voor \(\sigma ^2\)}{5}{section.4}
+\contentsline {section}{\numberline {5}Chikwadraat toets voor passing}{6}{section.5}
+\contentsline {section}{\numberline {6}Fisher's exacte toets}{7}{section.6}
+\contentsline {section}{\numberline {7}Yates correctie}{8}{section.7}
+\contentsline {section}{\numberline {8}T-verdeling}{8}{section.8}
+\contentsline {section}{\numberline {9}Betrouwbaarheidsinterval voor \(\mu \) bij onbekende \(\sigma \)}{10}{section.9}
+\contentsline {section}{\numberline {10}t-Toets voor \IeC {\'e}\IeC {\'e}n gemiddelde}{10}{section.10}
+\contentsline {section}{\numberline {11}Verschiltoets voor \(\mu \) met bekende \(\sigma \)}{11}{section.11}
+\contentsline {section}{\numberline {12}Verschiltoets voor \(\mu \) met een onbekende \(\sigma \)}{12}{section.12}
+\contentsline {section}{\numberline {13}Gepaarde t-toets}{12}{section.13}
+\contentsline {section}{\numberline {14}F-verdeling}{13}{section.14}
+\contentsline {section}{\numberline {15}F-toets}{14}{section.15}
+\contentsline {section}{\numberline {16}Harmonisch gemiddelde}{15}{section.16}
+\contentsline {section}{\numberline {17}Pooled-variance principe}{15}{section.17}
+\contentsline {section}{\numberline {18}ANOVA (\IeC {\'e}\IeC {\'e}n-factor model)}{15}{section.18}
+\contentsline {section}{\numberline {19}Ongelijke steekproefgroottes}{17}{section.19}
+\contentsline {section}{\numberline {20}Levene's toets}{17}{section.20}
+\contentsline {section}{\numberline {21}Bonferoni methode}{18}{section.21}
+\contentsline {section}{\numberline {22}Tukey's HSD methode}{19}{section.22}
+\contentsline {section}{\numberline {23}Maat voor effectgrootte}{19}{section.23}
+\contentsline {section}{\numberline {24}Rangtekentoets (Wilcoxon Signed Rank test)}{19}{section.24}
+\contentsline {section}{\numberline {25}Wilcoxon som toets (Mann-Whitney toets)}{21}{section.25}

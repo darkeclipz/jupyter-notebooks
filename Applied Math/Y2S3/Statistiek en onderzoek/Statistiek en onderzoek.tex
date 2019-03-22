@@ -1,0 +1,1601 @@
+
+% Default to the notebook output style
+
+    
+
+
+% Inherit from the specified cell style.
+
+
+
+
+    
+\documentclass[11pt]{article}
+
+    
+    
+    \usepackage[T1]{fontenc}
+    % Nicer default font (+ math font) than Computer Modern for most use cases
+    \usepackage{mathpazo}
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % We will generate all images so they have a width \maxwidth. This means
+    % that they will get their normal width if they fit onto the page, but
+    % are scaled down if they would overflow the margins.
+    \makeatletter
+    \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
+    \else\Gin@nat@width\fi}
+    \makeatother
+    \let\Oldincludegraphics\includegraphics
+    % Set max figure width to be 80% of text width, for now hardcoded.
+    \renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=.8\maxwidth]{#1}}
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionLabelFormat{nolabel}{}
+    \captionsetup{labelformat=nolabel}
+
+    \usepackage{adjustbox} % Used to constrain images to a maximum size 
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range 
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    \usepackage{mathrsfs}
+    
+
+    
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+    \definecolor{ansi-default-inverse-fg}{HTML}{FFFFFF}
+    \definecolor{ansi-default-inverse-bg}{HTML}{000000}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatibility definitions
+    \def\gt{>}
+    \def\lt{<}
+    \let\Oldtex\TeX
+    \let\Oldlatex\LaTeX
+    \renewcommand{\TeX}{\textrm{\Oldtex}}
+    \renewcommand{\LaTeX}{\textrm{\Oldlatex}}
+    % Document parameters
+    % Document title
+    \title{Statistiek en onderzoek}
+    
+    
+    
+    
+    
+
+    % Pygments definitions
+    
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % Exact colors from NB
+    \definecolor{incolor}{rgb}{0.0, 0.0, 0.5}
+    \definecolor{outcolor}{rgb}{0.545, 0.0, 0.0}
+
+
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+    \begin{document}
+    
+    
+    \maketitle
+    
+    \newpage
+    \tableofcontents
+    \newpage
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}1}]:} \PY{k+kp}{options}\PY{p}{(}repr.plot.width\PY{o}{=}\PY{l+m}{5}\PY{p}{,} repr.plot.height\PY{o}{=}\PY{l+m}{5}\PY{p}{)}
+\end{Verbatim}
+
+    \hypertarget{schatten-van-de-variantie}{%
+\section{Schatten van de variantie}\label{schatten-van-de-variantie}}
+
+    We gebruiken hier als schatter voor \(\sigma^2\) de grootheid \(s^2\).
+De formule luidt:
+
+\[s^2 = \dfrac{\sum\left(x_i - \bar{x}\right)^2}{n-1} = \dfrac{SSE}{n-1} \]
+
+    \hypertarget{chikwadraatverdeling}{%
+\section{Chikwadraatverdeling}\label{chikwadraatverdeling}}
+
+    Stel \(\underline{x}_1, \ldots, \underline{x}_n\) zijn alle
+kansvariabelen die standaardnormaal verdeeld zijn. Deze \(x\) gaan we
+kwadrateren zodat we zeker weten dat deze altijd positief is. Voor een
+enkele trekking \(\underline{x}_1\) krijgen we een Chikwadraat
+verdeling, aangeduidt met \(\chi^2[1]\), met één vrijheidsgraad. Met
+meerdere trekkingen ontstaat de grootheid chikwadraat:
+
+\[ \underline{\chi}^2[\nu] = \underline{x}_1 + \ldots + \underline{x}_n \]
+
+waarbij \(\nu\) het aantal vrijheidsgraden is.
+
+Enkele eigenschappen zijn dat:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \(\textrm{E}(\underline{\chi}^2[\nu]) = \nu\).
+\item
+  \(\textrm{Var}(\underline{\chi}^2[\nu]) = 2 \nu\).
+\end{enumerate}
+
+    \textbf{Verdelingsfunctie plot}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}2}]:} curve\PY{p}{(}dchisq\PY{p}{(}x\PY{p}{,} df\PY{o}{=}\PY{l+m}{9}\PY{p}{)}\PY{p}{,} col\PY{o}{=}\PY{l+s}{\PYZsq{}}\PY{l+s}{red\PYZsq{}}\PY{p}{,} main \PY{o}{=} \PY{l+s}{\PYZdq{}}\PY{l+s}{Chi\PYZhy{}Square Density Graph\PYZdq{}}\PY{p}{,} 
+              from\PY{o}{=}\PY{l+m}{0}\PY{p}{,}to\PY{o}{=}\PY{l+m}{60}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_6_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \textbf{Centrale limietstelling}
+
+    De chikwadraat verdeling kan normaal benaderd worden als
+\(\nu \rightarrow \infty\). De vuistregel hiervoor is dat \(\nu > 30\).
+Er geldt dan dat:
+
+\[ \chi^2[\nu] \sim N\left(\mu = \nu, \sigma = \sqrt{2\nu}\right) \]
+
+Bij benadering gebruiken we:
+
+\[ P(\chi^2[\nu] \leq k\ |\ \nu) \approx P(\underline{x}_{nor} \leq k\ |\ \mu = \nu, \sigma = \sqrt{2\nu} ).\]
+
+    \hypertarget{betrouwbaarheidsinterval-voor-sigma2}{%
+\section{\texorpdfstring{Betrouwbaarheidsinterval voor
+\(\sigma^2\)}{Betrouwbaarheidsinterval voor \textbackslash{}sigma\^{}2}}\label{betrouwbaarheidsinterval-voor-sigma2}}
+
+    Een vereiste om een betrouwbaarheidsinterval op te stellen voor
+\(\sigma^2\) is dat de onderzochte kansvariabele \(\underline{x}\) een
+normale verdeling volgt, of bij benadering normaal verdeeld is. De toets
+hiervoor staat in de volgende sectie.
+
+Het betrouwbaarheidsinterval voor \(\sigma^2\) luidt:
+
+    \[ \dfrac{\sum\left(x_i - \bar{x} \right)^2}{g_R} < \sigma^2 < \dfrac{\sum\left(x_i - \bar{x} \right)^2}{g_L} \]
+
+met andere woorden:
+
+\[ \dfrac{SSE}{g_{1-\frac{\alpha}{2}}} < \sigma^2 < \dfrac{SSE}{g_{\frac{\alpha}{2}}}. \]
+
+    \textbf{Voorbeeld}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}3}]:} SSE \PY{o}{=} \PY{l+m}{45}
+        xbar \PY{o}{=} \PY{l+m}{24}
+        df \PY{o}{=} \PY{l+m}{9}
+        interval \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}SSE \PY{o}{/} qchisq\PY{p}{(}\PY{l+m}{0.975}\PY{p}{,} df\PY{o}{=}\PY{l+m}{9}\PY{p}{)}\PY{p}{,} SSE \PY{o}{/} qchisq\PY{p}{(}\PY{l+m}{0.025}\PY{p}{,} df\PY{o}{=}\PY{l+m}{9}\PY{p}{)}\PY{p}{)}
+        interval
+\end{Verbatim}
+
+    \begin{enumerate*}
+\item 2.3655863582172
+\item 16.6642626925958
+\end{enumerate*}
+
+
+    
+    \hypertarget{toets-voor-sigma2}{%
+\section{\texorpdfstring{Toets voor
+\(\sigma^2\)}{Toets voor \textbackslash{}sigma\^{}2}}\label{toets-voor-sigma2}}
+
+    De verzamelde uitkomsten \(x_1, x_2, \ldots, x_n\) van een variabele
+\(\underline{x}\) dienen een spreiding \(s^2\) te vertonen die in
+redelijke mate overeen komt met \(\sigma^2\). Als dat niet het geval is,
+dan moet de nulhypothese \(\textrm{Var}(\underline{x})=\sigma^2\) worden
+verworpen.
+
+    \textbf{Toetsingsgrootheid}
+
+Gegeven de nulhypothese volgt de toetsingsgrootheid:
+
+\[ \dfrac{(n-1)s^2}{\sigma^2} = \dfrac{SSE}{\sigma^2}\]
+
+een \(\chi^2[n-1]\)-verdeling.
+
+    \textbf{Voorbeeld}
+
+    Stel \(n=10\), \(\sigma^2=15\), \(SSE=45\) en \(\alpha=0.05\), dan:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}4}]:} n \PY{o}{=} \PY{l+m}{10}
+        sigma2 \PY{o}{=} \PY{l+m}{15}
+        SSE \PY{o}{=} \PY{l+m}{45}
+        alpha \PY{o}{=} \PY{l+m}{0.05}
+        SSE \PY{o}{/} sigma2
+        pchisq\PY{p}{(}SSE \PY{o}{/} sigma2\PY{p}{,} n\PY{l+m}{\PYZhy{}1}\PY{p}{)}
+\end{Verbatim}
+
+    3
+
+    
+    0.0357050273149108
+
+    
+    \emph{Toetsprocedure}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \(H_0\) : \(\sigma^2 = 15\) en \(H_A\) : \(\sigma^2 \not= 15\).
+\item
+  Toetsingsgrootheid: \(\dfrac{SSE}{\sigma^2} = 3\) met \(\nu=n-1=9\).
+\item
+  Overschrijdingskans:
+  \(p = P(\chi^2[9] \leq 3) = \textrm{pchisq}(3,9) = 0.0357\).
+\item
+  Beslissing: \(p > \frac{\alpha}{2}\) met \(\alpha=0.05\), dus \(H_0\)
+  wordt niet verworpen.
+\item
+  Conclusie: De waarneming valt binnen het voorspellingsinterval van
+  \(\sigma^2\).
+\end{enumerate}
+
+    \hypertarget{chikwadraat-toets-voor-passing}{%
+\section{Chikwadraat toets voor
+passing}\label{chikwadraat-toets-voor-passing}}
+
+    Hiermee kunnen we toetsen of de uitkomsten een patroon vertonen dat
+overeenkomt met een gegeven kansverdeling. Hiervoor gaan we de
+waargenomen en de theoretische (vanuit de verwachte kansverdeling)
+uitkomsten met elkaar vergelijken.
+
+\textbf{Toetsingsgrootheid}
+
+Het vergelijken van de waargenomen en de theoretische frequenties
+gebeurt met de toetsingsgrootheid:
+
+\[ \chi^2 = \sum \dfrac{(O_i-E_i)^2}{E_i} \]
+
+dit wordt benaderd met \(\chi^2[\nu]\) waarbij \(\nu = n - 1\).
+
+    \textbf{Detail 1}
+
+In het algemeent geldt er er voor alle \(E_i \geq 5\). Indien dit niet
+het geval is, dan worden er klassen samemgevoegd zodanig dat dit wel het
+geval is.
+
+\textbf{Detail 2}
+
+Stel \(\mu\) is onbekend, dan wordt \(\mu\) bepaald door het
+steekproefgemiddelde (of een schatting hiervan). In dit geval gaat er
+een extra vrijheidsgraad verloren. Dus dan geldt er dat \(\nu = n-2\).
+
+    \textbf{Voorbeeld}
+
+    We willen nagaan wat het ziekteverzuim is op verschillende dagen in de
+week. Hiervoor hebben we de volgende gegevens:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}5}]:} dagen \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+s}{\PYZsq{}}\PY{l+s}{ma\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{di\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{wo\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{do\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{vr\PYZsq{}}\PY{p}{)}
+        zieken \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{20}\PY{p}{,} \PY{l+m}{14}\PY{p}{,} \PY{l+m}{14}\PY{p}{,} \PY{l+m}{12}\PY{p}{,} \PY{l+m}{20}\PY{p}{)}
+        df \PY{o}{=} \PY{k+kt}{data.frame}\PY{p}{(}dagen\PY{p}{,} zieken\PY{p}{)}
+        df
+\end{Verbatim}
+
+    \begin{tabular}{r|ll}
+ dagen & zieken\\
+\hline
+	 ma & 20\\
+	 di & 14\\
+	 wo & 14\\
+	 do & 12\\
+	 vr & 20\\
+\end{tabular}
+
+
+    
+    Men wil toetsen of het aantal ziektedagen gelijkmatig over de dagen van
+de week is verdeeld. Voor vijf dagen in de week zou dat betekenen dat er
+een kans is van \(0.20\) voor elke dag.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}6}]:} O \PY{o}{=} zieken
+        n \PY{o}{=} \PY{k+kp}{sum}\PY{p}{(}O\PY{p}{)}
+        E \PY{o}{=} \PY{k+kp}{rep}\PY{p}{(}\PY{l+m}{0.2} \PY{o}{*} n\PY{p}{,} \PY{l+m}{5}\PY{p}{)}
+        diff \PY{o}{=} O \PY{o}{\PYZhy{}} E
+        diffsq \PY{o}{=} \PY{k+kp}{diff}\PY{o}{*}\PY{k+kp}{diff}
+        diffsqdiv \PY{o}{=} diffsq \PY{o}{/} E
+        \PY{k+kt}{data.frame}\PY{p}{(}dagen\PY{p}{,} O\PY{p}{,} E\PY{p}{,} \PY{k+kp}{diff}\PY{p}{,} diffsq\PY{p}{,} diffsqdiv\PY{p}{)}
+        \PY{k+kp}{sum}\PY{p}{(}diffsqdiv\PY{p}{)}
+\end{Verbatim}
+
+    \begin{tabular}{r|llllll}
+ dagen & O & E & diff & diffsq & diffsqdiv\\
+\hline
+	 ma   & 20   & 16   &  4   & 16   & 1.00\\
+	 di   & 14   & 16   & -2   &  4   & 0.25\\
+	 wo   & 14   & 16   & -2   &  4   & 0.25\\
+	 do   & 12   & 16   & -4   & 16   & 1.00\\
+	 vr   & 20   & 16   &  4   & 16   & 1.00\\
+\end{tabular}
+
+
+    
+    3.5
+
+    
+    \emph{Toetsprocedure}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \(H_0\) : de ziektemeldingen zijn gelijkmatig verdeeld over de
+  werkdagen. \(H_A\) : ziektemeldingen zijn niet uniform verdeeld.
+\item
+  Toetsingsgrootheid: \[\sum{\dfrac{(O_i-E_i)^2}{E_i}} = 3.5\] met een
+  \(\chi^2[4]\)-verdeling.
+\item
+  Overschrijdingskans:
+  \(p = P(\chi^2[4] \geq 3.5) = \chi^2_{cdf}(3.5, 10^{99}, 4) = 0.4779\).
+\item
+  Beslissing: \(p > \alpha\) met \(\alpha=0.05\), dus \(H_0\) wordt niet
+  verworpen.
+\item
+  Conclusie: de geconstateerde afwijkingen kunnen heel goed aan het
+  toeval worden toegeschreven.
+\end{enumerate}
+
+    \hypertarget{fishers-exacte-toets}{%
+\section{Fisher's exacte toets}\label{fishers-exacte-toets}}
+
+    In het geval dat \(n < 20\), dan moet Fisher's exacte toets worden
+gebruikt. In het geval dat \(20 < n < 40\), gebruiken we alleen de Yates
+correctie. In het laatste geval, als \(n >40\), dan wordt er helemaal
+geen correctie toegepast.
+
+Bij Fisher's exacte toets gaan we uit van een \(2 \times 2\) kruistabel.
+
+\textbf{Voorbeeld}
+
+We willen kijken of er een verschil is in ziekte tussen docenten die
+wel/geen griepprik hebben gekregen.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}7}]:} griep \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{1}\PY{p}{,} \PY{l+m}{4}\PY{p}{)}
+        geen.griep \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{11}\PY{p}{,} \PY{l+m}{2}\PY{p}{)}
+        df \PY{o}{=} \PY{k+kp}{t}\PY{p}{(}\PY{k+kt}{data.frame}\PY{p}{(}griep\PY{p}{,} geen.griep\PY{p}{)}\PY{p}{)}
+        \PY{k+kp}{colnames}\PY{p}{(}df\PY{p}{)} \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+s}{\PYZsq{}}\PY{l+s}{prik\PYZsq{}}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{geen.prik\PYZsq{}}\PY{p}{)}
+        df
+\end{Verbatim}
+
+    \begin{tabular}{r|ll}
+  & prik & geen.prik\\
+\hline
+	griep &  1 & 4 \\
+	geen.griep & 11 & 2 \\
+\end{tabular}
+
+
+    
+    We kiezen hier het laagste getal als basis, in dit geval is dat \(1\).
+Hier stellen we dat \(\underline{k}\) het aantal docenten is met
+griepprik die de griep krijgen. In dit geval is \(\underline{k}\)
+hypergeometrisch verdeeld. Het steekproefresultaat is \(1\), en we gaan
+de kans bepalen dat dit voorkomt.
+
+\(p = P(\underline{k} \leq 1) = P(\underline{k} = 0) + P(\underline k = 1) = \dfrac{\begin{pmatrix}12\\0\end{pmatrix}\begin{pmatrix}6\\5\end{pmatrix}}{\begin{pmatrix}18\\5\end{pmatrix}} + \dfrac{\begin{pmatrix}12\\1\end{pmatrix}\begin{pmatrix}6\\4\end{pmatrix}}{\begin{pmatrix}18\\5\end{pmatrix}} = 0.0217.\)
+
+    We kunnen dit ook met R bepalen:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}8}]:} fisher.test\PY{p}{(}df\PY{p}{)}
+\end{Verbatim}
+
+    
+    \begin{verbatim}
+
+	Fisher's Exact Test for Count Data
+
+data:  df
+p-value = 0.02171
+alternative hypothesis: true odds ratio is not equal to 1
+95 percent confidence interval:
+ 0.0008583686 0.9414807659
+sample estimates:
+odds ratio 
+0.05873784 
+
+    \end{verbatim}
+
+    
+    \emph{Toetsprocedure}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \(H_0\) : Er is geen verschil in de griep krijgen tussen docenten
+  met/zonder griepprik en \(H_A\) : Er is wel een verschil.
+\item
+  Toetsingsgrootheid: \(\underline{k} \sim \textrm{hypergeometrisch}\).
+\item
+  Overschrijdingskans: \(p = 0.0217\).
+\item
+  Beslissing: \(p \leq \alpha\) (\(\alpha=0.05\)) dus \(H_0\) verwerpen.
+\item
+  Conclusie: De docenten met de griepprik krijgen significant minder
+  griep.
+\end{enumerate}
+
+    \hypertarget{yates-correctie}{%
+\section{Yates correctie}\label{yates-correctie}}
+
+    Indien er wordt voldaan aan de volgende drie voorwaarden:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \(20 < n < 40\).
+\item
+  Voor alle \(E_{ij}\)'s geldt dat \(E_{ij} > 1\).
+\item
+  \(80\%\) van alle \(E_{ij}\)'s is groter dan \(5\).
+\end{enumerate}
+
+dan wordt de Yates correctie toegepast. Dit geeft een nieuwe
+toetsingsgrootheid, namelijk:
+
+\[ \sum\limits_{i=1}^r \sum\limits_{j=1}^c \dfrac{\left(\left| O_{ij} - E_{ij}\right| - 0.5\right)^2 }{E_{ij}}. \]
+
+Doormiddel van de Yates correctie, wordt de toets convervatiever.
+Hierdoor wordt de nulhypthese minder snel verworpen en is de toets iets
+veiliger.
+
+    \hypertarget{t-verdeling}{%
+\section{T-verdeling}\label{t-verdeling}}
+
+    De t-verdeling kent een geschatte standaarddeviatie, terwijl de normale
+verdeling een exacte bekende standaarddeviatie heeft.
+
+\[ \underline{t} = \dfrac{\overline{\underline x} - \mu}{\frac{\underline{s}}{\sqrt{n}}} \]
+
+waarbij \(\underline s\) een schatting is, en bepaald door:
+
+\[ \underline{s} = \sqrt{  \dfrac{\sum\left(X_i - \underline{\overline X}\right)^2}{n-1}  } \]
+
+Bij het opstellen van een betrouwbaarheidsinterval voor \(\mu\) voor een
+continue variabele hebben we de volgende mogelijkheden:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Normale verdeling + gegeven \(\sigma\rightarrow\) de normale verdeling
+  gebruiken.
+\item
+  Normale verdeling + onbekende \(\sigma \rightarrow\) de t-verdeling
+  gebruiken als \(n\leq 30\) en anders de normale verdeling.
+\item
+  Willekeurige verdeling + onbekende \(\sigma \rightarrow\) de
+  t-verdeling gebruiken.
+\end{enumerate}
+
+    \textbf{Verdelingsfunctie plot}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}9}]:} curve\PY{p}{(}dt\PY{p}{(}x\PY{p}{,}\PY{l+m}{2}\PY{p}{,}\PY{l+m}{0.02}\PY{p}{)}\PY{p}{,} col\PY{o}{=}\PY{l+s}{\PYZsq{}}\PY{l+s}{red\PYZsq{}}\PY{p}{,} from\PY{o}{=}\PY{l+m}{\PYZhy{}5}\PY{p}{,} to\PY{o}{=}\PY{l+m}{5}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_42_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    De t-verdeling lijkt bijna op de normale verdeling. Het verschil is dat
+de t-verdeling een dikkere staart heeft.
+
+    \hypertarget{betrouwbaarheidsinterval-voor-mu-bij-onbekende-sigma}{%
+\section{\texorpdfstring{Betrouwbaarheidsinterval voor \(\mu\) bij
+onbekende
+\(\sigma\)}{Betrouwbaarheidsinterval voor \textbackslash{}mu bij onbekende \textbackslash{}sigma}}\label{betrouwbaarheidsinterval-voor-mu-bij-onbekende-sigma}}
+
+    \[ \bar{x} - t \cdot \dfrac{s}{\sqrt n} < \mu < \bar{x} + t \cdot \dfrac{s}{\sqrt n} \]
+
+    \textbf{Voorbeeld}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}10}]:} x \PY{o}{=} \PY{l+m}{16}
+         s \PY{o}{=} \PY{l+m}{1.34}
+         n \PY{o}{=} \PY{l+m}{10}
+         alpha \PY{o}{=} \PY{l+m}{0.05}
+         t \PY{o}{=} \PY{k+kp}{abs}\PY{p}{(}qt\PY{p}{(}alpha\PY{o}{/}\PY{l+m}{2}\PY{p}{,} n\PY{l+m}{\PYZhy{}1}\PY{p}{)}\PY{p}{)}
+         interval \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}x \PY{o}{\PYZhy{}} t \PY{o}{*} s \PY{o}{/} \PY{k+kp}{sqrt}\PY{p}{(}n\PY{p}{)}\PY{p}{,} x \PY{o}{+} t \PY{o}{*} s \PY{o}{/} \PY{k+kp}{sqrt}\PY{p}{(}n\PY{p}{)}\PY{p}{)}
+         interval
+\end{Verbatim}
+
+    \begin{enumerate*}
+\item 15.0414217459993
+\item 16.9585782540007
+\end{enumerate*}
+
+
+    
+    \hypertarget{t-toets-voor-uxe9uxe9n-gemiddelde}{%
+\section{t-Toets voor één
+gemiddelde}\label{t-toets-voor-uxe9uxe9n-gemiddelde}}
+
+    Bij veel toepassingen in de praktijk is de standaarddeviatie niet
+gegeven en dus moet deze worden geschat. Zoals we hebben gezien leidt
+het schatten tot het gebruik van de t-verdeling met \(\nu = n-1\)
+vrijheidsgraden.
+
+\textbf{Toetsingsgrootheid}
+
+Hiervoor berekenen we de \(t\)-waarde met:
+
+\[t^* = \dfrac{\bar{x} - \mu}{\frac{s}{\sqrt{n}}}\]
+
+    \textbf{Voorbeeld}
+
+    Bij een visverwerkende industrie wordt het afvalwater voortdurend
+gecontroleerd op verontreiniging. Afhankelijk van de hoeveelheid
+geloosde vervuilingseenheden (VE's) moet een mileuheffing worden
+afgedragen aan de overheid. Het bedrijf stelt dat gemiddeld hoogstens
+200 VE's per dag worden geloosd. Toets of de uitspraak van het bedrijf
+klopt.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}11}]:} dag \PY{o}{=} \PY{l+m}{1}\PY{o}{:}\PY{l+m}{10}
+         VE \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{190}\PY{p}{,} \PY{l+m}{250}\PY{p}{,} \PY{l+m}{320}\PY{p}{,} \PY{l+m}{410}\PY{p}{,} \PY{l+m}{310}\PY{p}{,} \PY{l+m}{280}\PY{p}{,} \PY{l+m}{230}\PY{p}{,} \PY{l+m}{370}\PY{p}{,} \PY{l+m}{350}\PY{p}{,} \PY{l+m}{290}\PY{p}{)}
+         n \PY{o}{=} \PY{k+kp}{length}\PY{p}{(}VE\PY{p}{)}
+         df \PY{o}{=} \PY{k+kp}{t}\PY{p}{(}\PY{k+kt}{data.frame}\PY{p}{(}dag\PY{p}{,} VE\PY{p}{)}\PY{p}{)}
+         df
+\end{Verbatim}
+
+    \begin{tabular}{r|llllllllll}
+	dag &   1 &   2 &   3 &   4 &   5 &   6 &   7 &   8 &   9 &  10\\
+	VE & 190 & 250 & 320 & 410 & 310 & 280 & 230 & 370 & 350 & 290\\
+\end{tabular}
+
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}12}]:} \PY{k+kp}{mean}\PY{p}{(}VE\PY{p}{)}
+\end{Verbatim}
+
+    300
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}13}]:} t \PY{o}{=} \PY{p}{(}\PY{k+kp}{mean}\PY{p}{(}VE\PY{p}{)} \PY{o}{\PYZhy{}} \PY{l+m}{200}\PY{p}{)} \PY{o}{/} \PY{p}{(}sd\PY{p}{(}VE\PY{p}{)} \PY{o}{/} \PY{k+kp}{sqrt}\PY{p}{(}n\PY{p}{)}\PY{p}{)}
+         \PY{k+kp}{t}
+\end{Verbatim}
+
+    4.74341649025257
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}14}]:} qt\PY{p}{(}\PY{l+m}{0.975}\PY{p}{,} \PY{l+m}{9}\PY{p}{)}
+\end{Verbatim}
+
+    2.2621571627982
+
+    
+    Het is duidelijk dat \(t\) in het kritieke gebied
+\(Z = \left[2.2621; \rightarrow\right>\) ligt.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}15}]:} \PY{l+m}{1} \PY{o}{\PYZhy{}} pt\PY{p}{(}\PY{l+m}{4.7434}\PY{p}{,} \PY{l+m}{9}\PY{p}{)}
+\end{Verbatim}
+
+    0.000526947811761658
+
+    
+    \emph{Toetsprocedure}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \(H_0\) : \(\mu \leq 200\) en \(H_A\) : \(\mu > 200\).
+\item
+  Toetsingsgrootheid: \(t^* = 4.7434 \sim t[9]\).
+\item
+  Overschrijdingskans:
+  \(p = P(t[9] \geq 4.7434) = 1 - P(t[9] \leq 4.7434) = 1 - \textrm{pt}(4.7434, 9) = 0.0005269\).
+\item
+  Beslissing: \(p \leq \alpha\) dus \(H_0\) verwerpen.
+\item
+  Conclusie: De uitspraak van het bedrijf wordt niet juist bevonden.
+\end{enumerate}
+
+    \hypertarget{verschiltoets-voor-mu-met-bekende-sigma}{%
+\section{\texorpdfstring{Verschiltoets voor \(\mu\) met bekende
+\(\sigma\)}{Verschiltoets voor \textbackslash{}mu met bekende \textbackslash{}sigma}}\label{verschiltoets-voor-mu-met-bekende-sigma}}
+
+    In de praktijk komt het nogal eens voor dat er steekproeven worden
+genomen uit twee populaties, waarbij de vraag naar voren komt of een
+kansvariabele voor beide populaties dezelfde waarde voor de
+verwachtingswaarde \(\mu\) heeft. In de eerste situatie kijken we naar
+twee normaal verdeelde kansvariabelen \(\underline{x}\) en
+\(\underline{y}\) waarvoor de varianties \(\sigma^2_x\) en
+\(\sigma^2_y\) gegeven zijn.
+
+\textbf{Hypothese}
+
+Voor de verschiltoets werken we vaak met de hypothese dat
+\(H_0 : \mu_x = \mu_y\) en \(H_A : \mu_x \not= \mu_y\).
+
+\textbf{Toetsingsgrootheid}
+
+Om de toets uit te voeren definiëren we de verschilvariabele
+\(\nu = \underline{\overline x} - \underline{\overline y}\). De
+bijbehorende toetsingsgrootheid is:
+
+\[ \underline \nu \sim N\left(\mu_\nu = 0; \sigma_\nu = \sqrt{\dfrac{\sigma^2_x}{n} + \dfrac{\sigma^2_y}{m}} \right) \]
+
+\textbf{Betrouwbaarheidsinterval}
+
+Een betrouwbaarheidsinterval voor \(\mu_x - \mu_y\) kan worden bepaald
+met:
+
+\[ \left( \underline{\overline x} - \underline{\overline y} \right) - z_{1-\frac{1}{2}\alpha} \cdot \sqrt{\dfrac{\sigma^2_x}{n} + \dfrac{\sigma^2_y}{m}} < \mu_x - \mu_y < \left( \underline{\overline x} - \underline{\overline y} \right) + z_{1-\frac{1}{2}\alpha} \cdot \sqrt{\dfrac{\sigma^2_x}{n} + \dfrac{\sigma^2_y}{m}}  \]
+
+    \textbf{Voorbeeld}
+
+Gegeven is dat \(n_x = 10\), \(\bar{X} = 50\), \(n_y = 5\), en
+\(\bar{Y} = 55\). Toets of beide dezelfde verwachtingswaarde kunnen
+hebben.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}16}]:} n \PY{o}{=} \PY{l+m}{10}\PY{p}{;} m \PY{o}{=} \PY{l+m}{5}
+         xbar \PY{o}{=} \PY{l+m}{50}\PY{p}{;} ybar \PY{o}{=} \PY{l+m}{55}
+         xvar \PY{o}{=} \PY{l+m}{100}\PY{p}{;} yvar \PY{o}{=} \PY{l+m}{30}
+         sigma \PY{o}{=} \PY{k+kp}{sqrt}\PY{p}{(}xvar \PY{o}{/} n \PY{o}{+} yvar \PY{o}{/} m\PY{p}{)}
+         v \PY{o}{=} xbar \PY{o}{\PYZhy{}} ybar
+         pnorm\PY{p}{(}v\PY{p}{,} \PY{l+m}{0}\PY{p}{,} sigma\PY{p}{)}
+\end{Verbatim}
+
+    0.105649773666855
+
+    
+    \emph{Toetsprocedure}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \(H_0\) : \(\mu_x = \mu_y\) en \(H_A\) : \(\mu_x \not= \mu_y\).
+\item
+  Toetsingsgrootheid:
+  \(\nu = \underline{\overline x} - \underline{\overline y} = -5 \sim N(\mu_\nu = 0, \sigma_\nu = 4)\).
+\item
+  Overschrijdingskans:
+  \(p = P(\underline{v} \leq -5) = \textrm{normal}_{cdf}(-10^{99}, -5, 0, 4) = 0.1056\).
+\item
+  Beslissing: \(p \leq \alpha\) (\(\alpha=0.05\)) dus \(H_0\) wordt niet
+  verworpen.
+\item
+  Conclusie: De steekproefgemiddelden zijn mogelijk gelijk aan elkaar.
+\end{enumerate}
+
+    \hypertarget{verschiltoets-voor-mu-met-een-onbekende-sigma}{%
+\section{\texorpdfstring{Verschiltoets voor \(\mu\) met een onbekende
+\(\sigma\)}{Verschiltoets voor \textbackslash{}mu met een onbekende \textbackslash{}sigma}}\label{verschiltoets-voor-mu-met-een-onbekende-sigma}}
+
+    Als de variantie van de kansvariabele niet is gegeven, kunnen we niet
+meteen de toets uitvoeren, maar moeten we eerst een schatting maken van
+\(\sigma^2\).
+
+\textbf{Variant A (gelijke \(\sigma\))}
+
+Veronderstel dat we aan mogen nemen dat de onbekende varianties van de
+variabelen aan elkaar gelijk zijn. (In de praktijk moeten we dit eerst
+toetsen met de F-verdeling.) We bepalen voor beide variabelen de
+variantie en deze kunnen dan worden gecombineerd tot één schatter, die
+als volgt wordt gedefineerd:
+
+\[s_p^2 = \dfrac{(n-1)s_x^2 + (m-1)s_y^2}{(n-1)+(m-1)} \quad \textrm{(pooled variance principe)}\]
+
+waarbij de bijbehorende \(t\)-verdeling \(df=n+m-2\) vrijheidsgraden
+heeft.
+
+    \textbf{Variant B (ongelijke \(\sigma\))}
+
+Als de variantieschattingen onderling sterk verschillen, mag de pooled
+variance methode niet worden toegepast. In dit geval gebruiken we de
+schatting:
+
+\[ s_\nu = \sqrt{\dfrac{s^2_x}{n} + \dfrac{s^2_y}{m}} \]
+
+waarbij de \(t\)-verdeling \(df=\min(m,n)-1\) vrijheidsgraden heeft.
+Deze formule is een veilige methode om het aantal vrijheidsgraden te
+bepalen. SPSS gebruikt een nauwkeurigere methode om het aantal
+vrijheidsgraden te bepalen.
+
+    \textbf{Betrouwbaarheidsinterval}
+
+Een betrouwbaarheidsinterval voor \(\mu_x - \mu_y\) kan worden bepaald
+met:
+
+\[ \nu - ts_\nu < \mu_x - \mu_y < \nu + ts_\nu. \]
+
+We hoeven hier niet te delen door \(\sqrt{n}\) omdat dit effect al zit
+verwerkt in \(s_\nu\).
+
+    \hypertarget{gepaarde-t-toets}{%
+\section{Gepaarde t-toets}\label{gepaarde-t-toets}}
+
+    Bij toepassing van de \(t\)-toets als verschiltoets wordt er wél
+aandacht geschonken aan de grootte van de waargenomen verschillen.
+Gegeven zijn \(n\) waargenomen getallenparen \((x_i, y_i)\). Deze paren
+worden met \(v_i = y_i - x_i\) omgezet in \(n\) waargenomen verschillen.
+
+\textbf{Toetsingsgrootheid}
+
+De toetsingsgrootheid voor de gepaarde t-toets is het gemiddelde
+verschil tussen de paren:
+
+\[\underline{\overline v} : \textrm{gemiddelde verschil}\]
+
+vervolgens bepalen we de \(t\)-waarde:
+
+\[t^* = \dfrac{\bar{v} - \mu}{\frac{s}{\sqrt{n}}} \sim t[n-1].\]
+
+    \textbf{Voorbeeld}
+
+Een farmaceutische onderneming neemt een vermageringspil te hebben
+ontdekt waarbij de proefpersonen niet van eetgewoonte hoeven te
+veranderen. De resultaten zien we in de tabel:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}17}]:} gewicht.voor \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{80}\PY{p}{,} \PY{l+m}{86}\PY{p}{,} \PY{l+m}{66}\PY{p}{,} \PY{l+m}{75}\PY{p}{,} \PY{l+m}{90}\PY{p}{,} \PY{l+m}{68}\PY{p}{,} \PY{l+m}{78}\PY{p}{,} \PY{l+m}{70}\PY{p}{)}
+         gewicht.na \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{75}\PY{p}{,} \PY{l+m}{78}\PY{p}{,} \PY{l+m}{68}\PY{p}{,} \PY{l+m}{71}\PY{p}{,} \PY{l+m}{84}\PY{p}{,} \PY{l+m}{65}\PY{p}{,} \PY{l+m}{73}\PY{p}{,} \PY{l+m}{67}\PY{p}{)}
+         gewicht.verschil \PY{o}{=} gewicht.na \PY{o}{\PYZhy{}} gewicht.voor
+         df \PY{o}{=} \PY{k+kp}{t}\PY{p}{(}\PY{k+kt}{data.frame}\PY{p}{(}gewicht.voor\PY{p}{,} gewicht.na\PY{p}{,} gewicht.verschil\PY{p}{)}\PY{p}{)}
+         df
+\end{Verbatim}
+
+    \begin{tabular}{r|llllllll}
+	gewicht.voor & 80 & 86 & 66 & 75 & 90 & 68 & 78 & 70\\
+	gewicht.na & 75 & 78 & 68 & 71 & 84 & 65 & 73 & 67\\
+	gewicht.verschil & -5 & -8 &  2 & -4 & -6 & -3 & -5 & -3\\
+\end{tabular}
+
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}18}]:} vbar \PY{o}{=} \PY{k+kp}{mean}\PY{p}{(}gewicht.verschil\PY{p}{)}
+         t \PY{o}{=} vbar \PY{o}{/} \PY{p}{(}sd\PY{p}{(}gewicht.verschil\PY{p}{)} \PY{o}{/} \PY{k+kp}{sqrt}\PY{p}{(}\PY{k+kp}{length}\PY{p}{(}gewicht.verschil\PY{p}{)}\PY{p}{)}\PY{p}{)}
+         vbar
+         \PY{k+kp}{t}
+         pt\PY{p}{(}\PY{k+kp}{t}\PY{p}{,} \PY{k+kp}{length}\PY{p}{(}gewicht.verschil\PY{p}{)} \PY{o}{\PYZhy{}} \PY{l+m}{1}\PY{p}{)}
+\end{Verbatim}
+
+    -4
+
+    
+    -3.86436713231718
+
+    
+    0.00308825163998739
+
+    
+    \emph{Toetsprocedure}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \(H_0\) : \(\mu_v = 0\) en \(H_A\) : \(\mu_v \not= 0\).
+\item
+  Toetsingsgrootheid: \(\overline{\underline v} = -4\) met
+  \(t^*=-3.8644 \sim t[7]\).
+\item
+  Overschrijdingskans:
+  \(p = P(t[7] \leq -3.8644) = \textrm{pt}(-3.8644, 7) = 0.00308\).
+\item
+  Beslissing: \(p \leq \frac{\alpha}{2}\) (\(\alpha=0.05\)) dus \(H_0\)
+  wordt verworpen.
+\item
+  Conclusie: het middel heeft een overtuigend effect.
+\end{enumerate}
+
+    \hypertarget{f-verdeling}{%
+\section{F-verdeling}\label{f-verdeling}}
+
+    De F-verdeling is een kansverdeling die betrekking heeft op twee groepen
+waarnemingsuitkomsten. Als beide series waarnemingen willekeurig uit
+dezelfde kansverdeling zijn getrokken, dan mag je verwachten dat de
+grootheden \(s_1^2\) en \(s_2^2\) niet al te veel van elkaar
+verschillen.
+
+Bij de F-verdeling houden we ons bezig met de verhouding:
+
+\[ F_{[\nu_1, \nu_2]} = \dfrac{s_1^2}{s_2^2} \]
+
+waarbij \(\nu_1\) het aantal vrijheidsgraden van de teller is en
+\(\nu_2\) het aantal van noemer.
+
+    \textbf{Verdelingsfunctie plot}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}19}]:} curve\PY{p}{(}df\PY{p}{(}x\PY{p}{,}\PY{l+m}{8}\PY{p}{,}\PY{l+m}{6}\PY{p}{)}\PY{p}{,} col\PY{o}{=}\PY{l+s}{\PYZsq{}}\PY{l+s}{red\PYZsq{}}\PY{p}{,} from\PY{o}{=}\PY{l+m}{0}\PY{p}{,} to\PY{o}{=}\PY{l+m}{5}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_77_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \hypertarget{f-toets}{%
+\section{F-toets}\label{f-toets}}
+
+    Met de F-toets kunnen we nagaan of de varianties van de twee populaties
+aan elkaar gelijk zouden kunnen zijn.
+
+\textbf{Hypothese}
+
+Als hypothese stellen we dat \(H_0 : \sigma_A^2 = \sigma_B^2\) en
+\(H_A : \sigma_A^2 \not= \sigma_B^2\).
+
+\textbf{Toetsingsgrootheid}
+
+Als toetsingsgrootheid gebruiken we:
+
+\[ \dfrac{s_1^2}{s_2^2} \sim F_{[\nu_1, \nu_2]}\]
+
+    \textbf{Voorbeeld}
+
+Stel \(s_A=6.2\) en \(s_B=2.7\), toets of de twee populaties waaruit de
+steekproef is getrokken een verschillende waarde van variantie heeft.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}33}]:} s.a \PY{o}{=} \PY{l+m}{6.2}\PY{p}{;} s.b \PY{o}{=} \PY{l+m}{2.7}
+         n.a \PY{o}{=} \PY{l+m}{10}\PY{p}{;}  n.b \PY{o}{=} \PY{l+m}{12}
+         \PY{n+nb+bp}{F} \PY{o}{=} s.a\PY{o}{\PYZca{}}\PY{l+m}{2} \PY{o}{/} s.b\PY{o}{\PYZca{}}\PY{l+m}{2}
+         \PY{n+nb+bp}{F}
+         \PY{l+m}{1} \PY{o}{\PYZhy{}} pf\PY{p}{(}\PY{n+nb+bp}{F}\PY{p}{,} df1\PY{o}{=}n.a\PY{l+m}{\PYZhy{}1}\PY{p}{,} df2\PY{o}{=}n.b\PY{l+m}{\PYZhy{}1}\PY{p}{)}
+\end{Verbatim}
+
+    5.27297668038409
+
+    
+    0.00606775480766442
+
+    
+    \emph{Toetsprocedure}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \(H_0\) : \(\sigma_A^2 = \sigma_B^2\) en \(H_A\) :
+  \(\sigma_A^2 \not= \sigma_B^2\).
+\item
+  Toetsingsgrootheid:
+  \(F = \dfrac{s_A^2}{s_B^2} = 5.2730 \sim F[9,11]\).
+\item
+  Overschrijdingskans:
+  \(p = P(F[9,11] \geq 5.2730) = 1 - \textrm{pf}(5.2730, 9, 11) = 0.006068\).
+\item
+  Beslissing: \(p \leq \frac{\alpha}{2}\) (\(\alpha=0.05\)) dus \(H_0\)
+  wordt verworpen.
+\item
+  Conclusie: De varianties van beide populaties kunnen aan elkaar gelijk
+  zijn.
+\end{enumerate}
+
+    \hypertarget{harmonisch-gemiddelde}{%
+\section{Harmonisch gemiddelde}\label{harmonisch-gemiddelde}}
+
+    Het harmonisch gemiddelde is een speciaal gemiddelde, van toepassing bij
+het berekenen van gemiddelden van verhoudingsgetallen
+{[}\href{https://nl.wikipedia.org/wiki/Harmonisch_gemiddelde}{Wikipedia}{]}.
+
+\[\bar{n}_h = \dfrac{c}{\frac{1}{n_1} + \frac{1}{n_2} + \ldots + \frac{1}{n_c}} = c \left( \sum\limits_{j=1}^c\dfrac{1}{n_j}\right)^{-1}\]
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}20}]:} X \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{2}\PY{p}{,}\PY{l+m}{6}\PY{p}{,}\PY{l+m}{2}\PY{p}{,}\PY{l+m}{5}\PY{p}{,}\PY{l+m}{3}\PY{p}{,}\PY{l+m}{6}\PY{p}{,}\PY{l+m}{3}\PY{p}{)}
+         \PY{k+kp}{mean}\PY{p}{(}X\PY{p}{)}               \PY{c+c1}{\PYZsh{} arithmetic mean}
+         \PY{k+kp}{length}\PY{p}{(}X\PY{p}{)} \PY{o}{/} \PY{k+kp}{sum}\PY{p}{(}\PY{l+m}{1}\PY{o}{/}X\PY{p}{)}  \PY{c+c1}{\PYZsh{} harmonic mean}
+\end{Verbatim}
+
+    3.85714285714286
+
+    
+    3.18181818181818
+
+    
+    \hypertarget{pooled-variance-principe}{%
+\section{Pooled-variance principe}\label{pooled-variance-principe}}
+
+    Het is mogelijk om varianties samen te voegen met het pooled-variance
+principe. De formule hiervoor is als volgt:
+
+    \[ s_2 = \dfrac{(n_1 - 1)s_1^2 + \ldots + (n_k - 1)s_k^2}{(n_1 - 1) + \ldots + (n_k - 1)} \]
+
+    waarbij \(k\) het aantal varianties zijn.
+
+    \hypertarget{anova-uxe9uxe9n-factor-model}{%
+\section{ANOVA (één-factor model)}\label{anova-uxe9uxe9n-factor-model}}
+
+    \textbf{Hypothese}
+
+De hypothese die we toetsen is \(H_0 : \mu_1 = \mu_2 = \mu_3\), en \$
+H\_A \$ : de populatiegemiddelden zijn niet gelijk aan elkaar.
+
+    \textbf{Toetsingsgrootheid}
+
+Om de ANOVA analyse te doen berekenen we de volgende grootheden:
+
+\textbf{Sum of Squares Total}:
+
+\[SST = \sum\limits_{j=1}^c \sum\limits_{i=1}^{n_j}\left( X_{ij} - \bar{X}_{\cdot \cdot}\right)^2; MST = \dfrac{SST}{n-1}\]
+
+\textbf{Sum of Squares Error}:
+
+\[SSE = \sum\limits_{j=1}^c \sum\limits_{i=1}^{n_j}\left( X_{ij} - \bar{X}_{\cdot j}\right)^2; MSE = \dfrac{SSE}{n-c}\]
+
+\textbf{Sum of Squares Groups}:
+
+\[SSG = \sum\limits_{j=1}^c n_j \left( \bar{X}_{\cdot j} - \bar{X}_{\cdot \cdot}\right)^2; MSG = \dfrac{SSG}{c-1}\]
+
+waarbij \(n\) het totaal aantal waarnemingen is en \(c\) het aantal
+groepen. Hiervoor geldt er dat \(SST = SSG + SSE\).
+
+\textbf{ANOVA tabel}
+
+Met de berekende waarden kunnen we de volgende tabel opstellen:
+
+\begin{longtable}[]{@{}lllll@{}}
+\toprule
+ANOVA & vrijheidsgraden (\(df\)) & Sum of Squares & Mean of Squares &
+F-ratio\tabularnewline
+\midrule
+\endhead
+Groepen (G) & \(c-1\) & \(SSG\) & \(MSG\) &
+\(\frac{MSG}{MSE}\)\tabularnewline
+Binnen (E) & \(n-c\) & \(SSE\) & \(MSE\) &\tabularnewline
+Totaal (T) & \(n-1\) & \(SST\) & &\tabularnewline
+\bottomrule
+\end{longtable}
+
+    \textbf{Voorbeeld}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}21}]:} economie \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{35}\PY{p}{,} \PY{l+m}{10}\PY{p}{,} \PY{l+m}{47}\PY{p}{,} \PY{l+m}{23}\PY{p}{,} \PY{l+m}{35}\PY{p}{,} \PY{l+m}{59}\PY{p}{,} \PY{l+m}{32}\PY{p}{,} \PY{l+m}{44}\PY{p}{,} \PY{l+m}{18}\PY{p}{,} \PY{l+m}{27}\PY{p}{)}
+         techniek \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{52}\PY{p}{,} \PY{l+m}{38}\PY{p}{,} \PY{l+m}{45}\PY{p}{,} \PY{l+m}{37}\PY{p}{,} \PY{l+m}{60}\PY{p}{,} \PY{l+m}{48}\PY{p}{,} \PY{l+m}{54}\PY{p}{,} \PY{l+m}{66}\PY{p}{)}
+         gezondheidszorg \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{18}\PY{p}{,} \PY{l+m}{24}\PY{p}{,} \PY{l+m}{10}\PY{p}{,} \PY{l+m}{48}\PY{p}{,} \PY{l+m}{20}\PY{p}{,} \PY{l+m}{12}\PY{p}{,} \PY{l+m}{36}\PY{p}{,} \PY{l+m}{24}\PY{p}{)}
+         n1 \PY{o}{=} \PY{k+kp}{length}\PY{p}{(}economie\PY{p}{)}\PY{p}{;} n2 \PY{o}{=} \PY{k+kp}{length}\PY{p}{(}techniek\PY{p}{)}\PY{p}{;} n3 \PY{o}{=} \PY{k+kp}{length}\PY{p}{(}gezondheidszorg\PY{p}{)}
+         Y \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}economie\PY{p}{,} techniek\PY{p}{,} gezondheidszorg\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}22}]:} SST \PY{o}{=} \PY{k+kp}{sum}\PY{p}{(}\PY{p}{(}economie \PY{o}{\PYZhy{}} \PY{k+kp}{mean}\PY{p}{(}Y\PY{p}{)}\PY{p}{)}\PY{o}{\PYZca{}}\PY{l+m}{2}\PY{p}{)} \PY{o}{+} 
+               \PY{k+kp}{sum}\PY{p}{(}\PY{p}{(}techniek \PY{o}{\PYZhy{}} \PY{k+kp}{mean}\PY{p}{(}Y\PY{p}{)}\PY{p}{)}\PY{o}{\PYZca{}}\PY{l+m}{2}\PY{p}{)} \PY{o}{+} 
+               \PY{k+kp}{sum}\PY{p}{(}\PY{p}{(}gezondheidszorg \PY{o}{\PYZhy{}} \PY{k+kp}{mean}\PY{p}{(}Y\PY{p}{)}\PY{p}{)}\PY{o}{\PYZca{}}\PY{l+m}{2}\PY{p}{)}
+         
+         SSE \PY{o}{=} \PY{k+kp}{sum}\PY{p}{(}\PY{p}{(}economie \PY{o}{\PYZhy{}} \PY{k+kp}{mean}\PY{p}{(}economie\PY{p}{)}\PY{p}{)}\PY{o}{\PYZca{}}\PY{l+m}{2}\PY{p}{)} \PY{o}{+} 
+               \PY{k+kp}{sum}\PY{p}{(}\PY{p}{(}techniek \PY{o}{\PYZhy{}} \PY{k+kp}{mean}\PY{p}{(}techniek\PY{p}{)}\PY{p}{)}\PY{o}{\PYZca{}}\PY{l+m}{2}\PY{p}{)} \PY{o}{+} 
+               \PY{k+kp}{sum}\PY{p}{(}\PY{p}{(}gezondheidszorg \PY{o}{\PYZhy{}} \PY{k+kp}{mean}\PY{p}{(}gezondheidszorg\PY{p}{)}\PY{p}{)}\PY{o}{\PYZca{}}\PY{l+m}{2}\PY{p}{)}
+                   
+         SSG \PY{o}{=} n1 \PY{o}{*} \PY{p}{(}\PY{k+kp}{mean}\PY{p}{(}economie\PY{p}{)} \PY{o}{\PYZhy{}} \PY{k+kp}{mean}\PY{p}{(}Y\PY{p}{)}\PY{p}{)}\PY{o}{\PYZca{}}\PY{l+m}{2} \PY{o}{+} 
+               n2 \PY{o}{*} \PY{p}{(}\PY{k+kp}{mean}\PY{p}{(}techniek\PY{p}{)} \PY{o}{\PYZhy{}} \PY{k+kp}{mean}\PY{p}{(}Y\PY{p}{)}\PY{p}{)}\PY{o}{\PYZca{}}\PY{l+m}{2} \PY{o}{+} 
+               n3 \PY{o}{*} \PY{p}{(}\PY{k+kp}{mean}\PY{p}{(}gezondheidszorg\PY{p}{)} \PY{o}{\PYZhy{}} \PY{k+kp}{mean}\PY{p}{(}Y\PY{p}{)}\PY{p}{)}\PY{o}{\PYZca{}}\PY{l+m}{2}
+         
+         MST \PY{o}{=} SST \PY{o}{/} \PY{p}{(}\PY{k+kp}{length}\PY{p}{(}Y\PY{p}{)} \PY{o}{\PYZhy{}} \PY{l+m}{1}\PY{p}{)}
+         MSE \PY{o}{=} SSE \PY{o}{/} \PY{p}{(}\PY{k+kp}{length}\PY{p}{(}Y\PY{p}{)} \PY{o}{\PYZhy{}} \PY{l+m}{3}\PY{p}{)}
+         MSG \PY{o}{=} SSG \PY{o}{/} \PY{l+m}{2}
+         \PY{n+nb+bp}{F} \PY{o}{=} MSG \PY{o}{/} MSE
+         p \PY{o}{=} df\PY{p}{(}\PY{n+nb+bp}{F}\PY{p}{,} df1\PY{o}{=}\PY{l+m}{2}\PY{p}{,} df2\PY{o}{=}\PY{l+m}{23}\PY{p}{)} \PY{c+c1}{\PYZsh{} met df1 = c\PYZhy{}1 en df2 = n\PYZhy{}c}
+         \PY{k+kp}{print}\PY{p}{(}\PY{k+kp}{paste}\PY{p}{(}\PY{l+s}{\PYZsq{}}\PY{l+s}{De f\PYZhy{}waarde is\PYZsq{}}\PY{p}{,} \PY{n+nb+bp}{F}\PY{p}{,} \PY{l+s}{\PYZsq{}}\PY{l+s}{met een p\PYZhy{}waarde van\PYZsq{}}\PY{p}{,} p\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+[1] "De f-waarde is 8.65886826768073 met een p-waarde van 0.000897214262039324"
+
+    \end{Verbatim}
+
+    Het kritieke gebied kunnen we bepalen met:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}23}]:} qf\PY{p}{(}\PY{l+m}{.95}\PY{p}{,} df1\PY{o}{=}\PY{l+m}{2}\PY{p}{,} df2\PY{o}{=}\PY{l+m}{23}\PY{p}{)}
+\end{Verbatim}
+
+    3.42213220786118
+
+    
+    In dit geval is het kritieke gebied:
+\(Z = \left[3.42; \rightarrow\right>\). Hier wordt \(H_0\) duidelijk
+verworpen.
+
+    \emph{Toetsprocedure}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \(H_0\) : \(\mu_1 = \mu_2 = \mu_3\) en \(H_A\) : de
+  populatiegemiddelden zijn niet gelijk aan elkaar.
+\item
+  Toetsingsgrootheid:
+  \(F = \dfrac{MSG}{MSE} = 8.6589 \sim F_{[\nu_1, \nu_2]}\) met
+  \(\nu_1=2\) en \(\nu_2=23\).
+\item
+  Overschrijdingskans: \(p = P(F_{[2,23]}\geq 8.6589) = 0.0008972\).
+\item
+  Beslissing: \(p \leq \alpha\) (\(\alpha=0.05\)) dus \(H_0\) verwerpen.
+\item
+  Conclusie: De drie populaties studenten hebben niet alle drie
+  hetzelfde gemiddelde aantal uren internetgebruik.
+\end{enumerate}
+
+    \hypertarget{ongelijke-steekproefgroottes}{%
+\section{Ongelijke
+steekproefgroottes}\label{ongelijke-steekproefgroottes}}
+
+    Bij ongelijke steekproefgroottes is \(E(\bar{X}_{\cdot \cdot})\) geen
+zuivere schatter voor \(\mu\). De oplossing hiervoor is als volgt:
+
+\[SSG = \bar{n}_h \sum\limits_{j=1}^c\left( \bar{X}_{\cdot j} - \bar{G}_{\cdot \cdot}\right)^2 \]
+
+waarbij \(\bar{n}_h\) het harmonisch gemiddelde is en
+
+\[ \bar{G}_{\cdot \cdot} = \dfrac{\sum\limits_{j=1}^c\left( \bar{X}_j \right)}{c}.\]
+
+In het geval van ongelijke steekproefgroottes geldt dat
+\(SST \not = SSG + SSE\).
+
+    \hypertarget{levenes-toets}{%
+\section{Levene's toets}\label{levenes-toets}}
+
+    Met Levene's toets kunnen we toetsen of populatievarianties mogelijk
+gelijk zijn aan elkaar. Dit is een vereiste voor de ANOVA analyse.
+Hierbij stellen we als \(H_0\) dat de populatievarianties gelijk zijn
+aan elkaar en willen we dit niet verwerpen.
+
+\textbf{Toetsingsgrootheid}
+
+\[ F_L = \dfrac{\left( \sum\limits_{j=1}^c n_j \left( \bar{Z}_{\cdot j} - \bar{Z}_{\cdot \cdot}\right)^2\right) / (c-1)}{\left( \sum\limits_{j=1}^c \sum\limits_{i=1}^{n_j} \left( \bar{Z}_{ij} - \bar{Z}_{\cdot j} \right)^2\right) / (n-c)} = \dfrac{MSG}{MSE} \sim F_{(\nu_1, \nu_2)} \]
+
+waarbij \(Z_{ij} = \left|\ X_{ij} - \bar{X}_{\cdot j}\ \right|\).
+
+\textbf{Beslissing}
+
+Als \(p > \alpha\) dan wordt \(H_0\) niet verworpen. De
+populatievarianties kunnen aan elkaar gelijk zijn.
+
+    \hypertarget{bonferoni-methode}{%
+\section{Bonferoni methode}\label{bonferoni-methode}}
+
+    Een post-hoc analyse kan worden toegepast zodra \(H_0\) wordt verworpen
+bij de variantieanalyse. Een methode hiervoor is de Bonferoni methode.
+De vraag die willen beantwoorden is welke \(\mu_j\)'s niet samenvallen.
+
+Dit kunnen we doen door het paarsgewijs vergelijken van de
+steekproefgemiddelden m.b.v. de t-toets. Als er drie groepen zijn dan
+moeten we \(k=\begin{pmatrix}c\\2\end{pmatrix}\) paren die we moeten
+toetsen. Voor een significantie van \(\alpha=0.05\) krijgen we bij
+herhalen van de t-toets:
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}24}]:} \PY{l+m}{1}\PY{o}{\PYZhy{}}\PY{p}{(}\PY{l+m}{1}\PY{l+m}{\PYZhy{}0.05}\PY{p}{)}\PY{o}{*}\PY{o}{*}\PY{l+m}{6}
+\end{Verbatim}
+
+    0.264908109375
+
+    
+    Er is dus een kans van \(26\%\) dat er een fout van eerste soort
+optreedt. Om dit op te lossen toetsen we met \(\frac{\alpha}{2\cdot k}\)
+als we tweezijdige toetsen en \(\frac{\alpha}{k}\) bij een enkelzijdige
+toets. Volgens BK is deze methode te rigoreus, zij komen met de Tukey's
+HSD methode.
+
+    \textbf{Hypothese}
+
+    De hypothese die we toetsen is \(H_0 : \mu_i = \mu_j\) en
+\(H_A : \mu_i \not= \mu_j\).
+
+    \textbf{Toetsingsgrootheid}
+
+    De te gebruiken toetsingsgrootheid voor de Bonferoni methode is als
+volgt:
+
+\[ \dfrac{\left( \overline{\underline X}_{\cdot i} - \overline{\underline X}_{\cdot j}\right) - \left( \mu_i - \mu_j \right)}{\sqrt{MSE} \cdot \sqrt{\frac{1}{n_i} + \frac{1}{n_j}}} \sim t[\nu] \]
+
+waarbij \(\nu = n-c\).
+
+    \textbf{Beslisregel}
+
+In dit geval is het makkelijker om te toetsen met het kritieke gebied
+i.p.v. de overschijdingskans. Het kritieke gebied kunnen we bepalen met:
+
+\[ Z = \left<\leftarrow; P(\underline{t}[\nu] \leq L) = \frac{\alpha}{2k} \right] \cup \left[P(\underline{t}[\nu] \geq R) = \frac{\alpha}{2k}; \rightarrow \right> \]
+
+    \textbf{Conclusie}
+
+Zodra \(H_0\) wordt verworpen is er een significant verschil aangetoond.
+Dus \(\mu_i < \mu_j\), of andersom. Dit wordt bepaalt door te kijken
+welk gemiddelde het laagst/hoogst is.
+
+    \hypertarget{tukeys-hsd-methode}{%
+\section{Tukey's HSD methode}\label{tukeys-hsd-methode}}
+
+    De Tuckey's HSD (honestly significant difference) gebruikt een waarde
+die is af te lezen vanuit een tabel. Dit is tabel 3, de verdeling van
+\(V\) voor Tukey's HSD procedure.
+
+\emph{Toetsprocedure}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \(H_0\) : \(\mu_i = \mu_j\) en \(H_A\) : \(\mu_i \not= \mu_j\).
+\item
+  Toetsingsgrootheid: \(V\).
+\item
+  Beslisregel: \(Z = \left[r;\rightarrow\right>\) met
+  \(P(v\geq r\ |\ c; \nu_t)\). Hier geldt dat \(a=c\) het aantal groepen
+  is. Deze waarde wordt afgelezen uit tabel 3.
+\item
+  Beslissing: Als \(x \in Z\) dan wordt \(H_0\) verworpen, als
+  \(x \not\in Z\) dan wordt \(H_0\) niet verworpen.
+\end{enumerate}
+
+    \hypertarget{maat-voor-effectgrootte}{%
+\section{Maat voor effectgrootte}\label{maat-voor-effectgrootte}}
+
+    Een maat voor effectgrootte \(\eta^2\), eta kwadraat, geeft het
+percentage van de variantie v/d scores op de afhankelijke variabele dat
+door de onafhankelijke variabele wordt verklaard.
+
+\[ \eta^2 = \dfrac{SSG}{SST} : \textrm{effectgrootte} \]
+
+Dit geldt voor een gelijke steekproefgrootte.
+
+    \hypertarget{rangtekentoets-wilcoxon-signed-rank-test}{%
+\section{Rangtekentoets (Wilcoxon Signed Rank
+test)}\label{rangtekentoets-wilcoxon-signed-rank-test}}
+
+    Het doel van de analyse is een verschil aantonen tussen twee
+\emph{afhankelijke/gekoppelde} groepen op een ordinale variabele.
+
+\textbf{Stappenplan}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Maak een tabel met de experimentele groep \(E\) en de controle groep
+  \(C\).
+\item
+  Bepaal het verschil \(D_i = E_i - C_i\).
+\item
+  Bepaal hat absolute verschil \(|\ D_i\ |\).
+\item
+  Bepaal de rangnummers \(R_i\) van het absolute verschil.
+\item
+  Bepaal het teken voor \(R_i\), dus \(\textrm{sign}(D_i) \cdot R_i\).
+\item
+  Bepaal \(W_+\) wat de som is van alle \emph{positieve} rangnummers.
+\item
+  Zodra \(W_+\) en \(n\) bepaald zijn kunnen we de \(p\)-waarde opzoeken
+  in tabel 10.
+\end{enumerate}
+
+Alle verschilscores waarvoor geldt dat \(D_i = 0\) moeten worden
+verwijderd. Indien dit het geval is dat wordt ook de \(n\) aangepast. In
+het geval van gelijke rangnummers, m.a.w. knopen, nemen we het
+gemiddelde van de rangnummers.
+
+    \textbf{Toetsingsgrootheid}
+
+De toetsingsgrootheid is \(W_+\). Dit is de som is van alle positieve
+rangnummers. Voor \(W_+\) geldt dat:
+
+\begin{itemize}
+\tightlist
+\item
+  \(\textrm{E}(W_+) = \dfrac{n(n-1)}{4}\)
+\item
+  \(\textrm{Var}(W_+) = \dfrac{n(n+1)(2n+1)}{24}\)
+\end{itemize}
+
+    \textbf{Centrale limietstelling}
+
+    Het blijkt dat we \(W_+\) normaal kunnen benaderen als
+\(n \rightarrow \infty\). De vuistregel hiervoor is \(n > 15\). In dit
+geval geldt dat:
+
+\[ W_+ \sim N\left(\mu=\dfrac{n(n-1)}{4}; \sigma=\sqrt{\dfrac{n(n+1)(2n+1)}{24}}\right)\]
+
+Bij benadering gebruiken we:
+
+\[ P(W_+ \leq k) \approx P\left(X_{nor} \leq k + \frac{1}{2}\ |\ \mu, \sigma\right) \]
+
+    \textbf{Voorbeeld}
+
+Voor patienten met depressieve klachten is er een experiment opgezet.
+Hiervoor is \(X\) de score op de vragenlijst (\(0\leq X \leq 100\)). Hoe
+hoger de score, hoe erger de klachten. Er zijn 10 gematchte paren
+gemaakt (personen met dezelfde score op de vragenlijst).
+
+De experimentele groep \(E\) krijgt een behandeling met hardlopen en de
+controle groep \(C\) krijgt een behandeling zonder hardlopen. Toets of
+het hardlopen effect heeft.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}25}]:} E \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{70}\PY{p}{,} \PY{l+m}{60}\PY{p}{,} \PY{l+m}{55}\PY{p}{,} \PY{l+m}{80}\PY{p}{,} \PY{l+m}{40}\PY{p}{,} \PY{l+m}{68}\PY{p}{,} \PY{l+m}{54}\PY{p}{,} \PY{l+m}{71}\PY{p}{,} \PY{l+m}{70}\PY{p}{,} \PY{l+m}{40}\PY{p}{)}
+         C \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{75}\PY{p}{,} \PY{l+m}{62}\PY{p}{,} \PY{l+m}{65}\PY{p}{,} \PY{l+m}{77}\PY{p}{,} \PY{l+m}{49}\PY{p}{,} \PY{l+m}{60}\PY{p}{,} \PY{l+m}{63}\PY{p}{,} \PY{l+m}{78}\PY{p}{,} \PY{l+m}{59}\PY{p}{,} \PY{l+m}{55}\PY{p}{)}
+         D \PY{o}{=} E\PY{o}{\PYZhy{}}C
+         D.abs \PY{o}{=} \PY{k+kp}{abs}\PY{p}{(}D\PY{p}{)}
+         R \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{4}\PY{p}{,} \PY{l+m}{1}\PY{p}{,} \PY{l+m}{8}\PY{p}{,} \PY{l+m}{2}\PY{p}{,} \PY{l+m}{7}\PY{p}{,} \PY{l+m}{6}\PY{p}{,} \PY{l+m}{3}\PY{p}{,} \PY{l+m}{5}\PY{p}{,} \PY{l+m}{9}\PY{p}{,} \PY{l+m}{10}\PY{p}{)}
+         R.sign \PY{o}{=} \PY{k+kp}{sign}\PY{p}{(}D\PY{p}{)} \PY{o}{*} R
+         df \PY{o}{=} \PY{k+kp}{t}\PY{p}{(}\PY{k+kt}{data.frame}\PY{p}{(}E\PY{p}{,} C\PY{p}{,} D\PY{p}{,} D.abs\PY{p}{,} R\PY{p}{,} R.sign\PY{p}{)}\PY{p}{)}
+         df
+\end{Verbatim}
+
+    \begin{tabular}{r|llllllllll}
+	E & 70  & 60  &  55 & 80  & 40  & 68  & 54  & 71  & 70  &  40\\
+	C & 75  & 62  &  65 & 77  & 49  & 60  & 63  & 78  & 59  &  55\\
+	D & -5  & -2  & -10 &  3  & -9  &  8  & -9  & -7  & 11  & -15\\
+	D.abs &  5  &  2  &  10 &  3  &  9  &  8  &  9  &  7  & 11  &  15\\
+	R &  4  &  1  &   8 &  2  &  7  &  6  &  3  &  5  &  9  &  10\\
+	R.sign & -4  & -1  &  -8 &  2  & -7  &  6  & -3  & -5  &  9  & -10\\
+\end{tabular}
+
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}26}]:} W\PYZus{}pos \PY{o}{=} \PY{k+kp}{sum}\PY{p}{(}R.sign\PY{p}{[}R.sign \PY{o}{\PYZgt{}} \PY{l+m}{0}\PY{p}{]}\PY{p}{)}
+         W\PYZus{}pos
+\end{Verbatim}
+
+    17
+
+    
+    \emph{Toetsprocedure}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \(H_0\) : \(\eta_E = \eta_C\) en \(H_A\) : \(\eta_E < \eta_C\).
+\item
+  Toetsingsgrootheid: \(W_+ = 17\) met \(n=10\).
+\item
+  Overschrijdingskans:
+  \(p = P(W_+\leq 17) \stackrel{\textrm{Tabel 10}}{=} 0.161\).
+\item
+  Beslissing: \(p \leq \alpha\) (\(0.10\)) dus \(H_0\) niet verwerpen.
+\item
+  Conclusie: Er is geen significant verschil in toetsscores.
+\end{enumerate}
+
+    \hypertarget{wilcoxon-som-toets-mann-whitney-toets}{%
+\section{Wilcoxon som toets (Mann-Whitney
+toets)}\label{wilcoxon-som-toets-mann-whitney-toets}}
+
+    Het doel van de analyse is een verschil aantonen tussen twee
+\emph{onafhankelijke} groepen op een ordinale variabele.
+
+\begin{itemize}
+\tightlist
+\item
+  Groepsvariabele : middel (groep 1: geneesmiddel, groep 2: placebo)
+\item
+  Testvariabele : mate van aggresief gedrag (testscore 1-100)
+\end{itemize}
+
+\textbf{Stappenplan}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Sorteer beide testscores, zowel \(X\) als \(Y\).
+\item
+  Bepaal de rangnummers voor \(X\) en \(Y\).
+\item
+  Bepaal de som voor elke groep, dus \(S_x\) en \(S_y\) waarbij de \(S\)
+  staat voor som.
+\item
+  Zodra \(m\), \(n\) en \(S_x\) bepaald zijn kunnen we de \(p\)-waarde
+  opzoeken in tabel 11.
+\end{enumerate}
+
+Let er op dat geldt dat \(m \leq n\), indien dit niet het geval is
+kunnen \(X\) en \(Y\) worden omgewisselt.
+
+\textbf{Toetsingsgrootheid}
+
+De toetsingsgrootheid is \(S_x\) waarbij \(S\) staat voor de som. Dit is
+de som van alle rangnummers van \(X\). Voor \(S_x\) geldt er dat:
+
+\begin{itemize}
+\tightlist
+\item
+  \(\textrm E(S_x) = \frac{m(m+n+1)}{2}\)
+\item
+  \(\textrm{Var}(S_x) = \frac{nm(n+m+1)}{12}\)
+\end{itemize}
+
+\textbf{Centrale limietstelling}
+
+Het blijkt dat we \(S_x\) normaal kunnen benaderen als
+\(n, m \rightarrow \infty\). Hiervoor geldt dat:
+
+\[S_x \sim N\left(\mu=\frac{m(m+n+1)}{2}; \sigma=\sqrt{\frac{nm(n+m+1)}{12}}\right)\]
+
+De vuistregel om te mogen benaderen eist dat \(m, n > 10\). Hiervoor
+gebruiken we:
+
+\[ P(S_x \leq k) \approx P\left(X_{nor} \leq k + \frac{1}{2}\ |\ \mu, \sigma\right) \]
+
+\textbf{Voorbeeld}
+
+    Voor twee groepen \(A\) en \(B\) wordt er een vitaminepil gegeven. Groep
+\(A\) is vertelt dat het een prestatieverhogend middel is en voor groep
+\(B\) een slaapmiddel.
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}27}]:} groep.a \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{36}\PY{p}{,} \PY{l+m}{41}\PY{p}{,} \PY{l+m}{44}\PY{p}{,} \PY{l+m}{45}\PY{p}{,} \PY{l+m}{52}\PY{p}{,} \PY{l+m}{53}\PY{p}{,} \PY{l+m}{54}\PY{p}{,} \PY{l+m}{57}\PY{p}{,} \PY{l+m}{58}\PY{p}{,} \PY{l+m}{77}\PY{p}{)}
+         groep.b \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{26}\PY{p}{,} \PY{l+m}{46}\PY{p}{,} \PY{l+m}{55}\PY{p}{,} \PY{l+m}{59}\PY{p}{,} \PY{l+m}{64}\PY{p}{,} \PY{l+m}{65}\PY{p}{,} \PY{l+m}{67}\PY{p}{,} \PY{l+m}{79}\PY{p}{,} \PY{l+m}{81}\PY{p}{,} \PY{l+m}{83}\PY{p}{)}
+         rank.a \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{2}\PY{p}{,} \PY{l+m}{3}\PY{p}{,} \PY{l+m}{4}\PY{p}{,} \PY{l+m}{5}\PY{p}{,} \PY{l+m}{7}\PY{p}{,} \PY{l+m}{8}\PY{p}{,} \PY{l+m}{9}\PY{p}{,} \PY{l+m}{11}\PY{p}{,} \PY{l+m}{12}\PY{p}{,} \PY{l+m}{17}\PY{p}{)}
+         rank.b \PY{o}{=} \PY{k+kt}{c}\PY{p}{(}\PY{l+m}{1}\PY{p}{,} \PY{l+m}{6}\PY{p}{,} \PY{l+m}{10}\PY{p}{,} \PY{l+m}{13}\PY{p}{,} \PY{l+m}{14}\PY{p}{,} \PY{l+m}{15}\PY{p}{,} \PY{l+m}{16}\PY{p}{,} \PY{l+m}{18}\PY{p}{,} \PY{l+m}{19}\PY{p}{,} \PY{l+m}{20}\PY{p}{)}
+         \PY{k+kp}{t}\PY{p}{(}\PY{k+kt}{data.frame}\PY{p}{(}groep.a\PY{p}{,} groep.b\PY{p}{,} rank.a\PY{p}{,} rank.b\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+    \begin{tabular}{r|llllllllll}
+	groep.a & 36 & 41 & 44 & 45 & 52 & 53 & 54 & 57 & 58 & 77\\
+	groep.b & 26 & 46 & 55 & 59 & 64 & 65 & 67 & 79 & 81 & 83\\
+	rank.a &  2 &  3 &  4 &  5 &  7 &  8 &  9 & 11 & 12 & 17\\
+	rank.b &  1 &  6 & 10 & 13 & 14 & 15 & 16 & 18 & 19 & 20\\
+\end{tabular}
+
+
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}28}]:} Sa \PY{o}{=} \PY{k+kp}{sum}\PY{p}{(}rank.a\PY{p}{)}
+         Sa
+\end{Verbatim}
+
+    78
+
+    
+    \emph{Toetsprocedure}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \(H_0\) : \(\eta_A = \eta_B\) en \(H_A\) : \(\eta_A < \eta_B\).
+\item
+  Toetsingsgrootheid: \(S_A = 78\) met \(m=n=10\).
+\item
+  Overschrijdingskans:
+  \(p = P(S_A \leq 78) \stackrel{\textrm{Tabel 11}}{=} 0.022\).
+\item
+  Beslissing: \(p \leq \alpha\) dus \(H_0\) verwerpen.
+\item
+  Conclusie: De suggestie doet zijn werk.
+\end{enumerate}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor} }]:} 
+\end{Verbatim}
+
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+    \end{document}

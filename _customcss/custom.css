@@ -1,0 +1,36 @@
+@font-face {
+    font-family: 'cmr10'; 
+    src: url('cmr10.ttf'); 
+}
+
+@font-face {
+    font-family: 'cmbx10'; 
+    src: url('cmbx10.ttf'); 
+}
+
+@font-face {
+    font-family: 'cmbx12'; 
+    src: url('cmbx12.ttf'); 
+}
+
+#notebook-container {
+    font-size: 14pt;
+    font-family: 'cmr10'
+} 
+
+#notebook-container h1, #notebook-container h2, #notebook-container h3, #notebook-container h4 {
+    font-family: 'cmbx12'
+}
+
+#notebook-container h5, #notebook-container h6, #notebook-container b {
+    font-family: 'cmbx10'
+}
+
+div.text_cell {
+    max-width: 124ex;
+}
+
+#notebook-container p {
+    text-align: justify;
+    text-justify: inter-word;
+}

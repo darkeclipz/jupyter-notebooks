@@ -1,17 +1,11 @@
-def digit_fourth_powers():
-    """
-    a*10^4 + b*10^3 + c*10^2 + d = a^4 + b^4 + c^4 + d^4
-    :return:
-    """
-    tuples = []
-    for a in range(10):
-        for b in range(10):
-            for c in range(10):
-                for d in range(10):
-                    if a*10**4 + b*10**3 + c*10**2 + d == a**4 + b**4 + c**4 + d**4:
-                        tuples.append(a**4 + b**4 + c**4 + d**4)
-    for t in tuples:
-        print(t)
+import eulerlib
 
 
-digit_fourth_powers()
+def digit_powers(n):
+    numbers = [i for i in range(2, 9**n*n + 1)
+               if sum(map(lambda x: x**n, eulerlib.digits(i))) == i]
+    print('Numbers found: {}'.format(numbers))
+    return sum(numbers)
+
+
+eulerlib.time_it(digit_powers, [5])

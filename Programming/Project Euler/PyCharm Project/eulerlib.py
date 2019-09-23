@@ -4,8 +4,9 @@ import time
 
 def time_it(f, args=None):
     t0 = time.time()
+    print('--- Timed execution for {} ----------------'.format(f.__name__))
     print('Running...')
-    result = f(*args)
+    result = f(*args) if args is not None else f()
     print('Solution is {}.'.format(result))
     t1 = time.time()
     print('Executed in {} seconds.'.format(round(t1 - t0, 4)))
@@ -18,6 +19,16 @@ def distinct(x):
     :return: List of unique elements.
     """
     return list(set(x))
+
+
+def is_unique_string(s):
+    """
+    Determines if a given string only consists of unique
+    characters.
+    :param s: The string to test.
+    :return: True if the string only contains unique characters.
+    """
+    return len(s) == len(set([c for c in s]))
 
 
 def divisors(x):
@@ -41,11 +52,38 @@ def divisors(x):
 
 
 def sum_of_proper_divisors_sieve(n):
+    """
+    Generates an array with the sum of the divisors
+    for that index of the array. To find the sum of
+    divisors for 12: sieve[12].
+    :param n: Upper limit of numbers.
+    :return: List with sum of divisors.
+    """
     sieve = [1] * (n + 1)
     for i in range(2, n // 2 + 1):
         for j in range(i + i, n, i):
             sieve[j] += i
     return sieve
+
+
+def prime_sieve(n):
+    """
+    Generates an array which determines if the index
+    of the array is a prime number. To see if 997 is
+    a prime number: sieve[997] == True.
+    :param n: Upper limit of numbers.
+    :return: List with boolean values.
+    """
+    upper_bound = int(math.sqrt(n))
+    primes = [True] * (n + 1)
+    primes[0] = primes[1] = False
+    for i in range(upper_bound + 1):
+        if not primes[i]:
+            continue
+        for j in range(2, n // i + 1):
+            if i*j < n:
+                primes[i*j] = False
+    return primes
 
 
 def proper_divisors(x):
@@ -100,6 +138,20 @@ def is_deficient_number(x):
     return sum(proper_divisors(x)) < x
 
 
+def digits(x):
+    """
+    Returns the the digits of a number.
+    Reference: https://en.wikipedia.org/wiki/Digit_sum
+    :param x: The number to sum the digits of.
+    :param b: The base of the number system.
+    :return: Sum of the number x.
+    """
+    upper_bound = int(math.log(x, 10))
+    reversed_digits = [1 / 10 ** n * (x % 10 ** (n + 1) - x % 10 ** n)
+                       for n in range(upper_bound + 1)]
+    return list(map(int, reversed_digits))[::-1]
+
+
 def is_fibonacci_number(x):
     """
     Test if x is a Fibonacci number.
@@ -129,6 +181,8 @@ def fibonacci_n_inv(x):
     :param x: Fibonacci number.
     :return: The position of the Fibonacci number (Fn)
     """
+    if x < 2:
+        raise ValueError('Function approximation is wrong when x < 2.')
     sqrt5 = math.sqrt(5)
     phi = (1 + sqrt5) / 2
     rad = 5 * x**2
@@ -161,3 +215,44 @@ def gcd(a, b):
         q = a // b
         r = a - b * q
     return b
+
+
+def prime_counting_function(n):
+    """
+    Return the number of primes below a given number.
+    This is calculated with the proportionality which
+    states that π(n) ~ n / log(n).
+    :param n: Upper bound.
+    :return: Estimate of the number of primes below the
+             bound.
+    """
+    return n / math.log(n)
+
+
+def lambertw(x):
+    """
+    Lambert W function with Newton's Method.
+    :param x:
+    :return:
+    """
+    eps = 1e-8
+    w = x
+    while True:
+        ew = math.exp(w)
+        w_new = w - (w * ew - x) / (w * ew + ew)
+        if abs(w - w_new) <= eps:
+            break
+        w = w_new
+    return w
+
+
+def prime_counting_function_inv(y):
+    """
+    Returns the upper bound for a given number of primes.
+    :param y: How many primes you want.
+    :return: Upper bound.
+    """
+    x = 2
+    while x / math.log(x) < y:
+        x += 1
+    return x

@@ -1,5 +1,6 @@
 import math
 import time
+import quadratic
 
 
 def time_it(f, args=None):
@@ -7,9 +8,9 @@ def time_it(f, args=None):
     print('--- Timed execution for {} ----------------'.format(f.__name__))
     print('Running...')
     result = f(*args) if args is not None else f()
-    print('Solution is {}.'.format(result))
+    print('Solution is {}'.format(result))
     t1 = time.time()
-    print('Executed in {} seconds.'.format(round(t1 - t0, 4)))
+    print('Executed in {} seconds'.format(round(t1 - t0, 4)))
 
 
 def distinct(x):
@@ -19,6 +20,10 @@ def distinct(x):
     :return: List of unique elements.
     """
     return list(set(x))
+
+
+def is_number(n):
+    return isinstance(n, (int, float))
 
 
 def is_unique_string(s):
@@ -84,6 +89,43 @@ def prime_sieve(n):
             if i*j < n:
                 primes[i*j] = False
     return primes
+
+
+def triangle_number(n):
+    """
+    Calculate the nth triangle number.
+    :param n: Fn
+    :return: Triangle number for n.
+    """
+    return n * (n + 1) // 2
+
+
+def is_triangle_number(n):
+    """
+    Tests if a number is a triangle number. Solved with the
+    inverse of n(n+1)/2, and testing if that solution
+    is integer.
+    :param n: Number to test.
+    :return: True if it is a triangle number.
+    """
+    s1, s2 = quadratic.solve(1, 1, -2*n)
+    return is_number(s1) and s1.is_integer() or is_number(s2) and s2.is_integer()
+
+
+def triangle_number_sieve(n):
+    """
+    Generates a sieve which can be used to tell if a number
+    is a triangle number.
+    :param n: Up to which n.
+    :return: Sieve with boolean values, sieve[3] = True.
+    """
+    triangle_numbers = [False] * (n + 1)
+    tn = i = 1
+    while tn < n:
+        triangle_numbers[triangle_number(i)] = True
+        i += 1
+        tn = triangle_number(i)
+    return triangle_numbers
 
 
 def proper_divisors(x):
@@ -256,3 +298,29 @@ def prime_counting_function_inv(y):
     while x / math.log(x) < y:
         x += 1
     return x
+
+
+def quadratic_solve(a, b, c):
+    """
+    Solves a polynomial of the form: ax^2 + bx + c = 0.
+    :param a: value of a in ax^2.
+    :param b: value of b in bx.
+    :param c: value of the constant c.
+    :return: the solution as a tuple (s1, s2), where s2 is None
+             if there is only a single solution.
+    """
+    if a == 0 and b == 0:
+        raise ValueError('Invalid polynomial.')
+
+    if a == 0 and b != 0:
+        return -c / b, None
+
+    discriminant = b * b - 4 * a * c
+
+    if discriminant < 0:
+        raise ValueError('Negative discriminant, there is no real solution.')
+
+    if discriminant == 0:
+        return (-b + math.sqrt(discriminant)) / (2 * a), None
+
+    return (-b - math.sqrt(discriminant)) / (2 * a), (-b + math.sqrt(discriminant)) / (2 * a)

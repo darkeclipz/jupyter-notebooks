@@ -182,23 +182,23 @@ def word_to_number(word):
     return sum([letter_to_number(c) for c in word])
 
 
-def code_triangle_numbers(words):
+def coded_triangle_numbers(words):
     numbers_to_test = list(map(word_to_number, words))
     print('Maximum triangle number: {}'.format(max(numbers_to_test)))
     triangle_number_sieve = eulerlib.triangle_number_sieve(max(numbers_to_test))
     return sum([1 for n in numbers_to_test if triangle_number_sieve[n]])
 
 
-def code_triangle_numbers_quadratic(words):
+def coded_triangle_numbers_quadratic(words):
     numbers_to_test = list(map(word_to_number, words))
     return sum([1 for n in numbers_to_test if eulerlib.is_triangle_number(n)])
 
 
-def code_triangle_numbers_quadratic_inline(words):
+def coded_triangle_numbers_quadratic_inline(words):
     numbers_to_test = list(map(word_to_number, words))
     return sum([1 for n in numbers_to_test if ((math.sqrt(1 + 8*n) - 1) / 2).is_integer()])
 
 
-eulerlib.time_it(code_triangle_numbers, [problem_data])
-eulerlib.time_it(code_triangle_numbers_quadratic, [problem_data])
-eulerlib.time_it(code_triangle_numbers_quadratic_inline, [problem_data])
+eulerlib.time_it(coded_triangle_numbers, [problem_data])
+eulerlib.time_it(coded_triangle_numbers_quadratic, [problem_data])
+eulerlib.time_it(coded_triangle_numbers_quadratic_inline, [problem_data])

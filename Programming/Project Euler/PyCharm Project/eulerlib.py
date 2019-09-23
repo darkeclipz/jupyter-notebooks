@@ -298,29 +298,3 @@ def prime_counting_function_inv(y):
     while x / math.log(x) < y:
         x += 1
     return x
-
-
-def quadratic_solve(a, b, c):
-    """
-    Solves a polynomial of the form: ax^2 + bx + c = 0.
-    :param a: value of a in ax^2.
-    :param b: value of b in bx.
-    :param c: value of the constant c.
-    :return: the solution as a tuple (s1, s2), where s2 is None
-             if there is only a single solution.
-    """
-    if a == 0 and b == 0:
-        raise ValueError('Invalid polynomial.')
-
-    if a == 0 and b != 0:
-        return -c / b, None
-
-    discriminant = b * b - 4 * a * c
-
-    if discriminant < 0:
-        raise ValueError('Negative discriminant, there is no real solution.')
-
-    if discriminant == 0:
-        return (-b + math.sqrt(discriminant)) / (2 * a), None
-
-    return (-b - math.sqrt(discriminant)) / (2 * a), (-b + math.sqrt(discriminant)) / (2 * a)

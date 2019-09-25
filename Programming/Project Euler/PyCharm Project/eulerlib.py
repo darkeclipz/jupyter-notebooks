@@ -108,8 +108,8 @@ def is_triangle_number(n):
     :param n: Number to test.
     :return: True if it is a triangle number.
     """
-    s1, s2 = quadratic.solve(1, 1, -2*n)
-    return is_number(s1) and s1.is_integer() or is_number(s2) and s2.is_integer()
+    _, x = quadratic.solve(1, 1, -2*n)
+    return is_number(x) and x.is_integer()
 
 
 def triangle_number_sieve(n):
@@ -126,6 +126,39 @@ def triangle_number_sieve(n):
         i += 1
         tn = triangle_number(i)
     return triangle_numbers
+
+
+def hexagonal_number(n):
+    """
+    Calculate the nth hexagonal number.
+    :param n: Hn
+    :return: Hexagonal number
+    """
+    return n * (2 * n - 1)
+
+
+def is_hexagonal_number(n):
+    """
+    Determines if n is a hexagonal number.
+    :param n: Hn
+    :return: Hexagonal number
+    """
+    _, x = quadratic.solve(2, -1, -n)
+    return is_number(x) and x.is_integer()
+
+
+def pentagonal_number(n):
+    return n * (3 * n - 1) / 2
+
+
+def is_pentagonal_number(n):
+    """
+    Determines if n is a pentagonal number.
+    :param n:
+    :return: True if pentagonal.
+    """
+    _, x = quadratic.solve(3, -1, -2 * n)
+    return is_number(x) and x.is_integer()
 
 
 def proper_divisors(x):

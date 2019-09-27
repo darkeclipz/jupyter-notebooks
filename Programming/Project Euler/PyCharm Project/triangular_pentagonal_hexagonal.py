@@ -1,5 +1,4 @@
 import eulerlib
-import quadratic
 
 
 def triangular_pentagonal_hexagonal():

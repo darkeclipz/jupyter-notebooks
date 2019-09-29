@@ -33,7 +33,7 @@ def is_unique_string(s):
     :param s: The string to test.
     :return: True if the string only contains unique characters.
     """
-    return len(s) == len(set([c for c in s]))
+    return len(s) == len(set(s))
 
 
 def divisors(x):
@@ -89,6 +89,16 @@ def prime_sieve(n):
             if i*j < n:
                 primes[i*j] = False
     return primes
+
+
+def sieve_to_list(sieve):
+    """
+    Returns the sieve as a list where the index is the number
+    where it was True.
+    :param sieve:
+    :return:
+    """
+    return [i for i, v in enumerate(sieve) if v]
 
 
 def triangle_number(n):
@@ -221,10 +231,20 @@ def digits(x):
     :param b: The base of the number system.
     :return: Sum of the number x.
     """
-    upper_bound = int(math.log(x, 10))
-    reversed_digits = [1 / 10 ** n * (x % 10 ** (n + 1) - x % 10 ** n)
-                       for n in range(upper_bound + 1)]
-    return list(map(int, reversed_digits))[::-1]
+    # upper_bound = int(math.log(x, 10))
+    # reversed_digits = [1 / 10 ** n * (x % 10 ** (n + 1) - x % 10 ** n)
+    #                    for n in range(upper_bound + 1)]
+    # return list(map(int, reversed_digits))[::-1]
+    return [int(d) for d in str(x)]
+
+
+def digits_to_int(x):
+    """
+    Concatenate a list of digits to an integer.
+    :param x:
+    :return:
+    """
+    return int(''.join([str(i) for i in x]))
 
 
 def is_fibonacci_number(x):
@@ -331,3 +351,143 @@ def prime_counting_function_inv(y):
     while x / math.log(x) < y:
         x += 1
     return x
+
+
+def product(numbers):
+    """
+    Returns the product of a list of numbers.
+    :param numbers:
+    :return:
+    """
+    p = 1
+    for x in numbers:
+        p *= x
+    return p
+
+
+def factorial(n):
+    """
+    Returns the factorial n! of a number.
+    :param n:
+    :return:
+    """
+    return n * factorial(n - 1) \
+        if n > 0 \
+        else 1
+
+
+def is_even(n):
+    """
+    Returns true if a number is even.
+    :param n:
+    :return:
+    """
+    return n % 2 == 0
+
+
+def is_odd(n):
+    """
+    Returns true if a number is odd.
+    :param n:
+    :return:
+    """
+    return n % 2 == 1
+
+
+def permutations(a):
+    """
+    Generates all the permutations for a set.
+    :param a:
+    :return:
+    """
+    n = len(a)
+    return _heap_perm_(n, a)
+
+
+def _heap_perm_(n, a):
+    """
+    Heap's permutation algorithm.
+    https://stackoverflow.com/a/29044942
+    :param n:
+    :param a:
+    :return:
+    """
+    if n == 1: yield a
+    else:
+        for i in range(n-1):
+            for hp in _heap_perm_(n-1, a): yield hp
+            j = 0 if (n % 2) == 1 else i
+            a[j], a[n - 1] = a[n - 1], a[j]
+        for hp in _heap_perm_(n-1, a): yield hp
+
+
+def shift(a, n=1):
+    """
+    Shift all the elements in the list by n.
+    :param a:
+    :param n:
+    :return:
+    """
+    return a[n:] + a[:n]
+
+
+def is_palindrome(x):
+    """
+    Returns true if a number or a string is a palindrome.
+    :param x:
+    :return:
+    """
+    chars = [c for c in x] if not is_number(x) else digits(x)
+    for i in range(len(chars) // 2):
+        if chars[i] != chars[len(chars) - i - 1]:
+            return False
+    return True
+
+
+def to_binary_string(x):
+    """
+    Useful to convert a number into a binary number.
+    :param x:
+    :return:
+    """
+    return "{0:b}".format(x)
+
+
+def _palindrome_number_generator():
+    """
+    https://stackoverflow.com/a/16344628
+    :return:
+    """
+    yield 0
+    lower = 1
+    while True:
+        higher = lower*10
+        for i in range(lower, higher):
+            s = str(i)
+            yield int(s+s[-2::-1])
+        for i in range(lower, higher):
+            s = str(i)
+            yield int(s+s[::-1])
+        lower = higher
+
+
+def palindromes(lower, upper):
+    """
+    Generates all palindromes between [lower, upper].
+    https://stackoverflow.com/a/16344628
+    :param lower:
+    :param upper:
+    :return:
+    """
+    all_palindrome_numbers = _palindrome_number_generator()
+    for p in all_palindrome_numbers:
+        if p >= lower:
+            break
+    palindrome_list = [p]
+    for p in all_palindrome_numbers:
+        # Because we use the same generator object,
+        # p continues where the previous loop halted.
+        if p >= upper:
+            break
+        palindrome_list.append(p)
+    return palindrome_list

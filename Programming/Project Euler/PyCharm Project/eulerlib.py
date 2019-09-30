@@ -444,8 +444,8 @@ def is_palindrome(x):
     return True
 
 
-def is_pandigital_to_n(x, n):
-    return set(x) == set(range(1, n + 1))
+def is_pandigital_to_n(x, n, zero_based=False):
+    return set(x) == set(range(0 if zero_based else 1, n + 1))
 
 
 def to_binary_string(x):

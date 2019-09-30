@@ -10,7 +10,7 @@ def time_it(f, args=None):
     result = f(*args) if args is not None else f()
     print('Solution is {}'.format(result))
     t1 = time.time()
-    print('Executed in {} seconds'.format(round(t1 - t0, 4)))
+    print('Executed in {} seconds'.format(round(t1 - t0, 6)))
 
 
 def distinct(x):
@@ -444,6 +444,10 @@ def is_palindrome(x):
     return True
 
 
+def is_pandigital_to_n(x, n):
+    return set(x) == set(range(1, n + 1))
+
+
 def to_binary_string(x):
     """
     Useful to convert a number into a binary number.
@@ -491,3 +495,19 @@ def palindromes(lower, upper):
             break
         palindrome_list.append(p)
     return palindrome_list
+
+
+def string_split_2d(data, field_delimiter=',', line_delimiter='\n'):
+    """
+    Split a string of 2D data into lists. Example of the data
+    1,2
+    3,4
+    5,6
+    to:
+    [[1,2],[3,4],[5,6]]
+    :param data:
+    :param field_delimiter: delimiter used between seperate fields, default: ,
+    :param line_delimiter: delimiter used between lines, default: \n
+    :return: 2D list
+    """
+    return [line.split(field_delimiter) for line in data.split(line_delimiter)]

@@ -49,6 +49,7 @@ def integer_right_triangles(n):
 def integer_right_triangles_lcd(n):
     lcm_of_p = 12
     for a, b, c in primitive_pythagorean_triplet_generator():
+        print('({}, {}, {})'.format(a, b, c))
         if lcm_of_p > n:
             return ans
         ans = lcm_of_p

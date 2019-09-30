@@ -312,6 +312,45 @@ def gcd(a, b):
     return b
 
 
+def lcm(a, b):
+    """
+    Calculate the least common multiple (LCM) with the GCD
+    algorithm using: LCM(a,b) = (a*b)/GCD(a,b).
+    :param a:
+    :param b:
+    :return:
+    """
+    return a * b / gcd(a, b)
+
+
+def lcm3(a, b, c):
+    """
+    Calculating the LCM for multiple digits is done with
+    LCM(a,b,c) = LCM(LCM(a,b),c)
+    :param a:
+    :param b:
+    :param c:
+    :return:
+    """
+    return lcm(lcm(a, b), c)
+
+
+def primitive_pythagorean_triplet_generator(n):
+    v = 2
+    u = 1
+    while n > 0:
+        if not(is_odd(v) and is_odd(u)) and gcd(u, v) == 1:
+            a = v*v - u*u
+            b = 2*v*u
+            c = u*u + v*v
+            n -= 1
+            yield (a, b, c)
+        u += 1
+        if u >= v:
+            v += 1
+            u = 1
+
+
 def prime_counting_function(n):
     """
     Return the number of primes below a given number.

@@ -26,15 +26,15 @@ def integer_right_triangles(n):
     u = 1
     p = 12  # [3, 4, 5] has perimeter 12
     while u**2 <= n:
-        if p <= n and not is_odd(v) and is_odd(u):
+        if p <= n and not (is_odd(v) and is_odd(u)) and gcd(u, v) == 1:
             # u, v combination is a primitive triplet
-            a = 1
+            m = 1
             q = p
             # find all multiples and increment solutions
             while q <= n:
                 solutions[q] += 1
-                a += 1
-                q = a * p
+                m += 1
+                q = m * p
         u += 1
         if u >= v:
             v += 1

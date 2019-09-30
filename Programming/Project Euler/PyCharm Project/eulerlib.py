@@ -335,7 +335,12 @@ def lcm3(a, b, c):
     return lcm(lcm(a, b), c)
 
 
-def primitive_pythagorean_triplet_generator(n):
+def primitive_pythagorean_triplet_generator(n=math.inf):
+    """
+    Generates n primitive pythagorean triplets.
+    :param n:
+    :return:
+    """
     v = 2
     u = 1
     while n > 0:

@@ -41,7 +41,9 @@ def integer_right_triangles(n):
             u = 1
         p = 2*v**2 + 2*u*v  # calculate perimeter
 
-    return solutions.index(max(solutions))
+    res = solutions.index(max(solutions))
+    print('There are {} solutions for P={}'.format(solutions[res], res))
+    return res
 
 
 time_it(integer_right_triangles, [1000])

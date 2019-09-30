@@ -223,19 +223,20 @@ def is_deficient_number(x):
     return sum(proper_divisors(x)) < x
 
 
-def digits(x):
+def digits(x, base=10):
     """
     Returns the the digits of a number.
     Reference: https://en.wikipedia.org/wiki/Digit_sum
     :param x: The number to sum the digits of.
-    :param b: The base of the number system.
+    :param base: The base of the number system.
     :return: Sum of the number x.
     """
-    # upper_bound = int(math.log(x, 10))
-    # reversed_digits = [1 / 10 ** n * (x % 10 ** (n + 1) - x % 10 ** n)
-    #                    for n in range(upper_bound + 1)]
-    # return list(map(int, reversed_digits))[::-1]
-    return [int(d) for d in str(x)]
+    # return [int(d) for d in str(x)]
+    upper_bound = int(math.log(x, base))
+    reversed_digits = [1 / 10 ** n * (x % base ** (n + 1) - x % base ** n)
+                       for n in range(upper_bound + 1)]
+    return list(map(int, reversed_digits))[::-1]
+
 
 
 def digits_to_int(x):
@@ -348,6 +349,8 @@ def primitive_pythagorean_triplet_generator(n=math.inf):
             a = v*v - u*u
             b = 2*v*u
             c = u*u + v*v
+            if a > b:
+                a, b = b, a
             n -= 1
             yield (a, b, c)
         u += 1

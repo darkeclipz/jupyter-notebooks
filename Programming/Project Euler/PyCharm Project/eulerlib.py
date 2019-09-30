@@ -558,3 +558,14 @@ def string_split_2d(data, field_delimiter=',', line_delimiter='\n'):
     :return: 2D list
     """
     return [line.split(field_delimiter) for line in data.split(line_delimiter)]
+
+
+def simplify_fraction(a, b):
+    """
+    Simplifies a fraction to the lowest common form.
+    :param a:
+    :param b:
+    :return:
+    """
+    c = gcd(a, b)
+    return a / c, b / c
